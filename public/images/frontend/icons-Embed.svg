@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="10283 5437.414 28.479 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #fff;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <g id="Group_90" data-name="Group 90" transform="translate(8532 4115)">
+    <path id="arrow-right-12" class="cls-1" d="M5.5,15.5,13.978,8,5.5.5" transform="translate(1765 1322.414)"/>
+    <path id="arrow-right-12-2" data-name="arrow-right-12" class="cls-1" d="M5.5,15.5,13.978,8,5.5.5" transform="translate(1765.479 1338.414) rotate(180)"/>
+  </g>
+</svg>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="971.215 4572.194 26 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: none;
+        stroke: #fff;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <g id="camera-live-view-on" transform="translate(967.215 4565.194)">
+    <path id="Path_63" data-name="Path 63" class="cls-1" d="M29.5,15S22.833,22.5,17,22.5,4.5,15,4.5,15,11.167,7.5,17,7.5,29.5,15,29.5,15Z"/>
+    <circle id="Ellipse_38" data-name="Ellipse 38" class="cls-1" cx="4.167" cy="4.167" r="4.167" transform="translate(12.833 10.833)"/>
+    <circle id="Ellipse_39" data-name="Ellipse 39" class="cls-1" cx="0.833" cy="0.833" r="0.833" transform="translate(16.167 14.167)"/>
+  </g>
+</svg>

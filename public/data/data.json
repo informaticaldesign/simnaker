@@ -1,0 +1,16 @@
+[
+    {
+        "name": "BJR Hospital",
+        "address": "Car Nicobar",
+        "pincode": 744301,
+        "lat": 9,
+        "long": 92
+    },
+    {
+        "name": "Campbellbay PHC",
+        "address": "Campbellbay",
+        "pincode": 744302,
+        "lat": 7.007565,
+        "long": 93.90478490000001
+    }
+]

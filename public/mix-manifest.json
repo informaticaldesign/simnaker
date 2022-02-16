@@ -1,0 +1,18 @@
+{
+    "/js/app.js": "/js/app.js",
+    "/js/users.js": "/js/users.js",
+    "/js/modules.js": "/js/modules.js",
+    "/js/roles.js": "/js/roles.js",
+    "/js/detailroles.js": "/js/detailroles.js",
+    "/js/home.js": "/js/home.js",
+    "/js/topik.js": "/js/topik.js",
+    "/js/organisasi.js": "/js/organisasi.js",
+    "/js/dataset.js": "/js/dataset.js",
+    "/js/visualisasi.js": "/js/visualisasi.js",
+    "/js/infografis.js": "/js/infografis.js",
+    "/js/markerclusterer.js": "/js/markerclusterer.js",
+    "/js/pengguna.js": "/js/pengguna.js",
+    "/css/menus.css": "/css/menus.css",
+    "/css/timeline.css": "/css/timeline.css",
+    "/css/app.css": "/css/app.css"
+}

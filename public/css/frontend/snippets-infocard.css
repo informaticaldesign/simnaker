@@ -1,0 +1,368 @@
+.infocard {
+  height: 280px;
+  background-color: #FFFFFF;
+}
+
+.infocard .dataTables_wrapper {
+  clear: none;
+}
+
+.infocard::before {
+  content: "";
+  float: left;
+  height: 280px;
+}
+
+.infocard header h4 {
+  margin: 0px;
+  padding: 5px 20px;
+  font-weight: 400;
+}
+
+.infocard .content {
+  position: relative;
+  width: 100%;
+  display: block;
+}
+
+.infocard .content::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.infocard .content .content-message {
+  position: absolute;
+  width: 100%;
+  font-size: 12px;
+  color: #777777;
+  text-align: center;
+  top: 50%;
+}
+
+.infocard .content .content-message .content-error {
+  display: none;
+}
+
+.infocard .content .content-message .content-loading {
+  display: none;
+}
+
+.infocard .content .content-box {
+  box-sizing: border-box;
+  position: absolute;
+  padding: 0 20px;
+  margin-top: 10px;
+  width: 100%;
+  height: 100%;
+}
+
+.infocard .content .content-box::before {
+  content: "";
+  float: left;
+  height: 100%;
+}
+
+.infocard .content .content-box .footnotes {
+  text-align: right;
+  font-size: 11px;
+  height: 20px;
+  color: #777777;
+}
+
+.infocard .content .content-box .info-value {
+  position: relative;
+  overflow: auto;
+  margin-bottom: 10px;
+}
+
+.infocard .content .content-box .info-value .values {
+  margin-top: 5px;
+  font-size: 48px;
+  text-align: right;
+  color: #2b80d5;
+}
+
+.infocard .content .content-box .info-value .values .value {
+  display: inline-block;
+}
+
+.infocard .content .content-box .info-value .values .value:not(:first-child) {
+  margin-left: 3%;
+}
+
+.infocard .content .content-box .info-value .values .value .prefix {
+  font-size: 60%;
+}
+
+.infocard .content .content-box .info-value .values .value .value-label {
+  font-size: 70%;
+}
+
+.infocard .content .content-box .info-value .values-small {
+  font-size: 24px;
+}
+
+.infocard .content .content-box .info-value .values-xsmall {
+  font-size: 20px;
+}
+
+@media (max-width: 767px) {
+  .infocard .content .content-box .info-value .values-xsmall {
+    font-size: 16px;
+  }
+}
+
+.infocard .content .content-box .info-value .desc {
+  text-align: right;
+  font-size: 12px;
+}
+
+@media (max-width: 767px) {
+  .infocard .info-value-hidden {
+    display: none;
+    height: 0px;
+  }
+}
+
+.infocard .dataTables_wrapper {
+  overflow-y: auto;
+  max-height: 90%;
+}
+
+.infocard .info-table {
+  clear: none;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.infocard .info-table thead {
+  display: none;
+}
+
+.infocard .info-table td {
+  vertical-align: top;
+  text-align: center;
+}
+
+.infocard .info-table td:last-of-type {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+@media (max-width: 979px) and (min-width: 768px) {
+  .infocard .info-table td {
+    padding: 5px;
+  }
+}
+
+.infocard .info-table tr:hover {
+  background-color: rgba(119, 119, 119, 0.2);
+}
+
+.infocard .info-table .odd {
+  background-color: rgba(119, 119, 119, 0.1);
+}
+
+.infocard .info-before,
+.infocard .info-after {
+  margin-right: 0px;
+  margin-top: 20px;
+  text-align: center;
+}
+
+.infocard .info-before .values .value,
+.infocard .info-after .values .value {
+  margin: 0px;
+}
+
+.infocard .info-after .values {
+  font-size: 65px;
+  font-weight: 700;
+}
+
+.infocard .info-before {
+  opacity: 0.8;
+}
+
+.infocard .info-before .desc {
+  font-size: 12px;
+}
+
+.infocard .chart-box {
+  position: relative;
+  width: 100%;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.infocard .chart-box::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.infocard .chart {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  overflow: visible;
+}
+
+.infocard .chart.plottable .line-plot .line {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.7;
+}
+
+@media (max-width: 767px) {
+  .infocard .chart.plottable .scatter-plot .symbol {
+    visibility: hidden;
+  }
+}
+
+.infocard .chart.plottable .axis text {
+  font-size: 10px;
+  font-weight: 300;
+  fill: #95989A;
+}
+
+.infocard .chart.plottable .axis .tick-mark, .infocard .chart.plottable .axis .baseline {
+  stroke: #afb1b3;
+}
+
+.infocard .chart.plottable .axis.hide-baseline .tick-mark, .infocard .chart.plottable .axis.hide-baseline .baseline {
+  visibility: hidden !important;
+}
+
+.infocard .chart.plottable .axis-label text {
+  fill: #95989A;
+  font-weight: 400;
+}
+
+.infocard .chart.plottable .gridlines line {
+  stroke: #c9cbcc;
+  stroke-width: 1px;
+}
+
+.infocard .chart.plottable .guide-line-layer line {
+  stroke: #afb1b3;
+}
+
+.infocard .chart.plottable .legend text {
+  fill: #95989A;
+  font-weight: 400;
+}
+
+.infocard .chart.plottable .pie-plot .label text {
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 300;
+  fill: #95989A;
+}
+
+.infocard .chart.plottable .pie-plot .label polyline {
+  stroke: #afb1b3;
+  stroke-width: 1px;
+  fill: none;
+}
+
+@media (max-width: 979px) and (min-width: 768px) {
+  .infocard .chart.plottable .pie-plot .label {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .infocard .chart.plottable .pie-plot .label {
+    display: none;
+  }
+}
+
+.infocard .chart.plottable .shadow .render-area rect {
+  fill: #DEDEDE;
+  opacity: 0.7;
+}
+
+.infocard .chart.plottable rect.highlight {
+  fill: #DEDEDE !important;
+}
+
+.infocard .chart.plottable ~ .popover {
+  width: auto;
+  border-radius: 3px;
+  font-size: 10px;
+  white-space: nowrap;
+  border-color: #afb1b3;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+.infocard .chart.plottable ~ .popover > .arrow {
+  border-width: 9px;
+}
+
+.infocard .chart.plottable ~ .popover.left > .arrow {
+  right: -9px;
+  margin-top: -9px;
+  border-right-width: 0;
+  border-left-color: #afb1b3;
+}
+
+.infocard .chart.plottable ~ .popover.right > .arrow {
+  left: -9px;
+  margin-top: -9px;
+  border-left-width: 0;
+  border-right-color: #afb1b3;
+}
+
+.infocard .chart.plottable ~ .popover.top > .arrow {
+  bottom: -9px;
+  margin-left: -9px;
+  border-bottom-width: 0;
+  border-top-color: #afb1b3;
+}
+
+.infocard .chart.plottable ~ .popover.bottom > .arrow {
+  top: -9px;
+  margin-left: -9px;
+  border-top-width: 0;
+  border-bottom-color: #afb1b3;
+}
+
+.infocard .chart.plottable ~ .popover .popover-title,
+.infocard .chart.plottable ~ .popover .popover-content {
+  color: #7b7f81;
+  font-size: 10px;
+  line-height: 1.25;
+  padding: 3px 10px;
+}
+
+.infocard .chart.plottable ~ .popover .popover-title {
+  background-color: inherit;
+  border-bottom: none;
+  font-weight: 500;
+}
+
+.infocard .chart.plottable ~ .popover .popover-content {
+  font-weight: 300;
+}
+
+.infocard .chart.plottable ~ .popover .popover-content i {
+  display: inline-block;
+  margin-right: 7px;
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.infocard .chart.plottable ~ .popover .popover-content .total {
+  padding-left: 13px;
+}
+
+.infocard .chart.plottable ~ .popover .popover-content .total span {
+  font-weight: 500;
+}
