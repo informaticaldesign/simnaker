@@ -8,7 +8,7 @@
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ url('admin/pengajuan') }}">Suket Online</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('admin/proses') }}">Suket Online</a></li>
             <li class="breadcrumb-item active">Pengajuan</li>
         </ol>
     </div>
@@ -92,7 +92,7 @@
                     {{ Form::close() }}
                 </div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a class="btn btn-warning mr-1" href="{{ url('admin/pengajuan/create/1') }}/{{ $id }}"><i class="fas fa-arrow-left"></i>&nbsp;Sebelumnya</a>
+                    <a class="btn btn-warning mr-1" href="{{ url('admin/proses/create/1') }}/{{ $id }}"><i class="fas fa-arrow-left"></i>&nbsp;Sebelumnya</a>
                     <button class="btn btn-success btn-action-next">Selanjutnya&nbsp;<i class="fas fa-arrow-right"></i></button>
                 </div>
             </div>
@@ -124,7 +124,7 @@
             var _form = $("form#MyForm");
             var formData = new FormData(_form[0]);
             $.ajax({
-                url: "{{ url('admin/pengajuan/store') }}",
+                url: "{{ url('admin/proses/store') }}",
                 type: "POST",
                 data: formData,
                 enctype: 'multipart/form-data',
@@ -132,7 +132,7 @@
                 contentType: false,
                 success: function (result) {
                     if (result.success) {
-                        window.location.href = "{{ url('admin/pengajuan/create/3')}}/" + result.data.id;
+                        window.location.href = "{{ url('admin/proses/create/3')}}/" + result.data.id;
                     }
                 },
                 error: function (err) {

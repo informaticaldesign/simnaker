@@ -120,8 +120,8 @@
                     </tr>
                     @endforeach
                 </table>
-                <button type="submit" class="btn btn-info">Submit</button>
-                <a href="{{ route('roles') }}" class="btn btn-default float-right" role="button" data-bs-toggle="button">Cancel</a>
+                <button type="submit" class="btn btn-info"><i class="fas fa-save"></i> Simpan</button>
+                <a href="{{ route('roles') }}" class="btn btn-default float-right" role="button" data-bs-toggle="button">Tutup</a>
                 {{ Form::close() }}
             </div>
         </div>

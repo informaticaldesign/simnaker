@@ -17,7 +17,30 @@
 @stop
 @section('content')
 <div class="row">
-    <div class="col-8">
+    <div class="col-md-3">
+        <div class="sticky-top mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Daftar Pegawai</h4>
+                    <div class="card-tools">
+                        <button class="btn btn-tool btn-sm text-success btn-action-refresh" >
+                            <i class="fas fa-sync text-danger"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+
+                    <div id="external-events">
+                        @foreach($pegawai as $key => $val )
+                        <div class="external-event ui-draggable ui-draggable-handle event-pegawai-renja" style="position: relative; background-color: {{ $val->color }}; cursor: pointer !important;" data-id="{{ $val->user_id }}">{{ $val->pegawai }}</div>
+                        @endforeach
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
         <div class="card card-primary card-outline" style="border-top: 3px solid #1e375a;">
             <div class="card-body" style="height:710px;">
                 <div class="row">
@@ -37,22 +60,13 @@
             </div>
         </div>
     </div>
-    <div class="col-4">
+    <div class="col-3">
         <div class="card card-default">
             <div class="card-header">
                 <h3 class="card-title">
                     <i class="fas fa-list"></i>
                     Daftar Rencana Kerja <span class="badge badge-info right span-total-renja">0</span>
                 </h3>
-                <div class="card-tools">
-                    <button class="btn btn-tool btn-sm text-success btn-action-renja">
-                        <i class="fas fa-plus text-success"></i>
-                    </button>
-                    <button class="btn btn-tool btn-sm text-success btn-action-print" >
-                        <i class="fas fa-print text-warning"></i>
-                    </button>
-                    <a href="{{ url('/admin/renja/excel') }}" class="btn btn-tool btn-sm text-success btn-action-excel"><i class="fas fa-file-excel text-danger"></i></a>
-                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body list-rencana-kerja overflow-auto anyClass">
@@ -78,10 +92,11 @@
             <div class="modal-body">
                 {{ Form::open(array('id' => 'MyForm','name'=>'MyForm', 'class'=>'form-horizontal')) }}
                 <input type="hidden" name="id" id="id">
+                <input type="hidden" name="menu" value="{{ $menu }}">
                 <div class="form-group">
                     <label for="jenis_kegiatan" class="col-sm-12 control-label">Jenis Kegiatan</label>
                     <div class="col-sm-12">
-                        <select class="form-control" name="jenis_kegiatan">
+                        <select class="form-control" name="jenis_kegiatan" readonly>
                             <option value="" selected disabled>Pilih Jenis Kegiatan</option>
                             <option value="Pembinaan">Pembinaan</option>
                             <option value="Pemeriksaan">Pemeriksaan</option>
@@ -89,26 +104,18 @@
                             <option value="Penyidikan Tindak Pidana Ketenagakerjaan">Penyidikan Tindak Pidana Ketenagakerjaan</option>
                         </select>
                         <div class="invalid-feedback invalid-jenis_kegiatan"></div>
-<!--                        <input type="text" class="form-control form-control-border" name="jenis_kegiatan" placeholder="Jenis Kegiatan" maxlength="256">
-                        <div class="invalid-feedback invalid-jenis_kegiatan"></div>-->
                     </div>
                 </div>
                 <div class="form-group">
                     <label class="col-sm-12 control-label">Tanggal Pelaksanaan</label>
                     <div class="col-sm-12">
-                        <input type="text" class="form-control" name="tgl_pelaksanaan" id="tgl_pelaksanaan" value="{{ date('Y-m-d') }}">
+                        <input type="text" class="form-control" name="tgl_pelaksanaan" id="tgl_pelaksanaan" value="{{ date('Y-m-d') }}" readonly>
                         <div class="invalid-feedback invalid-tgl_pelaksanaan"></div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="company_id" class="col-sm-12 control-label">Nama Perusahaan</label>
                     <div class="col-sm-12">
-                        <select class="form-control company" name="company_id">
-                            <option value="" selected disabled>Pilih Perusahaan</option>
-                            @foreach ($company as $key => $val)
-                            <option value="{{ $key }}">{{ $val }}</option>
-                            @endforeach
-                        </select>
                         <div class="invalid-feedback invalid-company_id"></div>
                     </div>
                 </div>
@@ -122,8 +129,26 @@
                 <div class="form-group">
                     <label for="keterangan" class="col-sm-12 control-label">Keterangan</label>
                     <div class="col-sm-12">
-                        <textarea name="keterangan" rows="3" cols="10" class="form-control form-control-border"></textarea>
+                        <textarea name="keterangan" rows="3" cols="10" class="form-control form-control-border" disabled></textarea>
                         <div class="invalid-feedback invalid-keterangan"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="status" class="col-sm-12 control-label">Status</label>
+                    <div class="col-sm-12">
+                        <select class="form-control status" name="status">
+                            <option value="" selected disabled>Pilih Status</option>
+                            <option value="disetujui">Di Setujui</option>
+                            <option value="ditolak">Di Tolak</option>
+                        </select>
+                        <div class="invalid-feedback invalid-status"></div>
+                    </div>
+                </div>
+                <div class="form-group field-reason" style="display:none">
+                    <label for="reason" class="col-sm-12 control-label">Alasan</label>
+                    <div class="col-sm-12">
+                        <textarea name="reason" rows="3" cols="10" class="form-control form-control-border"></textarea>
+                        <div class="invalid-feedback invalid-reason"></div>
                     </div>
                 </div>
                 {{ Form::close() }}
@@ -218,6 +243,9 @@ $(function () {
             url: "{{ url('admin/renja/event') }}",
             method: 'get',
             dataType: 'json',
+            extraParams: {
+                menu: '{{ $menu }}',
+            },
             failure: function () {
                 Toast.fire({
                     icon: 'error',
@@ -230,17 +258,16 @@ $(function () {
                 if (e.length > 0) {
                     $('.alert-rencana-kerja').hide();
                     $('span.span-total-renja').text(e.length);
-                    $('button.btn-action-print').prop("disabled", false);
-                    $('button.btn-action-excel').prop("disabled", false);
                 } else {
                     $('.alert-rencana-kerja').show();
                     $('span.span-total-renja').text(0);
-                    $('button.btn-action-print').prop("disabled", true);
-                    $('button.btn-action-excel').prop("disabled", true);
                 }
                 $.each(e, function (index, value) {
                     var status = '';
                     switch (value.status) {
+                        case 'terkirim':
+                            status = 'callout-warning';
+                            break;
                         case 'proses':
                             status = 'callout-warning';
                             break;
@@ -251,7 +278,7 @@ $(function () {
                             status = 'callout-danger';
                             break;
                     }
-                    modelHTML += '<div class="callout ' + status + '"><h5>' + value.title + '</h5><p>' + moment(value.start).format("dddd,Do MMMM YYYY") + '</p></div>';
+                    modelHTML += '<div class="callout ' + status + '"><h5>' + value.title + '</h5><p>' + value.pegawai + '<br>' + moment(value.start).format("dddd,Do MMMM YYYY") + '</p></div>';
                 });
 
                 $('.list-rencana-kerja').append(modelHTML);
@@ -260,24 +287,16 @@ $(function () {
             color: 'yellow',
             textColor: 'black',
         },
-        dateClick: function (e) {
-            $('#modelHeading').html("Buat Rencana Kerja");
-            $('#ajaxModel').modal('show');
-            $('#id').val('');
-            $('button.btn-action-save').show();
-            $('button.btn-action-save').html('<i class="far fa-save"></i> Simpan');
-            $('button.btn-action-save').prop('disabled', false);
-            $('#MyForm')[0].reset();
-            $('input').prop('readonly', false);
-            $("#tgl_pelaksanaan").val(e.dateStr);
-            $("#tgl_pelaksanaan").prop('readonly', true);
-        },
         eventClick: function (info) {
             $('.form-control').removeClass('is-invalid');
             $("form#MyForm :input").each(function () {
                 var inputName = $(this).attr('name');
-                $('.invalid-' + inputName).text('');
+                if (inputName != '_token') {
+                    $('.invalid-' + inputName).text('');
+                }
             });
+            $('button.btn-action-save').html('<i class="far fa-save"></i> Simpan');
+            $('button.btn-action-save').prop('disabled', false);
             var id = info.event.id;
             $.get("/admin/renja" + '/' + id + '/edit', function (data) {
                 $('#modelHeading').html("Ubah Rencana Kerja");
@@ -286,11 +305,23 @@ $(function () {
                     var inputName = $(this).attr('name');
                     if (inputName !== undefined) {
                         var _field = $(document).find('[name="' + inputName + '"]');
-                        _field.val(data[inputName]);
-                        _field.attr('disabled', false);
+                        if (inputName === 'id') {
+                            _field.attr('disabled', false);
+                            _field.val(data[inputName]);
+                        } else if (inputName === 'status') {
+                            _field.attr('disabled', false);
+                        } else if (inputName === 'menu') {
+                            _field.attr('disabled', false);
+                        } else if (inputName === 'reason') {
+                            _field.attr('disabled', false);
+                        } else {
+                            if (inputName != '_token') {
+                                _field.attr('disabled', true);
+                                _field.val(data[inputName]);
+                            }
+                        }
                     }
                 });
-                $('button.btn-action-save').hide();
             });
         }
     });
@@ -312,7 +343,7 @@ $(function () {
                 if (result.success) {
                     $('#address').val(result.data.address);
                 }
-            },
+            }
         });
     });
     $('button.btn-action-save').click(function (e) {
@@ -321,7 +352,9 @@ $(function () {
         e.preventDefault();
         $("form#MyForm :input").each(function () {
             var inputName = $(this).attr('name');
-            $('.invalid-' + inputName).text('');
+            if (inputName != '_token') {
+                $('.invalid-' + inputName).text('');
+            }
         });
         $('.form-control').removeClass('is-invalid');
         $('.invalid-name').text('');
@@ -368,6 +401,218 @@ $(function () {
         $('input').prop('readonly', false);
     });
 
+    $('.event-pegawai-renja').on('click', function () {
+        var _userId = $(this).attr('data-id');
+        calendar.destroy();
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: ['interaction', 'dayGrid'],
+            defaultView: 'dayGridMonth',
+            datesRender: handleDatesRender,
+            defaultDate: moment().format("YYYY-MM-DD"),
+            locale: 'in',
+            header: {
+                right: 'prev,next',
+                center: '',
+                left: 'title'
+            },
+            events: {
+                url: "{{ url('admin/renja/event') }}",
+                method: 'get',
+                dataType: 'json',
+                extraParams: {
+                    menu: '{{ $menu }}',
+                    user_id: _userId
+                },
+                failure: function () {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'There was an error while fetching events!'
+                    });
+                },
+                success: function (e) {
+                    $('.list-rencana-kerja .callout').remove();
+                    var modelHTML = "";
+                    if (e.length > 0) {
+                        $('.alert-rencana-kerja').hide();
+                        $('span.span-total-renja').text(e.length);
+                        $('button.btn-action-print').prop("disabled", false);
+                        $('button.btn-action-excel').prop("disabled", false);
+                    } else {
+                        $('.alert-rencana-kerja').show();
+                        $('span.span-total-renja').text(0);
+                        $('button.btn-action-print').prop("disabled", true);
+                        $('button.btn-action-excel').prop("disabled", true);
+                    }
+                    $.each(e, function (index, value) {
+                        var status = '';
+                        switch (value.status) {
+                            case 'terkirim':
+                                status = 'callout-warning';
+                                break;
+                            case 'proses':
+                                status = 'callout-warning';
+                                break;
+                            case 'disetujui':
+                                status = 'callout-success';
+                                break;
+                            case 'ditolak':
+                                status = 'callout-danger';
+                                break;
+                        }
+                        modelHTML += '<div class="callout ' + status + '"><h5>' + value.title + '</h5><p>' + value.pegawai + '<br>' + moment(value.start).format("dddd,Do MMMM YYYY") + '</p></div>';
+                    });
+
+                    $('.list-rencana-kerja').append(modelHTML);
+                },
+                loading: true,
+                color: 'yellow',
+                textColor: 'black',
+            },
+            eventClick: function (info) {
+                $('.form-control').removeClass('is-invalid');
+                $("form#MyForm :input").each(function () {
+                    var inputName = $(this).attr('name');
+                    if (inputName != '_token') {
+                        $('.invalid-' + inputName).text('');
+                    }
+                });
+                $('button.btn-action-save').html('<i class="far fa-save"></i> Simpan');
+                $('button.btn-action-save').prop('disabled', false);
+                var id = info.event.id;
+                $.get("/admin/renja" + '/' + id + '/edit', function (data) {
+                    $('#modelHeading').html("Ubah Rencana Kerja");
+                    $('#ajaxModel').modal('show');
+                    $("form#MyForm :input").each(function () {
+                        var inputName = $(this).attr('name');
+                        if (inputName !== undefined) {
+                            var _field = $(document).find('[name="' + inputName + '"]');
+                            if (inputName === 'id') {
+                                _field.attr('disabled', false);
+                                _field.val(data[inputName]);
+                            } else if (inputName === 'status') {
+                                _field.attr('disabled', false);
+                            } else if (inputName === 'menu') {
+                                _field.attr('disabled', false);
+                            } else if (inputName === 'reason') {
+                                _field.attr('disabled', false);
+                            } else {
+                                if (inputName != '_token') {
+                                    _field.attr('disabled', true);
+                                    _field.val(data[inputName]);
+                                }
+                            }
+                        }
+                    });
+                });
+            }
+        });
+        calendar.render();
+    });
+
+    $('.btn-action-refresh').on('click', function () {
+        calendar.destroy();
+        calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: ['interaction', 'dayGrid'],
+            defaultView: 'dayGridMonth',
+            datesRender: handleDatesRender,
+            defaultDate: moment().format("YYYY-MM-DD"),
+            locale: 'in',
+            header: {
+                right: 'prev,next',
+                center: '',
+                left: 'title'
+            },
+            events: {
+                url: "{{ url('admin/renja/event') }}",
+                method: 'get',
+                dataType: 'json',
+                extraParams: {
+                    menu: '{{ $menu }}',
+                },
+                failure: function () {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'There was an error while fetching events!'
+                    });
+                },
+                success: function (e) {
+                    $('.list-rencana-kerja .callout').remove();
+                    var modelHTML = "";
+                    if (e.length > 0) {
+                        $('.alert-rencana-kerja').hide();
+                        $('span.span-total-renja').text(e.length);
+                        $('button.btn-action-print').prop("disabled", false);
+                        $('button.btn-action-excel').prop("disabled", false);
+                    } else {
+                        $('.alert-rencana-kerja').show();
+                        $('span.span-total-renja').text(0);
+                        $('button.btn-action-print').prop("disabled", true);
+                        $('button.btn-action-excel').prop("disabled", true);
+                    }
+                    $.each(e, function (index, value) {
+                        var status = '';
+                        switch (value.status) {
+                            case 'terkirim':
+                                status = 'callout-warning';
+                                break;
+                            case 'proses':
+                                status = 'callout-warning';
+                                break;
+                            case 'disetujui':
+                                status = 'callout-success';
+                                break;
+                            case 'ditolak':
+                                status = 'callout-danger';
+                                break;
+                        }
+                        modelHTML += '<div class="callout ' + status + '"><h5>' + value.title + '</h5><p>' + value.pegawai + '<br>' + moment(value.start).format("dddd,Do MMMM YYYY") + '</p></div>';
+                    });
+
+                    $('.list-rencana-kerja').append(modelHTML);
+                },
+                loading: true,
+                color: 'yellow',
+                textColor: 'black',
+            },
+            eventClick: function (info) {
+                $('.form-control').removeClass('is-invalid');
+                $("form#MyForm :input").each(function () {
+                    var inputName = $(this).attr('name');
+                    if (inputName != '_token') {
+                        $('.invalid-' + inputName).text('');
+                    }
+                });
+                $('button.btn-action-save').html('<i class="far fa-save"></i> Simpan');
+                $('button.btn-action-save').prop('disabled', false);
+                var id = info.event.id;
+                $.get("/admin/renja" + '/' + id + '/edit', function (data) {
+                    $('#modelHeading').html("Ubah Rencana Kerja");
+                    $('#ajaxModel').modal('show');
+                    $("form#MyForm :input").each(function () {
+                        var inputName = $(this).attr('name');
+                        if (inputName !== undefined) {
+                            var _field = $(document).find('[name="' + inputName + '"]');
+                            if (inputName === 'id') {
+                                _field.attr('disabled', false);
+                                _field.val(data[inputName]);
+                            } else if (inputName === 'status') {
+                                _field.attr('disabled', false);
+                            } else if (inputName === 'menu') {
+                                _field.attr('disabled', false);
+                            } else if (inputName === 'reason') {
+                                _field.attr('disabled', false);
+                            } else {
+                                _field.attr('disabled', true);
+                                _field.val(data[inputName]);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+        calendar.render();
+    });
+
     $('body').on('click', 'button.btn-action-print', function () {
         $('button.btn-action-print').html('<i class="fas fa-spinner text-warning"></i>');
         $('button.btn-action-print').prop('disabled', true);
@@ -396,6 +641,15 @@ $(function () {
                 });
             }
         });
+    });
+
+    $('select.status').on('change', function () {
+        var _status = $(this).val();
+        if (_status === 'disetujui') {
+            $('.field-reason').hide();
+        } else {
+            $('.field-reason').show();
+        }
     });
 });
 </script>

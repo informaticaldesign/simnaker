@@ -17,5 +17,10 @@ class ConfigsHelper {
     public static function getByKey($key) {
         return \App\Models\Configs::getByKey($key);
     }
+    
+    //put your code here
+    public static function getBankByKey($key) {
+        return \App\Models\Banknota\Configs::getByKey($key);
+    }
 
 }

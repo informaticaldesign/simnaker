@@ -33,6 +33,8 @@ class Renja extends Model {
         'updated_at',
         'updated_by',
         'color',
+        'type_kegiatan',
+        'approval_next'
     ];
 
     public function storeData($input) {

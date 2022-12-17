@@ -16,18 +16,24 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @author heryhandoko
  */
-class Manual extends Model {
+class Homepage extends Model {
 
     //put your code here
     use HasFactory;
 
-    protected $table = 'sim_manual';
+    protected $table = 'sim_homepage';
     protected $fillable = [
-        'judul',
+        'title',
+        'subtitle',
         'status',
-        'attachment',
-        'attachment_name',
-        'slug',
+        'start_date',
+        'end_date',
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by',
+        'sorting',
+        'img_path',
         'created_at',
         'created_by',
         'updated_at',

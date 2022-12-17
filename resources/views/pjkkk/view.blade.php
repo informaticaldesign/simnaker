@@ -88,33 +88,6 @@
                             </div>
                         </div>
                         <div class="mb-1">
-                            <label for="city_code" class="col-sm-12 col-form-label">Kabupaten/Kota <span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <select class="form-control city_code" name="city_code">
-                                    <option value="" selected disabled>Pilih Kabupaten/Kota</option>
-                                </select>
-                                <div class="invalid-feedback invalid-city_code"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
-                            <label for="kec_code" class="col-sm-12 col-form-label">Kecamatan <span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <select class="form-control kec_code" name="kec_code">
-                                    <option value="" selected disabled>Pilih Kecamatan</option>
-                                </select>
-                                <div class="invalid-feedback invalid-kec_code"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
-                            <label for="kel_code" class="col-sm-12 col-form-label">Kelurahan <span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <select class="form-control kel_code" name="kel_code">
-                                    <option value="" selected disabled>Pilih Kelurahan</option>
-                                </select>
-                                <div class="invalid-feedback invalid-kel_code"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
                             <label for="jenis_usaha" class="col-sm-12 col-form-label">Jenis PJK3 <span class="text-danger">*</span></label>
                             <div class="col-sm-12">
                                 <select class="form-control" name="jenis_usaha">
@@ -136,18 +109,6 @@
                                     @endforeach
                                 </select>
                                 <div class="invalid-feedback invalid-bidang_usaha"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
-                            <label for="sektor_code" class="col-sm-12 col-form-label">Sektor <span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <select class="form-control company_sektor" name="sektor_code">
-                                    <option value="" selected disabled>Pilih Sektor</option>
-                                    @foreach ($sektors as $key => $sektor)
-                                    <option value="{{ $key }}">{{ $sektor }}</option>
-                                    @endforeach
-                                </select>
-                                <div class="invalid-feedback invalid-sektor_code"></div>
                             </div>
                         </div>
                         <div class="mb-1">
@@ -201,7 +162,7 @@
                                 <div class="invalid-feedback invalid-penanggung_jwb"></div>
                             </div>
                         </div>
-                        <div class="mb-1">
+                        <div class="mb-2">
                             <label for="nik_ktp_t" class="col-sm-12 col-form-label">NIK KTP Penanggung Jawab <span class="text-danger">*</span></label>
                             <div class="col-sm-12">
                                 <input type="text" class="form-control" name="nik_ktp_t">
@@ -209,29 +170,19 @@
                             </div>
                         </div>
                         <div class="mb-1">
-                            <label for="password" class="col-sm-12 col-form-label">Password<span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <input type="password" class="form-control" name="password">
-                                <div class="invalid-feedback invalid-password"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
-                            <label for="password_confirmation" class="col-sm-12 col-form-label">Konfirmasi Password<span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <input type="password" class="form-control" name="password_confirmation">
-                                <div class="invalid-feedback invalid-password_confirmation"></div>
-                            </div>
-                        </div>
-                        <div class="mb-2">
-                            <div class="col-sm-12">
-                                <img name="img_logo" id="img_logo" />
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="logo" class="col-sm-12 col-form-label">Logo Perusahaan <span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <input type="file" name="logo" width="50">
-                                <div class="invalid-feedback invalid-logo"></div>
+                            <div class="row">
+                                <div class="col-sm-6 p-1">
+                                    <iframe class="embed-responsive-item iframe-npwp" src="" frameborder="0" style="height:70%;width:100%;top:0px;left:0px;right:0px;"></iframe>
+                                    <div class="d-grid gap-2 col-12 mx-auto mt-2 text-center">
+                                        <a href="" class="button btn btn-download-npwp" target="_blank" style=" color: #fff; background-color: #1e375b; border-color: #1e375b;"><i class="fa fa-eye"></i>&nbsp;Preview NPWP</a>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 p-1">
+                                    <iframe class="embed-responsive-item iframe-akta" src="" frameborder="0" style="height:70%;width:100%;top:0px;left:0px;right:0px;"></iframe>
+                                    <div class="d-grid gap-2 col-12 mx-auto mt-2 text-center">
+                                        <a href="" class="button btn btn-download-akta" target="_blank" style=" color: #fff; background-color: #1e375b; border-color: #1e375b;"><i class="fa fa-eye"></i>&nbsp;Preview AKTA</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -239,7 +190,7 @@
                 {{ Form::close() }}
             </div>
             <div class="card-footer">
-                <a href="{{ url('/company') }}" class="btn btn-danger float-right"><i class="far fa-window-close"></i>&nbsp;Tutup</a>
+                <a href="{{ URL::previous() }}" class="btn btn-danger float-right"><i class="far fa-window-close"></i>&nbsp;Tutup</a>
             </div>
         </div>
     </div>
@@ -393,14 +344,13 @@ $(function () {
             var inputName = $(this).attr('name');
             if (inputName !== undefined) {
                 var _field = $(document).find('[name="' + inputName + '"]');
-                if (inputName == 'logo') {
-                    $('#img_logo').attr("src", '/' + data['logo_path']);
-                    $('#img_logo').attr("width", 90);
-                } else {
-                    _field.val(data[inputName]);
-                    _field.attr('readonly', true);
-                }
+                _field.val(data[inputName]);
+                _field.attr('readonly', true);
             }
+            $('.iframe-npwp').attr("src", '/' + data['filenpwp_path']);
+            $('.iframe-akta').attr("src", '/' + data['fileakta_path']);
+            $('.btn-download-npwp').attr("href", '/' + data['filenpwp_path']);
+            $('.btn-download-akta').attr("href", '/' + data['fileakta_path']);
         });
         $.get("/admin/kota" + '/' + '{{ $company->prov_code }}' + '/combo', function (data) {
             $('select.city_code').empty();
@@ -409,24 +359,6 @@ $(function () {
                 $('select.city_code').append(new Option(name, city_code))
             });
             $('select.city_code').val('{{ $company->city_code }}');
-        });
-
-        $.get("/admin/kecamatan" + '/' + '{{ $company->city_code }}' + '/combo', function (data) {
-            $('select.kec_code').empty();
-            $('select.kec_code').append('<option value="" selected disabled>Pilih Kecamatan</option>');
-            $.each(data, function (kec_code, name) {
-                $('select.kec_code').append(new Option(name, kec_code))
-            });
-            $('select.kec_code').val('{{ $company->kec_code }}');
-        });
-
-        $.get("/admin/kelurahan" + '/' + '{{ $company->kec_code }}' + '/combo', function (data) {
-            $('select.kel_code').empty();
-            $('select.kel_code').append('<option value="" selected disabled>Pilih Kelurahan</option>');
-            $.each(data, function (kel_code, name) {
-                $('select.kel_code').append(new Option(name, kel_code))
-            });
-            $('select.kel_code').val('{{ $company->kel_code }}');
         });
     });
 

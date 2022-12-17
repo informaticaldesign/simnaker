@@ -8,7 +8,7 @@
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ url('admin/pengajuan') }}">Suket Online</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('admin/proses') }}">Suket Online</a></li>
             <li class="breadcrumb-item active">Pengajuan</li>
         </ol>
     </div>
@@ -84,8 +84,8 @@
                     Formulir ini untuk Perusahaan Jasa Kesehatan dan Keselamatan Kerja (PJK3) mengajukan Permohonan Penerbitan Surat Keterangan (SUKET) K3 kepada Dinas Tenaga Kerja dan Transmigrasi Provinsi Banten. Akunt pada pertanyaan pertama adalah alamat email untuk mendapatkan bukti jika sudah mengisi formulir ini. Hasil Verifikasi / Kartu Penunjukkan Pengawas Spesialis K3, Hasil Evaluasi dan Informasi Cetak SUKET K3 akan secara otomatis dikirimkan ke akunt Perusahaan Jasa K3 pada bagian <b>Pengajuan (Suket Online)</b> yang dimasukkan di formulir ini. Periksa kembali jawaban dan lampiran sebelum mengirim formulir ini, kesalahan pada pengisian dapat mempengaruhi proses verifikasi.
                 </p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a class="btn btn-danger mr-1" href="{{ url('admin/pengajuan') }}"><i class="fas fa-times-circle"></i>&nbsp;Tutup</a>
-                    <a class="btn btn-success" href="{{ url('admin/pengajuan/create/2') }}/{{ $id }}">Selanjutnya&nbsp;<i class="fas fa-arrow-right"></i></a>
+                    <a class="btn btn-danger mr-1" href="{{ url('admin/proses') }}"><i class="fas fa-times-circle"></i>&nbsp;Tutup</a>
+                    <a class="btn btn-success" href="{{ url('admin/proses/create/2') }}/{{ $id }}">Selanjutnya&nbsp;<i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
         </div>

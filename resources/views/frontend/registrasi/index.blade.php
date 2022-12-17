@@ -2,7 +2,7 @@
 @section('title_prefix', 'Register - ')
 @section('title', 'Simnaker')
 @section('content')
-<div class="container mt-2 mb-2">
+<div class="container mb-2" style="margin-top: 110px !important;">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
@@ -127,6 +127,20 @@
                             <div class="col-sm-12">
                                 <input type="email" class="form-control" name="email" placeholder="">
                                 <div class="invalid-feedback invalid-email"></div>
+                            </div>
+                        </div>
+                        <div class="mb-1">
+                            <label for="password" class="col-sm-12 col-form-label">Password <span class="text-danger">*</span></label>
+                            <div class="col-sm-12">
+                                <input type="password" class="form-control" name="password" placeholder="">
+                                <div class="invalid-feedback invalid-password"></div>
+                            </div>
+                        </div>
+                        <div class="mb-1">
+                            <label for="password_confirmation" class="col-sm-12 col-form-label">Ulangi Password<span class="text-danger">*</span></label>
+                            <div class="col-sm-12">
+                                <input type="password" class="form-control" name="password_confirmation" placeholder="">
+                                <div class="invalid-feedback invalid-password_confirmation"></div>
                             </div>
                         </div>
                     </div>

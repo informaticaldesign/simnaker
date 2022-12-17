@@ -8,7 +8,7 @@
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ url('admin/pengajuan') }}">Suket Online</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('admin/proses') }}">Suket Online</a></li>
             <li class="breadcrumb-item active">Pengajuan</li>
         </ol>
     </div>
@@ -81,6 +81,7 @@
             {{ Form::open(array('id' => 'MyForm','method'=>'post','name'=>'MyForm', 'class'=>'form-horizontal')) }}
             <input type="hidden" name="step" value="{{ $step }}">
             <input type="hidden" name="id" value="{{ $id }}">
+            <input type="hidden" name="menu" value="proses">
             <div class="card-body">
                 <!--<p class="text-lg text-center text-bold">FORMULIR</p>-->
                 <p class="card-text">
@@ -93,7 +94,7 @@
                             <select class="form-control" id="id_pemeriksaan" name="id_pemeriksaan">
                                 <option value="" selected disabled>Pilih Jenis Obyek K3</option>
                                 @foreach ($pemeriksaan as $key => $jenis)
-                                <option value="{{ $key }}">{{ $jenis }}</option>
+                                <option value="{{ $key }}" {{ $key == $data->id_pemeriksaan ? 'selected' : '' }}>{{ $jenis }}</option>
                                 @endforeach
                             </select>
                             <div class="invalid-feedback invalid-id_pemeriksaan"></div>
@@ -103,13 +104,16 @@
                     <div class="col-lg-3">
                         <p>Jumlah Obyek K3 Jenis PAA</p>
                         <div class="form-group">
-                            <input type="number" class="form-control" name="jml_obyek">
+                            <input type="number" class="form-control" name="jml_obyek" value="{{ $data->jml_obyek }}">
                             <div class="invalid-feedback invalid-jml_obyek"></div>
                         </div>
                         <!--<button class="btn btn-outline-lite py-0 add_new_frm_field_btn"><i class="fas fa-plus add_icon"></i> Tambah</button>-->
                     </div>
                     <div class="col-lg-3">
                         <p>Lampirkan Tabel Data Objek K3</p>
+                        @if($preview)
+                         <a class="btn btn-primary btn-block text-white" href="{{ asset($data->attach_object_path) }}" target="_blank"><i class="fa fa-eye"></i> Lihat Lampiran</a>
+                         @else
                         <div class="form-group">
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="customFile" name="attach_object">
@@ -117,6 +121,7 @@
                                 <div class="invalid-feedback invalid-attach_object"></div>
                             </div>
                         </div>
+                         @endif
                         <!--<button class="btn btn-outline-lite py-0 add_new_frm_field_btn"><i class="fas fa-plus add_icon"></i> Tambah</button>-->
                     </div>
                     <div class="col-lg-3">
@@ -125,7 +130,7 @@
                             <select class="form-control" id="id_type_pem" name="id_type_pem">
                                 <option value="" selected disabled>Pilih Jenis Pemeriksaan</option>
                                 @foreach ($types as $key => $val)
-                                <option value="{{ $key }}">{{ $val }}</option>
+                                <option value="{{ $key }}" {{ $key == $data->id_type_pem ? 'selected' : '' }}>{{ $val }}</option>
                                 @endforeach
                             </select>
                             <div class="invalid-feedback invalid-id_type_pem"></div>
@@ -133,10 +138,17 @@
                         <!--<button class="btn btn-outline-lite py-0 add_new_frm_field_btn"><i class="fas fa-plus add_icon"></i> Tambah</button>-->
                     </div>
                 </div>
+                @if($users->role_id == 35)
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a class="btn btn-warning mr-1" href="{{ url('admin/pengajuan/create/4') }}/{{ $id }}"><i class="fas fa-arrow-left"></i>&nbsp;Sebelumnya</a>
+                    <a class="btn btn-warning mr-1" href="{{ url('admin/proses/create/4') }}/{{ $id }}"><i class="fas fa-arrow-left"></i>&nbsp;Sebelumnya</a>
                     <button class="btn btn-success btn-action-next">Kirim&nbsp;<i class="fa fa-paper-plane"></i></button>
                 </div>
+                @else
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <a class="btn btn-warning mr-1" href="{{ url('admin/proses/create/4') }}/{{ $id }}"><i class="fas fa-arrow-left"></i>&nbsp;Sebelumnya</a>
+                    <button class="btn btn-success btn-action-approve">Selanjutnya&nbsp;<i class="fas fa-arrow-right"></i></button>
+                </div>
+                @endif
             </div>
             {{ Form::close() }}
         </div>
@@ -178,7 +190,7 @@
                 contentType: false,
                 success: function (result) {
                     if (result.success) {
-                        window.location.href = "{{ url('admin/pengajuan')}}";
+                        window.location.href = "{{ url('admin/proses')}}";
                     }
                 },
                 error: function (err) {
@@ -191,6 +203,43 @@
                     });
                     $('button.btn-action-next').html('Selanjutnya&nbsp;<i class="fas fa-arrow-right"></i>');
                     $('button.btn-action-next').prop('disabled', false);
+                }
+            });
+        });
+        
+        $('button.btn-action-approve').click(function (e) {
+            $('button.btn-action-approve').html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+            $('button.btn-action-approve').prop('disabled', true);
+            e.preventDefault();
+            $('.form-control').removeClass('is-invalid');
+            $("form#MyForm :input").each(function () {
+                var inputName = $(this).attr('name');
+                $('.invalid-' + inputName).text('');
+            });
+            var _form = $("form#MyForm");
+            var formData = new FormData(_form[0]);
+            $.ajax({
+                url: "{{ url('admin/pengajuan/store') }}",
+                type: "POST",
+                data: formData,
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                success: function (result) {
+                    if (result.success) {
+                        window.location.href = "{{ url('admin/proses/create/6')}}/" + result.data.id;
+                    }
+                },
+                error: function (err) {
+                    $.each(err.responseJSON.message, function (i, error) {
+                        var _field = $(document).find('[name="' + i + '"]');
+                        _field.addClass('is-invalid');
+                        var el = $(document).find('[class="invalid-feedback invalid-' + i + '"]');
+                        el.css('display', 'block');
+                        el.text(error[0]);
+                    });
+                    $('button.btn-action-approve').html('Selanjutnya&nbsp;<i class="fas fa-arrow-right"></i>');
+                    $('button.btn-action-approve').prop('disabled', false);
                 }
             });
         });

@@ -55,7 +55,12 @@ class Company extends Model {
         'updated_at',
         'updated_by',
         'slug',
-        'agent'
+        'comp_type',
+        'filenpwp',
+        'filenpwp_path',
+        'fileakta',
+        'fileakta_path',
+        'status'
     ];
 
     public function storeData($input) {

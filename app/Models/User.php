@@ -27,7 +27,9 @@ class User extends Authenticatable {
         'password',
         'role_id',
         'company_id',
-        'biodata_id'
+        'biodata_id',
+        'password_confirm',
+        'color'
     ];
 
     /**

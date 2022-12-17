@@ -63,7 +63,8 @@ class ModulesController extends Controller {
 
     public function store(Request $request, Modules $modules) {
         $validator = \Validator::make($request->all(), [
-                    'name' => ['required', 'string', 'max:255', 'unique:modules'],
+                    // 'name' => ['required', 'string', 'max:255', 'unique:modules'],
+                    'name' => ['required', 'string', 'max:255'],
                     'label' => ['required', 'string', 'max:255'],
                     'fa_icon' => ['required', 'string'],
                     'url' => ['required', 'string'],

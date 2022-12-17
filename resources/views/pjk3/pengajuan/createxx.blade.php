@@ -88,9 +88,14 @@
                 </p>
                 <div class="col-lg-4">
                     <div class="form-group">
-                        <label for="name">Nama Perusahaan Pemilik Obyek K3 </label>
-                        <input type="text" class="form-control" id="name" placeholder="" readonly value="{{ Auth::user()->name }}">
-                        <div class="invalid-feedback invalid-name"></div>
+                        <label for="company_id">Nama Perusahaan Pemilik Obyek K3 </label>
+                        <select class="form-control" name="company_id">
+                            <option value="" selected disabled>Pilih Perusahaan</option>
+                            @foreach ($companies as $key => $company)
+                            <option value="{{ $key }}" {{ $key == $data->company_id ? 'selected' : '' }}>{{ $company }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback invalid-company_id"></div>
                     </div>
                     <div class="form-group">
                         <label for="tgl">Tanggal Surat Permohonan</label>

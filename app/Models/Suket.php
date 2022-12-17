@@ -35,6 +35,11 @@ class Suket extends Model {
         'created_by',
         'updated_at',
         'updated_by',
+        'biodata_upt_id',
+        'id_pemeriksaan',
+        'jml_obyek',
+        'id_type_pem',
+        'reason'
     ];
 
     public function storeData($input) {

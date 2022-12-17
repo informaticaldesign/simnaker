@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Manual')
+@section('title', 'Homepage')
 @section('css')
 <link rel="stylesheet" href="{{ asset('vendor/jquery-ui/jquery-ui.min.css') }}">
 @stop
@@ -8,12 +8,12 @@
 @section('content_header')
 <div class="row mb-2">
     <div class="col-sm-6">
-        <h1>Manual</h1>
+        <h1>Homepage</h1>
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ url('/') }}">Beranda</a></li>
-            <li class="breadcrumb-item active">Manual</li>
+            <li class="breadcrumb-item active">Homepage</li>
         </ol>
     </div>
 </div>
@@ -24,14 +24,12 @@
     <div class="col-12">
         <div class="card card-primary card-outline" style="border-top: 3px solid #1e375a !important;">
             <div class="card-header">
-                <h3 class="card-title">Manual <small>list</small></h3>
+                <h3 class="card-title">Homepage <small>list</small></h3>
                 @if($users->role_id != 35 )
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool btn-action-add" data-toggle="tooltip" data-placement="top" title="Add Modules">
                         <i class="fas fa-plus text-primary"></i>
                     </button>
-                    <a href="#" class="btn btn-tool"><i class="fas fa-file-excel text-gray-300"></i></a>
-                    <a href="#" class="btn btn-tool" target="_blank"><i class="fas fa-file-pdf text-gray-300"></i></a>
                 </div>
                 @endif
             </div>
@@ -41,7 +39,12 @@
                     <thead>
                         <tr>
                             <th width="50px">No</th>
-                            <th>Judul</th>
+                            <th width="50px">Image</th>
+                            <th>Title</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Slide</th>
+                            <th>Status</th>
                             <th width="200px">Action</th>
                         </tr>
                     </thead>
@@ -68,23 +71,47 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="judul" class="col-sm-12 control-label">Judul<span class="text-danger">*</span></label>
+                                <label for="title" class="col-sm-12 control-label">Title<span class="text-danger">*</span></label>
                                 <div class="col-sm-12">
-                                    <input type="text" class="form-control" id="judul" name="judul" placeholder="Judul" maxlength="255">
-                                    <div class="invalid-feedback invalid-judul"></div>
+                                    <input type="text" class="form-control" id="title" name="title" placeholder="Title" maxlength="255">
+                                    <div class="invalid-feedback invalid-title"></div>
                                 </div>
-                                <label for="status" class="col-sm-6 control-label">Lampiran<span class="text-danger">*</span></label>
+                                <label for="subtitle" class="col-sm-12 control-label">Sub Title</label>
+                                <div class="col-sm-12">
+                                    <input type="text" class="form-control" id="subtitle" name="subtitle" placeholder="Subtitle" maxlength="255">
+                                    <div class="invalid-feedback invalid-subtitle"></div>
+                                </div>
+                                <label for="start_date" class="col-sm-12 control-label">Start Date</label>
+                                <div class="col-sm-12">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" id="start_date" name="start_date" placeholder="YYYY-MM-DD" maxlength="255">
+                                            <div class="invalid-feedback invalid-start_date"></div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="text" class="form-control" id="end_date" name="end_date" placeholder="YYYY-MM-DD" maxlength="255">
+                                            <div class="invalid-feedback invalid-end_date"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <label for="sorting" class="col-sm-12 control-label">Sorting</label>
+                                <div class="col-sm-3">
+                                    <input type="number" class="form-control" id="sorting" name="sorting" placeholder="Sorting" maxlength="255">
+                                    <div class="invalid-feedback invalid-sorting"></div>
+                                </div>
+
+                                <label for="img_path" class="col-sm-6 control-label mt-1">Image Slider(1280 × 720)<span class="text-danger">*</span></label>
                                 <div class="col-sm-12">
                                     <div class="form-group">
-                                        <input type="file" name="attachment" accept=".pdf">
-                                        <div class="invalid-feedback invalid-attachment"></div>
+                                        <input type="file" name="img_path" accept="image/*">
+                                        <div class="invalid-feedback invalid-img_path"></div>
                                     </div>
                                 </div>
                                 <label for="status" class="col-sm-6 control-label">Status<span class="text-danger">*</span></label>
                                 <div class="col-sm-12">
                                     <div class="form-group">
                                         <div class="custom-control custom-switch">
-                                            <input type="checkbox" class="custom-control-input" id="status" name="status">
+                                            <input type="checkbox" class="custom-control-input" id="status" value="1" name="status">
                                             <label class="custom-control-label" for="status">Active</label>
                                             <div class="invalid-feedback invalid-status"></div>
                                         </div>
@@ -118,12 +145,17 @@ $(function () {
     var _dataTable = $('.data-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.manual.fetch') }}",
+        ajax: "{{ route('admin.homepage.fetch') }}",
         columns: [
             {data: 'id', name: 'id'},
-            {data: 'judul', name: 'judul'},
+            {data: 'image', name: 'image'},
+            {data: 'title', name: 'title'},
+            {data: 'start_date', name: 'start_date'},
+            {data: 'end_date', name: 'end_date'},
+            {data: 'sorting', name: 'sorting'},
+            {data: 'status', name: 'status'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
-        ],
+        ]
     });
     var Toast = Swal.mixin({
         toast: true,
@@ -145,7 +177,7 @@ $(function () {
             if (result.isConfirmed) {
                 $.ajax({
                     type: "DELETE",
-                    url: "{{ url('admin/manual/destroy') }}" + "/" + id,
+                    url: "{{ url('admin/homepage/destroy') }}" + "/" + id,
                     dataType: 'JSON',
                     data: {
                         'id': id,
@@ -170,15 +202,23 @@ $(function () {
         $('button.btn-save').html('<i class="far fa-save"></i> Simpan');
         $('button.btn-save').prop('disabled', false);
         var id = $(this).data('id');
-        $.get("/admin/manual" + '/' + id + '/edit', function (data) {
-            $('#modelHeading').html("Edit Manual");
+        $.get("/admin/homepage" + '/' + id + '/edit', function (data) {
+            $('#modelHeading').html("Edit Homepage");
             $('#ajaxModel').modal('show');
             $("form#MyForm :input").each(function () {
                 var inputName = $(this).attr('id');
                 if (inputName !== undefined) {
                     var _field = $(document).find('[name="' + inputName + '"]');
-                    _field.val(data[inputName]);
-                    _field.attr('disabled', false);
+                    if (inputName != 'status') {
+                        _field.val(data[inputName]);
+                        _field.attr('disabled', false);
+                    } else if (inputName == 'status') {
+                        if (data[inputName] == '1') {
+                            _field.attr('checked', true);
+                        } else {
+                            _field.attr('checked', false);
+                        }
+                    }
                 }
             });
             $('button.btn-submit-update').show();
@@ -192,15 +232,23 @@ $(function () {
             $('.invalid-' + inputName).text('');
         });
         var id = $(this).data('id');
-        $.get("/admin/manual" + '/' + id + '/edit', function (data) {
-            $('#modelHeading').html("View Manual");
+        $.get("/admin/homepage" + '/' + id + '/edit', function (data) {
+            $('#modelHeading').html("View Homepage");
             $('#ajaxModel').modal('show');
             $("form#MyForm :input").each(function () {
                 var inputName = $(this).attr('id');
                 if (inputName !== undefined) {
                     var _field = $(document).find('[name="' + inputName + '"]');
-                    _field.val(data[inputName]);
-                    _field.attr('disabled', true);
+                    if (inputName != 'status') {
+                        _field.val(data[inputName]);
+                        _field.attr('disabled', true);
+                    } else if (inputName == 'status') {
+                        if (data[inputName] == '1') {
+                            _field.attr('checked', true);
+                        } else {
+                            _field.attr('checked', false);
+                        }
+                    }
                 }
             });
             $('button.btn-submit-update').hide();
@@ -208,7 +256,7 @@ $(function () {
     });
 
     $('body').on('click', '.btn-action-add', function () {
-        $('#modelHeading').html("Add Manual");
+        $('#modelHeading').html("Add Homepage");
         $('#ajaxModel').modal('show');
         $('#id').val('');
         $('button.btn-submit-update').show();
@@ -231,7 +279,7 @@ $(function () {
         var _form = $("form#MyForm");
         var formData = new FormData(_form[0]);
         $.ajax({
-            url: "{{ url('admin/manual/update') }}",
+            url: "{{ url('admin/homepage/update') }}",
             type: "POST",
             data: formData,
             enctype: 'multipart/form-data',
@@ -265,12 +313,12 @@ $(function () {
             }
         });
     });
-    $("#tgl_netap").datepicker({
+    $("#start_date").datepicker({
         changeMonth: true,
         changeYear: true,
         dateFormat: 'yy-mm-dd'
     });
-    $("#tgl_undang").datepicker({
+    $("#end_date").datepicker({
         changeMonth: true,
         changeYear: true,
         dateFormat: 'yy-mm-dd'

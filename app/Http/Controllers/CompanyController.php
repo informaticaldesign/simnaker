@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use DataTables;
 use App\Models\Company;
 use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Models\User;
 use Auth;
 use File;
@@ -31,7 +31,51 @@ class CompanyController extends Controller {
         $kotas = \App\Models\Kota::pluck('name', 'id');
         return View('company.index', [
             'provinsis' => $provinsis,
-            'kotas' => $kotas
+            'kotas' => $kotas,
+            'comp_type' => 'company'
+        ]);
+    }
+
+    public function agent() {
+        $provinsis = \App\Models\Provinsi::pluck('name', 'id');
+        $kotas = \App\Models\Kota::pluck('name', 'id');
+        return View('company.index', [
+            'provinsis' => $provinsis,
+            'kotas' => $kotas,
+            'comp_type' => 'agent'
+        ]);
+    }
+
+    public function pengawas($id) {
+        $biodata = \App\Models\Biodata::select([
+                    'sim_biodata.id',
+                    'sim_biodata.name',
+                    'sim_biodata.nip',
+                    'm_jabatan.name AS jabatan_name',
+                    'm_pangkat.name AS pangkat_name',
+                    'm_golongan.name AS golongan_name',
+                    DB::raw('count( sim_user_company.id ) AS ttl_comp')
+                ])
+                ->leftJoin('m_jabatan', 'm_jabatan.jabatan_code', '=', 'sim_biodata.jabatan_code')
+                ->leftJoin('m_pangkat', 'm_pangkat.pangkat_code', '=', 'sim_biodata.pangkat_code')
+                ->leftJoin('m_golongan', 'm_golongan.golongan_code', '=', 'sim_biodata.golongan_code')
+                ->leftJoin('sim_user_company', function($join) use($id) {
+                    $join->on('sim_user_company.biodata_id', '=', 'sim_biodata.id');
+                    $join->on('sim_user_company.company_id', '=', DB::raw($id));
+                })
+                ->groupBy(DB::raw('sim_biodata.id,
+                    sim_biodata.name,
+                    sim_biodata.nip,
+                    m_jabatan.name,
+                    m_pangkat.name,
+                    m_golongan.name')
+                )
+                ->orderBy(DB::raw('count( sim_user_company.id )'), 'desc')
+                ->get();
+        $company = Company::select(['m_company.*'])->where('id', $id)->first();
+        return View('company.pengawas', [
+            'biodata' => $biodata,
+            'company' => $company
         ]);
     }
 
@@ -55,29 +99,77 @@ class CompanyController extends Controller {
 
     public function fetch(Request $request) {
         if ($request->ajax()) {
-            DB::statement(DB::raw('set @rownum=0'));
-            $data = Company::select(['*', DB::raw('@rownum  := @rownum  + 1 AS rownum')]);
-            return DataTables::of($data)
-                            ->addIndexColumn()
-                            ->filter(function ($instance) use ($request) {
-                                if (!empty($request->get('search'))) {
-                                    $instance->where(function($w) use($request) {
-                                        $search = $request->get('search');
-                                        $w->orWhere('name', 'LIKE', "%" . Str::lower($search['value']) . "%");
-                                    });
-                                }
-                            })->addColumn('image', function ($artist) {
-                                $url = url($artist->logo_path);
-                                return '<img src="' . $url . '" border="0" width="40" class="img-rounded" align="center" />';
-                            })
-                            ->addColumn('action', function($row) {
-                                $btn = '<a href="' . url('company/' . $row->id . '/view') . '" data-toggle="tooltip" data-original-title="View" class="btn btn-success btn-sm"><i class="fas fa-eye"></i> View</a> ';
-                                $btn .= '<a href="' . url('company/' . $row->id . '/ubah') . '" data-toggle="tooltip" data-original-title="Edit" class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i> Edit</a> ';
-                                $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="action-delete btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>';
-                                return $btn;
-                            })
-                            ->rawColumns(['image', 'action'])
-                            ->make(true);
+            if ($request->comp_type == 'agent') {
+                $data = Company::select(['a.id', 'a.name', 'a.logo_path', DB::raw('count(c.id) as ttl_pengawas')])
+                        ->from('m_company AS a')
+                        ->leftJoin('users AS b', 'b.company_id', '=', 'a.id')
+                        ->leftJoin('m_company AS c', 'c.created_by', '=', 'b.id')
+                        ->where('a.comp_type', $request->comp_type)
+                        ->where('a.status', DB::raw(1))
+                        ->groupByRaw('a.id,a.name,a.logo_path');
+                $users = Auth::user();
+                if ($users->role_id == '35') {
+                    $data->where('a.created_by', $users->id);
+                }
+                return DataTables::of($data)
+                                ->addIndexColumn()
+                                ->filter(function ($instance) use ($request) {
+                                    if (!empty($request->get('search'))) {
+                                        $instance->where(function($w) use($request) {
+                                            $search = $request->get('search');
+                                            $w->orWhere('a.name', 'LIKE', "%" . Str::lower($search['value']) . "%");
+                                        });
+                                    }
+                                })->addColumn('image', function ($artist) {
+                                    $url = url($artist->logo_path);
+                                    return '<img src="' . $url . '" border="0" width="40" class="img-rounded" align="center" />';
+                                })
+                                ->addColumn('action', function($row) use ($users) {
+                                    $btn = '<a href="' . url('company/' . $row->id . '/view') . '" data-toggle="tooltip" data-original-title="View" class="btn btn-success btn-sm"><i class="fas fa-eye"></i> View</a> ';
+//                                    $btn .= '<a href="' . url('company/' . $row->id . '/ubah') . '" data-toggle="tooltip" data-original-title="Edit" class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i> Edit</a> ';
+//                                    $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="action-delete btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> ';
+                                    if ($users->role_id == 38 || $users->role_id == 1) {
+                                        $btn .= '<a href="' . url('company/' . $row->id . '/anggota') . '" data-toggle="tooltip" data-original-title="Pengawas" class="btn btn-info btn-sm"><i class="fas fa-building"></i> Perusahaan</a> ';
+                                    }
+                                    return $btn;
+                                })
+                                ->rawColumns(['image', 'action'])
+                                ->make(true);
+            } else {
+                $data = Company::select(['a.id', 'a.name', 'a.logo_path', DB::raw('count(b.id) as ttl_pengawas')])
+                        ->from('m_company AS a')
+                        ->leftJoin('sim_user_company AS b', 'a.id', '=', 'b.company_id')
+                        ->where('a.comp_type', $request->comp_type)
+                        ->groupByRaw('a.id,a.name,a.logo_path');
+                $users = Auth::user();
+                if ($users->role_id == '35') {
+                    $data->where('a.created_by', $users->id);
+                }
+                return DataTables::of($data)
+                                ->addIndexColumn()
+                                ->filter(function ($instance) use ($request) {
+                                    if (!empty($request->get('search'))) {
+                                        $instance->where(function($w) use($request) {
+                                            $search = $request->get('search');
+                                            $w->orWhere('a.name', 'LIKE', "%" . Str::lower($search['value']) . "%");
+                                        });
+                                    }
+                                })->addColumn('image', function ($artist) {
+                                    $url = url($artist->logo_path);
+                                    return '<img src="' . $url . '" border="0" width="40" class="img-rounded" align="center" />';
+                                })
+                                ->addColumn('action', function($row) use ($users) {
+                                    $btn = '<a href="' . url('company/' . $row->id . '/view') . '" data-toggle="tooltip" data-original-title="View" class="btn btn-success btn-sm"><i class="fas fa-eye"></i> View</a> ';
+                                    $btn .= '<a href="' . url('company/' . $row->id . '/ubah') . '" data-toggle="tooltip" data-original-title="Edit" class="btn btn-warning btn-sm"><i class="fas fa-pencil-alt"></i> Edit</a> ';
+                                    $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="action-delete btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a> ';
+                                    if ($users->role_id == 38 || $users->role_id == 1) {
+                                        $btn .= '<a href="' . url('company/' . $row->id . '/pengawas') . '" data-toggle="tooltip" data-original-title="Pengawas" class="btn btn-info btn-sm"><i class="fas fa-users"></i> Pengawas</a> ';
+                                    }
+                                    return $btn;
+                                })
+                                ->rawColumns(['image', 'action'])
+                                ->make(true);
+            }
         }
     }
 
@@ -89,14 +181,14 @@ class CompanyController extends Controller {
     public function update(Request $request, Company $datapost) {
         $validator = \Validator::make($request->all(), [
                     'name' => ['required', 'string', 'max:255'],
-                    'address' => ['required', 'string', 'max:255'],
-                    'id_provinsi' => ['required', 'numeric'],
-                    'id_kota' => ['required', 'numeric'],
-                    'email' => ['required', 'email'],
-                    'phone' => ['required', 'numeric'],
-                    'longitude' => ['required', 'string', 'max:255'],
-                    'latitude' => ['required', 'string', 'max:255'],
-                    'logo' => ['string', 'max:255'],
+//                    'address' => ['required', 'string', 'max:255'],
+//                    'id_provinsi' => ['required', 'numeric'],
+//                    'id_kota' => ['required', 'numeric'],
+//                    'email' => ['required', 'email'],
+//                    'phone' => ['required', 'numeric'],
+//                    'longitude' => ['required', 'string', 'max:255'],
+//                    'latitude' => ['required', 'string', 'max:255'],
+//                    'logo' => ['string', 'max:255'],
         ]);
 
         if ($validator->fails()) {
@@ -139,6 +231,28 @@ class CompanyController extends Controller {
         return response()->json(['success' => true]);
     }
 
+    public function pegawai(Request $request) {
+        $users = Auth::user();
+        if ($request->status == 'checked') {
+            DB::table('sim_user_company')->insert([
+                'biodata_id' => $request->biodata_id,
+                'company_id' => $request->company_id,
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => $users->id
+            ]);
+        } elseif ($request->status == 'unchecked') {
+            DB::table('sim_user_company')
+                    ->where('biodata_id', '=', $request->biodata_id)
+                    ->where('company_id', '=', $request->company_id)
+                    ->delete();
+        }
+
+        return response()->json([
+                    'success' => true,
+                    'message' => 'Pendaftaran PJK3 Berhasil',
+        ]);
+    }
+
     public function submit(Request $request, Company $company) {
         $idUser = 0;
         if ($request->email) {
@@ -147,31 +261,26 @@ class CompanyController extends Controller {
                 $idUser = $userData->id;
             }
         }
+        $users = Auth::user();
         $validator = \Validator::make($request->all(), [
-                    'nib' => ['required', 'string', 'max:255', 'unique:m_company,nib,' . $request->id],
-                    'no_wlkp' => ['required', 'string', 'max:255'],
+//                    'nib' => ['required', 'string', 'max:13', 'min:13', 'regex:/^[0-9]+$/', 'unique:m_company,nib,' . $request->id],
+//                    'no_wlkp' => ['required', 'string', 'max:255', 'regex:/^[0-9]+$/'],
                     'name' => ['required', 'string', 'max:255'],
-                    'address' => ['required', 'string', 'max:1000'],
-                    'prov_code' => ['required', 'string', 'exists:m_provinsi,prov_code'],
-                    'city_code' => ['required', 'string', 'exists:m_kota,city_code'],
-                    'kec_code' => ['required', 'string', 'exists:m_kecamatan,kec_code'],
-                    'kel_code' => ['required', 'string', 'exists:m_kelurahan,kel_code'],
-                    'sektor_code' => ['required', 'string', 'exists:m_sektor,sektor_code'],
-                    'email' => ['required', 'email', 'unique:users,email,' . $idUser],
-                    'phone' => ['required', 'string', 'max:18', 'regex:/^[0-9]+$/'],
-                    'longitude' => ['required', 'string', 'max:255'],
-                    'latitude' => ['required', 'string', 'max:255'],
-                    'npp_bpjs' => ['required', 'string', 'max:255'],
-                    'no_npwp' => ['required', 'string', 'max:25', 'regex:/^[0-9]+$/'],
-                    'pemeriksa' => ['required', 'string', 'max:255'],
-                    'nik_ktp_p' => ['required', 'string', 'max:25', 'regex:/^[0-9]+$/'],
-                    'penanggung_jwb' => ['required', 'string', 'max:255'],
-                    'nik_ktp_t' => ['required', 'string', 'max:25', 'regex:/^[0-9]+$/'],
-                    'jenis_usaha' => ['required', 'numeric'],
-                    'bidang_usaha' => ['required', 'numeric'],
-                    'password' => ['required', 'string', 'min:8', 'confirmed'],
-                    'password_confirmation' => ['required', 'string', 'min:8', 'same:password'],
-                    'logo' => ['required', 'max:10000', 'min:8', 'mimes:jpg,jpeg,png'],
+//                    'address' => ['required', 'string', 'max:1000'],
+//                    'prov_code' => ['required', 'string', 'exists:m_provinsi,prov_code'],
+//                    'city_code' => ['required', 'string', 'exists:m_kota,city_code'],
+//                    'kec_code' => ['required', 'string', 'exists:m_kecamatan,kec_code'],
+//                    'kel_code' => ['required', 'string', 'exists:m_kelurahan,kel_code'],
+//                    'sektor_code' => ['required', 'string', 'exists:m_sektor,sektor_code'],
+//                    'email' => ['required', 'email', 'unique:users,email,' . $idUser],
+//                    'phone' => ['required', 'string', 'max:18', 'regex:/^[0-9]+$/'],
+//                    'longitude' => ['required', 'string', 'max:255'],
+//                    'latitude' => ['required', 'string', 'max:255'],
+//                    'npp_bpjs' => ['required', 'string', 'max:13', 'min:13'],
+//                    'no_npwp' => ['required', 'string', 'max:15', 'min:15', 'regex:/^[0-9]+$/'],
+//                    'jenis_usaha' => ['required', 'numeric'],
+//                    'bidang_usaha' => ['required', 'numeric'],
+//                    'logo' => ['required', 'max:10000', 'min:8', 'mimes:jpg,jpeg,png'],
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -231,49 +340,27 @@ class CompanyController extends Controller {
             'latitude' => $request->latitude,
             'npp_bpjs' => $request->npp_bpjs,
             'no_npwp' => $request->no_npwp,
-            'pemeriksa' => $request->pemeriksa,
-            'nik_ktp_p' => $request->nik_ktp_p,
-            'penanggung_jwb' => $request->penanggung_jwb,
-            'nik_ktp_t' => $request->nik_ktp_t,
             'jenis_usaha' => $request->jenis_usaha,
             'bidang_usaha' => $request->bidang_usaha,
             'status' => 1,
             'logo' => $pdfname,
-            'logo_path' => $pdfpath
+            'logo_path' => $pdfpath,
+            'comp_type' => 'company'
         ];
         if ($request->has('id')) {
             $input['updated_at'] = date('Y-m-d H:i:s');
+            $input['updated_by'] = $users->id;
             Company::where('id', $request->id)
                     ->update($input);
-            $dataUser = User::select(['email'])->where('email', $request->email)->first();
-            if ($dataUser) {
-                $user = User::find($dataUser->id);  // Find the user using model and hold its reference
-                $user->name = $request->name;
-                $user->save();
-            } else {
-                User::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                    'role_id' => 35,
-                    'company_id' => $request->id
-                ]);
-            }
             return response()->json([
                         'success' => true,
                         'message' => 'Update data perusahaan berhasil.',
             ]);
         } else {
             $input['created_at'] = date('Y-m-d H:i:s');
+            $input['created_by'] = $users->id;
             $result = $company->storeData($input);
             if ($result) {
-                User::create([
-                    'name' => $request->name,
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                    'role_id' => 35,
-                    'company_id' => $result->id
-                ]);
                 return response()->json([
                             'success' => true,
                             'message' => 'Pendaftaran PJK3 Berhasil',
@@ -330,6 +417,70 @@ class CompanyController extends Controller {
     public function show($id) {
         $company = Company::select(['m_company.*'])->where('id', $id)->first();
         return response()->json($company);
+    }
+
+    public function export_excel(Request $request) {
+        date_default_timezone_set("Asia/Bangkok");
+        ini_set('memory_limit', '1024M');
+        ini_set('upload_max_filesize', '1024M');
+        ini_set('post_max_size', '1024M');
+        $users = Auth::user();
+        $filename = 'report_company_' . $users->id . '.xls';
+        return Excel::download(new \App\Exports\CompanyExport($request), $filename);
+    }
+
+    public function anggota($id) {
+        $biodata = Company::find($id);
+        return View('company.anggota', [
+            'biodata' => $biodata,
+            'id' => $id
+        ]);
+    }
+
+    public function fcomp($id, Request $request) {
+        if ($request->ajax()) {
+            $data = Company::select(['m_company.id', 'm_company.name', 'm_company.logo_path'])
+                    ->leftJoin('users', 'users.id', '=', 'm_company.created_by')
+                    ->where('m_company.comp_type', 'company')
+                    ->where('users.company_id', $id);
+            return DataTables::of($data)
+                            ->addIndexColumn()
+                            ->filter(function ($instance) use ($request) {
+                                if (!empty($request->get('search'))) {
+                                    $instance->where(function($w) use($request) {
+                                        $search = $request->get('search');
+                                        $w->orWhere('m_company.name', 'LIKE', "%" . Str::lower($search['value']) . "%");
+                                    });
+                                }
+                            })->addColumn('image', function ($artist) {
+                                $url = url($artist->logo_path);
+                                return '<img src="' . $url . '" border="0" width="40" class="img-rounded" align="center" />';
+                            })
+                            ->rawColumns(['image'])
+                            ->make(true);
+        }
+    }
+
+    public function ucomp(Request $request) {
+        $users = Auth::user();
+        if ($request->status == 'checked') {
+            DB::table('sim_user_company')->insert([
+                'biodata_id' => $request->biodata_id,
+                'company_id' => $request->company_id,
+                'created_at' => date('Y-m-d H:i:s'),
+                'created_by' => $users->id
+            ]);
+        } elseif ($request->status == 'unchecked') {
+            DB::table('sim_user_company')
+                    ->where('biodata_id', '=', $request->biodata_id)
+                    ->where('company_id', '=', $request->company_id)
+                    ->delete();
+        }
+
+        return response()->json([
+                    'success' => true,
+                    'message' => 'Pendaftaran PJK3 Berhasil',
+        ]);
     }
 
 }

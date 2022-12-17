@@ -10,25 +10,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DataTables;
-use App\Models\Sifatdok;
+use App\Models\Tembusan;
 use Illuminate\Support\Str;
 use Auth;
 
 /**
- * Description of SifatdokController
+ * Description of TembusanController
  *
  * @author heryhandoko
  */
-class SifatdokController extends Controller {
+class TembusanController extends Controller {
 
     //put your code here
     public function index() {
-        return View('sifatdok.index');
+        return View('tembusan.index');
     }
 
     public function fetch(Request $request) {
         if ($request->ajax()) {
-            $data = Sifatdok::select('*');
+            $data = Tembusan::select('*');
             return DataTables::of($data)
                             ->addIndexColumn()
                             ->filter(function ($instance) use ($request) {
@@ -51,11 +51,11 @@ class SifatdokController extends Controller {
     }
 
     public function edit($id) {
-        $Users = Sifatdok::find($id);
+        $Users = Tembusan::find($id);
         return response()->json($Users);
     }
 
-    public function update(Request $request, Sifatdok $datapost) {
+    public function update(Request $request, Tembusan $datapost) {
         $validator = \Validator::make($request->all(), [
                     'name' => ['required', 'string', 'max:255'],
         ]);
@@ -74,7 +74,7 @@ class SifatdokController extends Controller {
         if ($request->id) {
             $input['updated_at'] = date('Y-m-d H:i:s');
             $input['updated_by'] = $user->id;
-            Sifatdok::where('id', $request->id)->update($input);
+            Tembusan::where('id', $request->id)->update($input);
             $status = 'update';
         } else {
             $input['created_at'] = date('Y-m-d H:i:s');
@@ -89,7 +89,7 @@ class SifatdokController extends Controller {
     }
 
     public function destroy($id) {
-        Sifatdok::find($id)->delete();
+        Tembusan::find($id)->delete();
         return response()->json(['success' => true]);
     }
 

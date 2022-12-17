@@ -8,7 +8,7 @@
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ url('admin/pengajuan') }}">Suket Online</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('admin/proses') }}">Suket Online</a></li>
             <li class="breadcrumb-item active">Pengajuan</li>
         </ol>
     </div>
@@ -81,11 +81,17 @@
             {{ Form::open(array('id' => 'MyForm','method'=>'post','name'=>'MyForm', 'class'=>'form-horizontal')) }}
             <input type="hidden" name="step" value="{{ $step }}">
             <input type="hidden" name="id" value="{{ $id }}">
+            <input type="hidden" name="menu" value="proses">
             <div class="card-body">
                 <!--<p class="text-lg text-center text-bold">FORMULIR</p>-->
                 <p class="card-text">
                     Lampirkan Surat Permohonan disini, file harus berbentuk PDF dan maksimal ukuran file 2 MB. Pastikan surat sudah ditandatangani dan dicap sebelum discan dan dilampirkan..
                 </p>
+                @if($preview)
+                <div class="col-md-4">
+                    <a class="btn btn-primary btn-block text-white" href="{{ asset($data->lampiran_path) }}" target="_blank"><i class="fa fa-eye"></i> Lihat Lampiran</a>
+                </div>
+                @else
                 <div class="col-lg-6">
                     <div class="form-group">
                         <div class="custom-file">
@@ -95,8 +101,9 @@
                         </div>
                     </div>
                 </div>
+                @endif
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a class="btn btn-warning mr-1" href="{{ url('admin/pengajuan/create/3') }}/{{ $id }}"><i class="fas fa-arrow-left"></i>&nbsp;Sebelumnya</a>
+                    <a class="btn btn-warning mr-1" href="{{ url('admin/proses/create/3') }}/{{ $id }}"><i class="fas fa-arrow-left"></i>&nbsp;Sebelumnya</a>
                     <button class="btn btn-success btn-action-next">Selanjutnya&nbsp;<i class="fas fa-arrow-right"></i></button>
                 </div>
             </div>
@@ -140,7 +147,7 @@
                 contentType: false,
                 success: function (result) {
                     if (result.success) {
-                        window.location.href = "{{ url('admin/pengajuan/create/5')}}/" + result.data.id;
+                        window.location.href = "{{ url('admin/proses/create/5')}}/" + result.data.id;
                     }
                 },
                 error: function (err) {

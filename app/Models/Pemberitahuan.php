@@ -16,35 +16,22 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @author heryhandoko
  */
-class Biodata extends Model {
+class Pemberitahuan extends Model {
 
     //put your code here
     use HasFactory;
 
-    protected $table = 'sim_biodata';
+    protected $table = 'sim_pemberitahuan';
     protected $fillable = [
-        'name',
-        'nip',
-        'birth_place',
-        'birth_date',
-        'id_jabatan',
-        'id_golongan',
-        'id_pangkat',
-        'id_uptd',
-        'address',
-        'id_kota',
-        'id_provinsi',
-        'latitude',
-        'longitude',
-        'email',
-        'phone',
-        'avatar',
-        'status',
-        'avatar_path',
+        'no_idx',
+        'tgl_notif',
+        'uraian',
         'created_at',
         'created_by',
         'updated_at',
         'updated_by',
+        'status',
+        'renja_id'
     ];
 
     public function storeData($input) {

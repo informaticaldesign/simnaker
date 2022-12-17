@@ -159,6 +159,7 @@ return [
         Meneses\LaravelMpdf\LaravelMpdfServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Laravel\Passport\PassportServiceProvider::class,
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class
     ],
     /*
       |--------------------------------------------------------------------------
@@ -210,6 +211,7 @@ return [
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'PDFX' => Meneses\LaravelMpdf\Facades\LaravelMpdf::class,
-        'PDF' => Barryvdh\DomPDF\Facade::class
+        'PDF' => Barryvdh\DomPDF\Facade::class,
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class
     ],
 ];

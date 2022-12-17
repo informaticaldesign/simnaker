@@ -25,7 +25,7 @@
                 {{ Form::open(array('id' => 'MyForm','method'=>'post', 'enctype'=>"multipart/form-data",'name'=>'MyForm', 'class'=>'form-horizontal')) }}
                 <input type="hidden" name="id">
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-12">
                         <div class="mb-1">
                             <label for="nib" class="col-sm-12 col-form-label">NIB (Nomor Induk Usaha)<span class="text-danger">*</span></label>
                             <div class="col-sm-12">
@@ -164,8 +164,6 @@
                                 <div class="invalid-feedback invalid-email"></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-6">
                         <div class="mb-1">
                             <label for="npp_bpjs" class="col-sm-12 col-form-label">NPP BPJS <span class="text-danger">*</span></label>
                             <div class="col-sm-12">
@@ -178,48 +176,6 @@
                             <div class="col-sm-12">
                                 <input type="text" class="form-control" name="no_npwp">
                                 <div class="invalid-feedback invalid-no_npwp"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
-                            <label for="pemeriksa" class="col-sm-12 col-form-label">Nama Pemeriksa <span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" name="pemeriksa">
-                                <div class="invalid-feedback invalid-pemeriksa"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
-                            <label for="nik_ktp_p" class="col-sm-12 col-form-label">NIK KTP <span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" name="nik_ktp_p">
-                                <div class="invalid-feedback invalid-nik_ktp_p"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
-                            <label for="penanggung_jwb" class="col-sm-12 col-form-label">Nama Penanggung Jawab <span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" name="penanggung_jwb">
-                                <div class="invalid-feedback invalid-penanggung_jwb"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
-                            <label for="nik_ktp_t" class="col-sm-12 col-form-label">NIK KTP Penanggung Jawab <span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" name="nik_ktp_t">
-                                <div class="invalid-feedback invalid-nik_ktp_t"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
-                            <label for="password" class="col-sm-12 col-form-label">Password<span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <input type="password" class="form-control" name="password">
-                                <div class="invalid-feedback invalid-password"></div>
-                            </div>
-                        </div>
-                        <div class="mb-1">
-                            <label for="password_confirmation" class="col-sm-12 col-form-label">Konfirmasi Password<span class="text-danger">*</span></label>
-                            <div class="col-sm-12">
-                                <input type="password" class="form-control" name="password_confirmation">
-                                <div class="invalid-feedback invalid-password_confirmation"></div>
                             </div>
                         </div>
                         <div class="mb-2">

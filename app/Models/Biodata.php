@@ -45,6 +45,7 @@ class Biodata extends Model {
         'created_by',
         'updated_at',
         'updated_by',
+        'avatar_path'
     ];
 
     public function storeData($input) {

@@ -14,8 +14,15 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::get('admin', [App\Http\Controllers\HomeController::class, 'index']);
+Route::get('layanan-pengaduan', [App\Http\Controllers\Frontend\PengaduanController::class, 'index']);
+Route::get('akta-pemeriksaan', [App\Http\Controllers\Frontend\PemeriksaanController::class, 'index']);
+Route::post('akta-pemeriksaan/register', [App\Http\Controllers\Frontend\PemeriksaanController::class, 'register']);
+Route::post('akta-pemeriksaan/masuk', [App\Http\Controllers\Frontend\PemeriksaanController::class, 'masuk']);
+Route::get('akta-pemeriksaan/login', [App\Http\Controllers\Frontend\PemeriksaanController::class, 'login']);
+Route::post('layanan-pengaduan/submit', [App\Http\Controllers\Frontend\PengaduanController::class, 'store']);
 Route::get('pelatihan', [App\Http\Controllers\Frontend\PelatihanController::class, 'index']);
 Route::get('layanan', [App\Http\Controllers\Frontend\LayananController::class, 'index'])->name('layanan');
+Route::get('akses', [App\Http\Controllers\Frontend\AksesController::class, 'index'])->name('akses');
 Route::get('regulasi', [App\Http\Controllers\Frontend\RegulasiController::class, 'index']);
 Route::get('regulasi/{slug}', [\App\Http\Controllers\Frontend\RegulasiController::class, 'show']);
 Route::get('talkshow', [App\Http\Controllers\Frontend\TalkshowController::class, 'index']);
@@ -36,6 +43,7 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::post('/home/pieajukan', ['as' => 'home.pieajukan', 'uses' => 'HomeController@pieajukan']);
     Route::post('/home/dbbn', ['as' => 'home.dbbn', 'uses' => 'HomeController@dbbn']);
     Route::post('/admin/visitor/chartline', ['as' => 'admin.visitor.chartline', 'uses' => 'HomeController@chartline']);
+    Route::get('/home/notifcount', ['as' => 'home.notifcount', 'uses' => 'HomeController@notifcount']);
 
     Route::get('/profile', [App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
     Route::get('/profile/show', [App\Http\Controllers\ProfileController::class, 'show'])->name('profile.show');
@@ -105,10 +113,16 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
 
     Route::get('/pengguna', ['as' => 'pengguna', 'uses' => 'PenggunaController@index']);
     Route::get('/pengguna/fetch', ['as' => 'pengguna.fetch', 'uses' => 'PenggunaController@fetch']);
+    Route::get('/pengguna/fcomp/{id}', ['as' => 'pengguna.fcomp', 'uses' => 'PenggunaController@fcomp']);
     Route::post('/pengguna/store', ['as' => 'pengguna.store', 'uses' => 'PenggunaController@store']);
+    Route::post('/pengguna/ucomp', ['as' => 'pengguna.ucomp', 'uses' => 'PenggunaController@ucomp']);
     Route::get('/pengguna/{id}/edit', ['as' => 'pengguna.edit', 'uses' => 'PenggunaController@edit']);
     Route::put('/pengguna/update', ['as' => 'pengguna.update', 'uses' => 'PenggunaController@update']);
     Route::delete('/pengguna/destroy/{id}', ['as' => 'pengguna.destroy', 'uses' => 'PenggunaController@destroy']);
+    Route::get('/pengguna/{id}/company', ['as' => 'pengguna.company', 'uses' => 'PenggunaController@company']);
+    Route::get('/pengguna/{id}/upt', ['as' => 'pengguna.upt', 'uses' => 'PenggunaController@upt']);
+    Route::get('/pengguna/fupt/{id}', ['as' => 'pengguna.fupt', 'uses' => 'PenggunaController@fupt']);
+    Route::post('/pengguna/eupt', ['as' => 'pengguna.eupt', 'uses' => 'PenggunaController@eupt']);
 
     Route::get('/jabatan', ['as' => 'jabatan', 'uses' => 'JabatanController@index']);
     Route::get('/jabatan/fetch', ['as' => 'jabatan.fetch', 'uses' => 'JabatanController@fetch']);
@@ -198,6 +212,7 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::delete('/unitkerja/destroy/{id}', ['as' => 'unitkerja.destroy', 'uses' => 'UnitkerjaController@destroy']);
 
     Route::get('/company', ['as' => 'company', 'uses' => 'CompanyController@index']);
+    Route::get('/company/agent', ['as' => 'company.agent', 'uses' => 'CompanyController@agent']);
     Route::get('/company/create', ['as' => 'company.create', 'uses' => 'CompanyController@create']);
     Route::post('/company/submit', ['as' => 'company.submit', 'uses' => 'CompanyController@submit']);
     Route::get('/company/fetch', ['as' => 'company.fetch', 'uses' => 'CompanyController@fetch']);
@@ -205,9 +220,15 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::get('/company/{id}/edit', ['as' => 'company.edit', 'uses' => 'CompanyController@edit']);
     Route::get('/company/{id}/show', ['as' => 'company.show', 'uses' => 'CompanyController@show']);
     Route::get('/company/{id}/ubah', ['as' => 'company.ubah', 'uses' => 'CompanyController@ubah']);
+    Route::get('/company/{id}/pengawas', ['as' => 'company.pengawas', 'uses' => 'CompanyController@pengawas']);
     Route::get('/company/{id}/view', ['as' => 'company.view', 'uses' => 'CompanyController@view']);
     Route::put('/company/update', ['as' => 'company.update', 'uses' => 'CompanyController@update']);
     Route::delete('/company/destroy/{id}', ['as' => 'company.destroy', 'uses' => 'CompanyController@destroy']);
+    Route::post('/company/pegawai', ['as' => 'company.pegawai', 'uses' => 'CompanyController@pegawai']);
+    Route::get('/company/export_excel', ['as' => 'company.export_excel', 'uses' => 'CompanyController@export_excel']);
+    Route::get('/company/{id}/anggota', ['as' => 'company.anggota', 'uses' => 'CompanyController@anggota']);
+    Route::get('/company/fcomp/{id}', ['as' => 'company.fcomp', 'uses' => 'CompanyController@fcomp']);
+    Route::post('/company/ucomp', ['as' => 'company.ucomp', 'uses' => 'CompanyController@ucomp']);
 
     Route::get('/admin/regulasi', ['as' => 'admin.regulasi', 'uses' => 'RegulasiController@index']);
     Route::get('/admin/regulasi/fetch', ['as' => 'admin.regulasi.fetch', 'uses' => 'RegulasiController@fetch']);
@@ -229,6 +250,13 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::get('/admin/manual/{id}/edit', ['as' => 'admin.manual.edit', 'uses' => 'ManualController@edit']);
     Route::post('/admin/manual/update', ['as' => 'admin.manual.update', 'uses' => 'ManualController@update']);
     Route::delete('/admin/manual/destroy/{id}', ['as' => 'admin.manual.destroy', 'uses' => 'ManualController@destroy']);
+    
+    Route::get('/admin/homepage', ['as' => 'admin.homepage', 'uses' => 'HomepageController@index']);
+    Route::get('/admin/homepage/fetch', ['as' => 'admin.homepage.fetch', 'uses' => 'HomepageController@fetch']);
+    Route::post('/admin/homepage/store', ['as' => 'admin.homepage.store', 'uses' => 'HomepageController@store']);
+    Route::get('/admin/homepage/{id}/edit', ['as' => 'admin.homepage.edit', 'uses' => 'HomepageController@edit']);
+    Route::post('/admin/homepage/update', ['as' => 'admin.homepage.update', 'uses' => 'HomepageController@update']);
+    Route::delete('/admin/homepage/destroy/{id}', ['as' => 'admin.homepage.destroy', 'uses' => 'HomepageController@destroy']);
 
     Route::get('/admin/inbox', ['as' => 'admin.inbox', 'uses' => 'InboxController@index']);
     Route::get('/admin/inbox/read/{id}', ['as' => 'admin.inbox.read', 'uses' => 'InboxController@show']);
@@ -239,8 +267,13 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::get('/admin/pengajuan/fetch', ['as' => 'admin.pengajuan.fetch', 'uses' => 'PengajuanController@fetch']);
     Route::delete('/admin/pengajuan/destroy/{id}', ['as' => 'admin.pengajuan.destroy', 'uses' => 'PengajuanController@destroy']);
 
+    Route::get('/admin/persetujuan', ['as' => 'admin.persetujuan', 'uses' => 'PersetujuanController@index']);
+    Route::get('/admin/persetujuan/fetch', ['as' => 'admin.persetujuan.fetch', 'uses' => 'PersetujuanController@fetch']);
+
     Route::get('/admin/proses', ['as' => 'admin.proses', 'uses' => 'ProsesController@index']);
     Route::get('/admin/proses/fetch', ['as' => 'admin.proses.fetch', 'uses' => 'ProsesController@fetch']);
+    Route::get('/admin/proses/create/{step}/{id}', ['as' => 'admin.proses.create', 'uses' => 'ProsesController@create']);
+    Route::post('/admin/proses/store', ['as' => 'admin.proses.store', 'uses' => 'PengajuanController@store']);
 
     Route::get('/admin/terverifikasi', ['as' => 'admin.terverifikasi', 'uses' => 'TerverifikasiController@index']);
     Route::get('/admin/terverifikasi/fetch', ['as' => 'admin.terverifikasi.fetch', 'uses' => 'TerverifikasiController@fetch']);
@@ -254,6 +287,9 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::get('/admin/renja/export_excel', ['as' => 'admin.renja.export_excel', 'uses' => 'RenjaController@export_excel']);
     Route::post('/admin/renja/chartbar', ['as' => 'admin.renja.chartbar', 'uses' => 'RenjaController@chartbar']);
     Route::post('/admin/renja/chartpie', ['as' => 'admin.renja.chartpie', 'uses' => 'RenjaController@chartpie']);
+    Route::get('/admin/persetujuanrenja', ['as' => 'admin.persetujuanrenja', 'uses' => 'RenjaController@persetujuan']);
+    Route::get('/admin/renja/company', ['as' => 'admin.renja.company', 'uses' => 'RenjaController@company']);
+    Route::get('/admin/renja/view/{month}/{year}', ['as' => 'admin.renja.view', 'uses' => 'RenjaController@view']);
 
     Route::get('/admin/sektor', ['as' => 'admin.sektor', 'uses' => 'SektorController@index']);
     Route::get('/admin/sektor/fetch', ['as' => 'admin.sektor.fetch', 'uses' => 'SektorController@fetch']);
@@ -265,4 +301,138 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
 
     Route::get('/admin/templates', ['as' => 'admin.template', 'uses' => 'TemplatesController@index']);
     Route::match(['get', 'post'], '/admin/templates/create', ['as' => 'admin.template.create', 'uses' => 'TemplatesController@create']);
+
+    Route::get('/admin/pjkkk/proses', ['as' => 'admin.pjkkk.proses', 'uses' => 'PjkkkController@proses']);
+    Route::get('/admin/pjkkk/fetch', ['as' => 'admin.pjkkk.fetch', 'uses' => 'PjkkkController@fetch']);
+    Route::get('/admin/pjkkk/{id}/edit', ['as' => 'admin.pjkkk.edit', 'uses' => 'PjkkkController@edit']);
+    Route::get('/admin/pjkkk/{id}/show', ['as' => 'admin.pjkkk.pjkkk.show', 'uses' => 'PjkkkController@show']);
+    Route::get('/admin/pjkkk/{id}/ubah', ['as' => 'admin.pjkkk.ubah', 'uses' => 'PjkkkController@ubah']);
+    Route::get('/admin/pjkkk/{id}/view', ['as' => 'admin.pjkkk.view', 'uses' => 'PjkkkController@view']);
+    Route::post('/admin/pjkkk/submit', ['as' => 'admin.pjkkk.submit', 'uses' => 'PjkkkController@submit']);
+    Route::get('/admin/pjkkk/verify', ['as' => 'admin.pjkkk.verify', 'uses' => 'PjkkkController@verify']);
+
+    Route::get('/admin/spt', ['as' => 'admin.spt', 'uses' => 'SptController@index']);
+    Route::get('/admin/spt/create', ['as' => 'admin.spt.create', 'uses' => 'SptController@create']);
+    Route::get('/admin/spt/cetak', ['as' => 'admin.spt.cetak', 'uses' => 'SptController@cetak']);
+    Route::get('/admin/spt/fetch', ['as' => 'admin.spt.fetch', 'uses' => 'SptController@fetch']);
+    Route::post('/admin/spt/submit', ['as' => 'admin.spt.submit', 'uses' => 'SptController@submit']);
+    Route::get('/admin/spt/{id}/edit', ['as' => 'admin.spt.edit', 'uses' => 'SptController@edit']);
+    Route::get('/admin/spt/{id}/view', ['as' => 'admin.spt.view', 'uses' => 'SptController@view']);
+    Route::put('/admin/spt/update', ['as' => 'admin.spt.update', 'uses' => 'SptController@update']);
+    Route::get('/admin/spt/cari', ['as' => 'admin.spt.cari', 'uses' => 'SptController@cari']);
+    Route::delete('/admin/spt/destroy/{id}', ['as' => 'admin.spt.destroy', 'uses' => 'SptController@destroy']);
+    Route::get('/admin/spt/{id}/pengawas', ['as' => 'admin.spt.pengawas', 'uses' => 'SptController@pengawas']);
+    Route::post('/admin/spt/pegawai', ['as' => 'admin.spt.pegawai', 'uses' => 'SptController@pegawai']);
+    Route::match(['post', 'get'], '/admin/spt/template', ['as' => 'admin.spt.template', 'uses' => 'SptController@template']);
+
+    Route::get('/admin/layanan-pengaduan', ['as' => 'admin.layanan.pengaduan', 'uses' => 'PengaduanController@index']);
+    Route::get('/admin/layanan-pengaduan/fetch', ['as' => 'admin.layanan.pengaduan.fetch', 'uses' => 'PengaduanController@fetch']);
+    Route::get('/admin/layanan-pengaduan/{id}/edit', ['as' => 'admin.layanan.pengaduan.edit', 'uses' => 'PengaduanController@edit']);
+    Route::post('/admin/layanan-pengaduan/store', ['as' => 'admin.layanan.pengaduan.store', 'uses' => 'PengaduanController@store']);
+
+    Route::group(['prefix' => 'spt'], function () {
+        
+    });
+
+    Route::get('/tembusan', ['as' => 'tembusan', 'uses' => 'TembusanController@index']);
+    Route::get('/tembusan/fetch', ['as' => 'tembusan.fetch', 'uses' => 'TembusanController@fetch']);
+    Route::post('/tembusan/store', ['as' => 'tembusan.store', 'uses' => 'TembusanController@store']);
+    Route::get('/tembusan/{id}/edit', ['as' => 'tembusan.edit', 'uses' => 'TembusanController@edit']);
+    Route::put('/tembusan/update', ['as' => 'tembusan.update', 'uses' => 'TembusanController@update']);
+    Route::delete('/tembusan/destroy/{id}', ['as' => 'tembusan.destroy', 'uses' => 'TembusanController@destroy']);
+
+    Route::get('/admin/upt', ['as' => 'admin.upt', 'uses' => 'UptController@index']);
+    Route::get('/admin/upt/fetch', ['as' => 'admin.upt.fetch', 'uses' => 'UptController@fetch']);
+    Route::post('/admin/upt/store', ['as' => 'admin.upt.store', 'uses' => 'UptController@store']);
+    Route::get('/admin/upt/{id}/edit', ['as' => 'admin.upt.edit', 'uses' => 'UptController@edit']);
+    Route::put('/admin/upt/update', ['as' => 'admin.upt.update', 'uses' => 'UptController@update']);
+    Route::delete('/admin/upt/destroy/{id}', ['as' => 'admin.upt.destroy', 'uses' => 'UptController@destroy']);
+    Route::get('/admin/upt/{id}/pegawai', ['as' => 'admin.upt.pegawai', 'uses' => 'UptController@pegawai']);
+    Route::post('/admin/upt/anggota', ['as' => 'admin.upt.anggota', 'uses' => 'UptController@anggota']);
+    Route::get('/admin/upt/{id}/company', ['as' => 'admin.upt.company', 'uses' => 'UptController@company']);
+    Route::get('/admin/upt/fcomp/{id}', ['as' => 'admin.upt.fcomp', 'uses' => 'UptController@fcomp']);
+    Route::post('/admin/upt/ucomp', ['as' => 'admin.upt.ucomp', 'uses' => 'UptController@ucomp']);
+
+    Route::get('/admin/reporting', ['as' => 'admin.reporting', 'uses' => 'ReportingController@index']);
+    Route::get('/admin/reporting/fetch', ['as' => 'admin.reporting.fetch', 'uses' => 'ReportingController@fetch']);
+    Route::delete('/admin/reporting/destroy/{id}', ['as' => 'admin.reporting.destroy', 'uses' => 'ReportingController@destroy']);
+    Route::post('/admin/reporting/store', ['as' => 'admin.reporting.store', 'uses' => 'ReportingController@store']);
+
+    Route::group(['prefix' => 'spt'], function () {
+        Route::get('list', 'Spt\ListController@index')->name('spt.list');
+        Route::get('list/fetch', 'Spt\ListController@fetch')->name('spt.list.fetch');
+        Route::get('list/cetak', 'Spt\ListController@cetak')->name('spt.list.cetak');
+        Route::get('list/view/{id}', 'Spt\ListController@view')->name('spt.list.view');
+        Route::post('list/desc', 'Spt\ListController@desc')->name('spt.list.desc');
+    });
+
+    Route::group(['prefix' => 'pemberitahuan'], function () {
+        Route::get('list', 'Pemberitahuan\ListController@index')->name('pemberitahuan.list');
+        Route::get('list/fetch', 'Pemberitahuan\ListController@fetch')->name('pemberitahuan.list.fetch');
+        Route::get('list/cetak', 'Pemberitahuan\ListController@cetak')->name('pemberitahuan.list.cetak');
+        Route::get('list/view/{id}', 'Pemberitahuan\ListController@view')->name('pemberitahuan.list.view');
+        Route::post('list/desc', 'Pemberitahuan\ListController@desc')->name('pemberitahuan.list.desc');
+
+        Route::get('template', 'Pemberitahuan\TemplateController@index')->name('pemberitahuan.template.list');
+        Route::post('template/store', 'Pemberitahuan\TemplateController@store')->name('pemberitahuan.template.store');
+    });
+
+    Route::group(['prefix' => 'banknota'], function () {
+        Route::get('jenis', 'Banknota\JenisController@index')->name('banknota.jenis');
+        Route::get('jenis/fetch', 'Banknota\JenisController@fetch')->name('banknota.jenis.fetch');
+        Route::get('jenis/create', 'Banknota\JenisController@create')->name('banknota.jenis.create');
+        Route::post('jenis/store', 'Banknota\JenisController@store')->name('banknota.jenis.store');
+        Route::get('jenis/{id}/edit', 'Banknota\JenisController@edit')->name('banknota.jenis.edit');
+        Route::delete('jenis/destroy/{id}', 'Banknota\JenisController@destroy')->name('banknota.jenis.destroy');
+
+        Route::get('listbn', 'Banknota\ListbnController@index')->name('banknota.listbn');
+        Route::get('listbn/fetch', 'Banknota\ListbnController@fetch')->name('banknota.listbn.fetch');
+        Route::get('listbn/create', 'Banknota\ListbnController@create')->name('banknota.listbn.create');
+        Route::post('listbn/store', 'Banknota\ListbnController@store')->name('banknota.listbn.store');
+        Route::post('listbn/desc', 'Banknota\ListbnController@desc')->name('banknota.listbn.desc');
+        Route::post('listbn/send', 'Banknota\ListbnController@send')->name('banknota.listbn.send');
+        Route::get('listbn/{slug}/edit', 'Banknota\ListbnController@edit')->name('banknota.listbn.edit');
+        Route::get('listbn/{id}/spt', 'Banknota\ListbnController@spt')->name('banknota.listbn.spt');
+        Route::get('listbn/preview/{slug}', 'Banknota\ListbnController@preview')->name('banknota.listbn.preview');
+        Route::get('listbn/view/{slug}', 'Banknota\ListbnController@view')->name('banknota.listbn.view');
+        Route::delete('listbn/destroy/{id}', 'Banknota\ListbnController@destroy')->name('banknota.listbn.destroy');
+        Route::get('listbn/cetak', 'Banknota\ListbnController@cetak')->name('banknota.listbn.cetak');
+
+        Route::get('listbnn', 'Banknota\ListbnnController@index')->name('banknota.listbnn');
+        Route::get('listbnn/fetch', 'Banknota\ListbnnController@fetch')->name('banknota.listbnn.fetch');
+        Route::get('listbnn/create', 'Banknota\ListbnnController@create')->name('banknota.listbnn.create');
+        Route::post('listbnn/store', 'Banknota\ListbnnController@store')->name('banknota.listbnn.store');
+        Route::post('listbnn/desc', 'Banknota\ListbnnController@desc')->name('banknota.listbnn.desc');
+        Route::post('listbnn/send', 'Banknota\ListbnnController@send')->name('banknota.listbnn.send');
+        Route::get('listbnn/{slug}/edit', 'Banknota\ListbnnController@edit')->name('banknota.listbnn.edit');
+        Route::get('listbnn/{id}/spt', 'Banknota\ListbnnController@spt')->name('banknota.listbnn.spt');
+        Route::get('listbnn/preview/{slug}', 'Banknota\ListbnnController@preview')->name('banknota.listbnn.preview');
+        Route::get('listbnn/view/{slug}', 'Banknota\ListbnnController@view')->name('banknota.listbnn.view');
+        Route::delete('listbnn/destroy/{id}', 'Banknota\ListbnnController@destroy')->name('banknota.listbnn.destroy');
+        Route::get('listbnn/cetak', 'Banknota\ListbnnController@cetak')->name('banknota.listbnn.cetak');
+
+        Route::get('approval', 'Banknota\ApprovalController@index')->name('banknota.approval');
+        Route::get('approval/fetch', 'Banknota\ApprovalController@fetch')->name('banknota.approval.fetch');
+        Route::get('approval/create', 'Banknota\ApprovalController@create')->name('banknota.approval.create');
+        Route::post('approval/store', 'Banknota\ApprovalController@store')->name('banknota.approval.store');
+        Route::post('approval/desc', 'Banknota\ApprovalController@desc')->name('banknota.approval.desc');
+        Route::post('approval/send', 'Banknota\ApprovalController@send')->name('banknota.approval.send');
+        Route::get('approval/{slug}/edit', 'Banknota\ApprovalController@edit')->name('banknota.approval.edit');
+        Route::get('approval/{id}/spt', 'Banknota\ApprovalController@spt')->name('banknota.approval.spt');
+        Route::get('approval/preview/{slug}', 'Banknota\ApprovalController@preview')->name('banknota.approval.preview');
+        Route::get('approval/view/{slug}', 'Banknota\ApprovalController@view')->name('banknota.approval.view');
+        Route::delete('approval/destroy/{id}', 'Banknota\ApprovalController@destroy')->name('banknota.approval.destroy');
+        Route::get('approval/cetak', 'Banknota\ApprovalController@cetak')->name('banknota.approval.cetak');
+
+        Route::get('configs', 'Banknota\ConfigsController@index')->name('banknota.configs');
+        Route::post('configs/store', 'Banknota\ConfigsController@store')->name('banknota.configs.store');
+    });
+
+    Route::get('qr-code-g', function () {
+        \QrCode::size(500)
+                ->format('png')
+                ->generate('ItSolutionStuff.com', public_path('images/qrcode.png'));
+
+        return view('qrCode');
+    });
 });

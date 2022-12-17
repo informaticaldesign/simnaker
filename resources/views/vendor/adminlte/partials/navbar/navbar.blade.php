@@ -22,25 +22,34 @@
         <li class="nav-item dropdown">
             <a class="nav-link" data-toggle="dropdown" href="#" aria-expanded="false">
                 <i class="far fa-bell"></i>
-                <!--<span class="badge badge-warning navbar-badge">15</span>-->
+                <span class="badge badge-danger navbar-badge badge-count-notif" style="display: none">0</span>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right" style="left: inherit; right: 0px;">
-                <span class="dropdown-item dropdown-header">0 Notifications</span>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-envelope mr-2"></i> 0 Pesan Masuk
-                    <!--<span class="float-right text-muted text-sm">0 mins</span>-->
+                <span class="dropdown-item dropdown-header dropdown-header-notif">0 Notifications</span>
+                <div class="dropdown-divider divider-pjk3-proses"></div>
+                <a href="{{ route('admin.pjkkk.proses') }}" class="dropdown-item href-pjk3-proses">
+                    <i class="fas fa-shield-alt mr-2"></i> 0 PJK3 Proses
                 </a>
-                <div class="dropdown-divider"></div>
-                <a href="#" class="dropdown-item">
-                    <i class="fas fa-inbox mr-2"></i> 0 Persetujuan
-                    <!--<span class="float-right text-muted text-sm">0 days</span>-->
+                <a href="{{ route('admin.pengajuan') }}" class="dropdown-item href-suket-online-pengajuan">
+                    <i class="fas fa-file-alt  mr-2"></i> 0 Suket Online
+                </a>
+                <a href="{{ route('admin.proses') }}" class="dropdown-item href-suket-online-proses">
+                    <i class="fas fa-file-alt  mr-2"></i> 0 Suket Online
+                </a>
+                <a href="{{ route('admin.spt') }}" class="dropdown-item href-spt-proses-notif">
+                    <i class="fas fa-file-alt  mr-2"></i> 0 SPT
+                </a>
+                <a href="{{ route('admin.persetujuanrenja') }}" class="dropdown-item href-renja-upt-notif">
+                    <i class="fas fa-file-alt  mr-2"></i> 0 Renja
+                </a>
+                <a href="{{ route('admin.layanan.pengaduan') }}" class="dropdown-item href-layanan-pengaduan">
+                    <i class="fas fa-file-alt  mr-2"></i> 0 Layanan Pengaduan
                 </a>
                 <div class="dropdown-divider"></div>
             </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+            <a class="nav-link href-fullscreen" data-value="0" data-widget="fullscreen" href="#" role="button">
                 <i class="fas fa-expand-arrows-alt"></i>
             </a>
         </li>
@@ -64,5 +73,4 @@
         @include('adminlte::partials.navbar.menu-item-right-sidebar-toggler')
         @endif
     </ul>
-
 </nav>

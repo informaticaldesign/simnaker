@@ -16,14 +16,16 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @author heryhandoko
  */
-class Bidangusaha extends Model {
+class Usrcompsuket extends Model {
 
     //put your code here
     use HasFactory;
 
-    protected $table = 'm_bidang_usaha';
+    protected $table = 'sim_bio_comp_suket';
     protected $fillable = [
-        'name',
+        'biodata_id',
+        'company_id',
+        'suket_id',
         'created_at',
         'created_by',
         'updated_at',

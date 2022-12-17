@@ -1,10 +1,10 @@
 @extends('frontend.page')
-@section('title_prefix', 'Beranda - ')
+@section('title_prefix', 'Akses - ')
 @section('title', 'Sistem Informasi Pelaporan Pengawasan Ketenagakerjaan')
 @section('content')
 <link rel="stylesheet" href="https://rawcdn.githack.com/rafaelbotazini/floating-whatsapp/3d18b26d5c7d430a1ab0b664f8ca6b69014aed68/floating-wpp.min.css">
 <!-- ======= Hero Section ======= -->
-<section id="bizland" class="d-flex align-items-center">
+<section id="bizland" class="d-flex align-items-center" style="margin-top: 80px;">
     <div class="container" data-aos="zoom-out" data-aos-delay="100" style="max-width: 100% !important; padding-right: var(--bs-gutter-x,.0rem) !important;padding-left: var(--bs-gutter-x,.0rem) !important;">
         <div id="map"></div>
     </div>
@@ -76,7 +76,6 @@
         </div>
     </div>
 </div>
-<div id="WAButton"></div>
 @endif
 @stop
 
@@ -84,13 +83,13 @@
 <style>
     #bizland {
         width: 100%;
-        height: 75vh;
+        height: 80vh;
         background-size: cover;
         position: relative;
     }
 
     #map {
-        height: 75vh;
+        height: 80vh;
         width: 100%;
     }
     .center {
@@ -104,7 +103,6 @@
 @section('js')
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgaWFBpt4UyShxn_m-Ax5PVquLK4VemSw"></script>
 <script src="{{ asset('js/markerclusterer.js') }}"></script>
-<script type="text/javascript" src="https://rawcdn.githack.com/rafaelbotazini/floating-whatsapp/3d18b26d5c7d430a1ab0b664f8ca6b69014aed68/floating-wpp.min.js"></script>
 <script>
 var urlFetch = "{{ route('beranda.fetch') }}";
 var urlMarker = "{{ asset('bizland/img/m') }}";
@@ -117,17 +115,6 @@ var urlLogo = "{{ url('/') }}/";
         }
     });
     $(document).ready(function () {
-        $('#WAButton').floatingWhatsApp({
-            phone: '+62 813 8000 1903',
-            headerTitle: 'Butuh bantuan!',
-            popupMessage: 'Hello, bagaimana kami dapat membantu Anda?',
-            showPopup: true,
-            buttonImage: '<img src="https://rawcdn.githack.com/rafaelbotazini/floating-whatsapp/3d18b26d5c7d430a1ab0b664f8ca6b69014aed68/whatsapp.svg" />', //Button Image
-            headerColor: '#1e375b',
-            backgroundColor: '#1e375b',
-            position: "right"
-        });
-
         $('button.btn-login').click(function (e) {
             $('button.btn-login').html('<i class="fa fa-spinner fa-spin"></i> Processing...');
             $('button.btn-login').prop('disabled', true);

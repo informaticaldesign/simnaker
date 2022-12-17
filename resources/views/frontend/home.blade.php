@@ -4,232 +4,406 @@
 @section('content')
 <link rel="stylesheet" href="https://rawcdn.githack.com/rafaelbotazini/floating-whatsapp/3d18b26d5c7d430a1ab0b664f8ca6b69014aed68/floating-wpp.min.css">
 <!-- ======= Hero Section ======= -->
-<section id="bizland" class="d-flex align-items-center">
-    <div class="container" data-aos="zoom-out" data-aos-delay="100" style="max-width: 100% !important; padding-right: var(--bs-gutter-x,.0rem) !important;padding-left: var(--bs-gutter-x,.0rem) !important;">
-        <div id="map"></div>
+<div class="container-fluid p-0 wow fadeIn" data-wow-delay="0.1s" style="margin-top: 80px;">
+    <div id="header-carousel">
+        <img src="{{ asset('images/home-banner.jpg') }}" width="100%">
     </div>
-</section>
-@if(!Auth::user())
-<section id="clients" class="clients section-bg">
-    <div class="container aos-init aos-animate" data-aos="zoom-in"></div>
-</section>
-<div class="row m-1">
-    <div class="col-sm-4">
-        @include('frontend.auth.login')
-    </div>
-    <div class="col-sm-8">
-        <div class="row mt-1 pt-1">
-            <p class="fw-bold" style="margin-bottom:5px !important;">CEK KEABSAHAN BERKAS K3</p>
-        </div>
-        <div class="row d-flex align-items-start mt-1">
-            <div class="col-md-1">
-                <i class="fa fa-barcode fa-3x" style="color:#1e375b !important;"></i>
-            </div>
-            <div class="col-md-11 pt-1">
-                {{ Form::open(array('id' => 'MyFormCekBerkas','name'=>'MyFormCekBerkas', 'class'=>'row','style'=>"margin-bottom:0px !important;")) }}
-                <div class="col-5">
-                    <input type="text" class="form-control" placeholder="Nomor Berkas" name="no_berkas">
-                    <div class="invalid-feedback invalid-no_berkas"></div>
+    <section id="features" class="features-area item-full text-center cell-items default-padding" style="background: linear-gradient(to top, #586a85, #ffffff);">
+        <div class="container">
+            <div class="row features-items">
+                <div class="col-md-4 col-sm-6 equal-height">
+                    <a href="{{ url('/akses') }}">
+                        <div class="item">
+                            <div class="icon">
+                                <i class="fas fa-tv"></i>
+                            </div>
+                            <div class="info">
+                                <h4>Daftar Perusahaan</h4>
+                                <p>Daftar perusahaan yang sudah terdaftar di system ketenagakerjaan.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-                <div class="col-auto">
-                    <button type="button" class="btn btn-primary mb-3 btn-cek-berkas" style="background-color:#1e375b !important; color:#fff !important; border-color: #1e375b !important;"><i class="fa fa-check"></i>&nbsp;Cek Sekarang</button>
+                <div class="col-md-4 col-sm-6 equal-height">
+                    <a target="_blank" href="https://smartk3.id/">
+                        <div class="item">
+                            <div class="icon">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div class="info">
+                                <h4>Layanan P2K3</h4>
+                                <p>Layanan Panitia Pembina Keselamatan dan Kesehatan Kerja.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-                {{ Form::close() }}
+                <div class="col-md-4 col-sm-6 equal-height">
+                    <a href="{{ url('/layanan') }}">
+                        <div class="item">
+                            <div class="icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                            <div class="info">
+                                <h4>Layanan PJK3</h4>
+                                <p>Daftar Perusahaan Jasa Keselamatan dan Kesehatan Kerja.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-6 equal-height">
+                    <a href="{{ url('/layanan-pengaduan') }}">
+                        <div class="item">
+                            <div class="icon">
+                                <i class="fas fa-pen-fancy"></i>
+                            </div>
+                            <div class="info">
+                                <h4>Layanan Pengaduan</h4>
+                                <p>Layanan Pengaduan Masyarakat Bidang ketenagakerjaan.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-6 equal-height">
+                    <a href="{{ url('/akta-pemeriksaan') }}">
+                        <div class="item">
+                            <div class="icon">
+                                <i class="fas fa-tachometer-alt"></i>
+                            </div>
+                            <div class="info">
+                                <h4>Akta Pemeriksaan</h4>
+                                <p>Akta Pengawasan Ketenagakerjaan Provinsi Banten.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-4 col-sm-6 equal-height">
+                    <a href="{{ url('/regulasi') }}">
+                        <div class="item">
+                            <div class="icon">
+                                <i class="fas fa-diagnoses"></i>
+                            </div>
+                            <div class="info">
+                                <h4>Regulasi Ketenagakerjaan</h4>
+                                <p>Informasi Peraturan Perundang-undangan Bidang Ketenaagkerjaan.
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-1 contact">
-                <div class="info-box mb-1 description" style="box-shadow: none !important; padding:0 !important;">
-                    <i class="bx bx-map description" style="font-size: 30px !important; padding: 5px;"></i>
-                </div>
-            </div>
-            <div class="col-md-10">
-                <p class="description fw-normal fs-6" style="margin-bottom:0px !important;">DINAS TENAGA KERJA DAN TRANSMIGRASI PROVINSI BANTEN
-                    BIDANG PENGAWAS KETENAGAKERJAAN
-                </p>
-                <p class="description fw-lighter fs-6" style="margin-bottom:0px !important;">
-                    Kawasan Pusat Pemerintahan Provinsi Banten (KP3B)
-                    JL. KH. Syech Nawawi Al-Bantani Palima
-                    Kota Serang-Provinsi Banten.
-                </p>
-            </div>
-        </div>
-        <div class="row d-flex align-items-center">
-            <div class="col-md-1 contact">
-                <div class="info-box mb-2" style="box-shadow: none !important; padding:0 !important;">
-                    <i class="bx bx-phone-call description" style="font-size: 30px !important; padding: 5px;"></i>
-                </div>
-            </div>
-            <div class="col-md-10">
-                <p class="description fw-lighter fs-6 align-middle">Telephone/Fax : 0254-267111/112</p>
-            </div>
-        </div>
-        <div class="row d-flex align-items-start">
-            <div class="col-md-1 contact">
-                <div class="info-box mb-1" style="box-shadow: none !important; padding:0 !important;">
-                    <i class="bx bx-envelope description" style="font-size: 30px !important; padding: 5px;"></i>
-                </div>
-            </div>
-            <div class="col-md-10">
-                <p class="description fw-lighter fs-6">Email : info.simnaker@gmail.com</p>
-            </div>
-        </div>
-    </div>
+    </section>
 </div>
-<div id="WAButton"></div>
-@endif
 @stop
 
 @section('css')
 <style>
-    #bizland {
-        width: 100%;
-        height: 75vh;
-        background-size: cover;
-        position: relative;
-    }
-
-    #map {
-        height: 75vh;
-        width: 100%;
-    }
     .center {
         display: block;
         margin-left: auto;
         margin-right: auto;
         width: 50%;
     }
-</style>
-@stop
-@section('js')
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCgaWFBpt4UyShxn_m-Ax5PVquLK4VemSw"></script>
-<script src="{{ asset('js/markerclusterer.js') }}"></script>
-<script type="text/javascript" src="https://rawcdn.githack.com/rafaelbotazini/floating-whatsapp/3d18b26d5c7d430a1ab0b664f8ca6b69014aed68/floating-wpp.min.js"></script>
-<script>
-var urlFetch = "{{ route('beranda.fetch') }}";
-var urlMarker = "{{ asset('bizland/img/m') }}";
-var urlLogo = "{{ url('/') }}/";
-</script>
-<script>
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    $(document).ready(function () {
-        $('#WAButton').floatingWhatsApp({
-            phone: '+62 813 8000 1903',
-            headerTitle: 'Butuh bantuan!',
-            popupMessage: 'Hello, bagaimana kami dapat membantu Anda?',
-            showPopup: true,
-            buttonImage: '<img src="https://rawcdn.githack.com/rafaelbotazini/floating-whatsapp/3d18b26d5c7d430a1ab0b664f8ca6b69014aed68/whatsapp.svg" />', //Button Image
-            headerColor: '#1e375b',
-            backgroundColor: '#1e375b',
-            position: "right"
-        });
 
-        $('button.btn-login').click(function (e) {
-            $('button.btn-login').html('<i class="fa fa-spinner fa-spin"></i> Processing...');
-            $('button.btn-login').prop('disabled', true);
-            e.preventDefault();
-            $('.form-control').removeClass('is-invalid');
-            $("form#MyFormLogin :input").each(function () {
-                var inputName = $(this).attr('name');
-                $('.invalid-' + inputName).text('');
-            });
-            $.ajax({
-                url: "/login",
-                method: 'post',
-                data: $('#MyFormLogin').serialize(),
-                success: function (result) {
-                    window.location.href = "{{ url('home')}}";
-                },
-                error: function (err) {
-                    console.log(err);
-                    $.each(err.responseJSON.errors, function (i, error) {
-                        var _field = $(document).find('[name="' + i + '"]');
-                        _field.addClass('is-invalid');
-                        var el = $(document).find('[class="invalid-feedback invalid-' + i + '"]');
-                        el.css('display', 'block');
-                        el.text(error[0]);
-                    });
-                    $('button.btn-login').html('<i class="fa fa-sign-in-alt"></i> Simpan');
-                    $('button.btn-login').prop('disabled', false);
-                }
-            });
-        });
-        $('button.btn-cek-berkas').click(function (e) {
-            $('button.btn-cek-berkas').html('<i class="fa fa-spinner fa-spin"></i> Processing...');
-            $('button.btn-cek-berkas').prop('disabled', true);
-            e.preventDefault();
-            var _field = $(document).find('[name="no_berkas"]');
-            _field.addClass('is-invalid');
-            var el = $(document).find('[class="invalid-feedback invalid-no_berkas"]');
-            el.css('display', 'block');
-            el.text('Nomor Berkas Tidak Terdaftar');
-            $('button.btn-cek-berkas').html('<i class="fa fa-check"></i>&nbsp;Cek Sekarang');
-            $('button.btn-cek-berkas').prop('disabled', false);
-        });
-    });
-
-    var markers = [];
-    const infoWindow = new google.maps.InfoWindow({
-        maxWidth: 200
-    });
-    function initialize() {
-        var center = new google.maps.LatLng(-6.364233, 106.272860);
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 9,
-            center: center,
-            mapTypeId: google.maps.MapTypeId.ROADMAP
-        });
-
-
-        map.addListener('click', () => {
-            if (infoWindow) {
-                infoWindow.close();
-            }
-        });
-
-        var request = $.ajax({
-            type: 'GET',
-            dataType: 'json',
-            url: urlFetch,
-        });
-        request.done(function (data) {
-            if (data.photos.length > 0) {
-                $.each(data.photos, function (i, item) {
-                    var dataPhoto = data.photos[i];
-                    var latLng = new google.maps.LatLng(dataPhoto.latitude, dataPhoto.longitude);
-                    var marker = new google.maps.Marker({
-                        position: latLng,
-                        title: dataPhoto.name,
-                        animation: google.maps.Animation.DROP,
-                        label: {
-                            fontFamily: "'Font Awesome 5 Free'",
-                            text: '\uf1ad',
-                            fontWeight: '500',
-                            fontSize: "16px",
-                            color: '#fff',
-                        }
-                    });
-                    markers.push(marker);
-                    marker.addListener('click', function () {
-                        infoWindow.setContent(`
-                            <img src="` + urlLogo + dataPhoto.logo_path + `" alt="` + dataPhoto.name + `" width="100" class="center">
-                            <h6>` + dataPhoto.name + `</h6>
-                            <hr>
-                            <p>` + dataPhoto.address + `<br>
-                            <i class="fa fa-phone"></i>&nbsp;` + dataPhoto.phone + `<br><i class="fa fa-envelope"></i>&nbsp;` + dataPhoto.email + `</p>
-                          `);
-                        infoWindow.open(map, marker);
-                    });
-                });
-                var markerCluster = new MarkerClusterer(map, markers, {imagePath: urlMarker});
-            }
-        });
+    /********** Template CSS **********/
+    :root {
+        --primary: #009CFF;
+        --secondary: #777777;
+        --light: #F8F8F8;
+        --dark: #252525;
     }
-    google.maps.event.addDomListener(window, 'load', initialize);
-</script>
+
+    .back-to-top {
+        position: fixed;
+        display: none;
+        right: 30px;
+        bottom: 30px;
+        z-index: 99;
+    }
+
+
+    /*** Spinner ***/
+    #spinner {
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity .5s ease-out, visibility 0s linear .5s;
+        z-index: 99999;
+    }
+
+    #spinner.show {
+        transition: opacity .5s ease-out, visibility 0s linear 0s;
+        visibility: visible;
+        opacity: 1;
+    }
+
+
+    /*** Header ***/
+    #header-carousel .carousel-caption {
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0, 0, 0, .1);
+        z-index: 1;
+    }
+
+    .page-header {
+        background: linear-gradient(rgba(0, 0, 0, .5), rgba(0, 0, 0, .5)), url(../images/carousel-1.jpg) center center no-repeat;
+        background-size: cover;
+    }
+
+
+    /*** Footer ***/
+    .footer .btn.btn-link {
+        display: block;
+        margin-bottom: 5px;
+        padding: 0;
+        text-align: left;
+        color: var(--secondary);
+        font-weight: normal;
+        text-transform: capitalize;
+        transition: .3s;
+    }
+
+    .footer .btn.btn-link::before {
+        position: relative;
+        content: "\f105";
+        font-family: "Font Awesome 5 Free";
+        font-weight: 900;
+        color: var(--secondary);
+        margin-right: 10px;
+    }
+
+    .footer .btn.btn-link:hover {
+        color: var(--primary);
+        letter-spacing: 1px;
+        box-shadow: none;
+    }
+
+    .footer .copyright {
+        padding: 25px 0;
+        font-size: 15px;
+        border-top: 1px solid rgba(256, 256, 256, .1);
+    }
+
+    .footer .copyright a {
+        color: var(--light);
+    }
+
+    .footer .copyright a:hover {
+        color: var(--primary);
+    }
+
+    /** our services */
+    section#features {
+        padding: 20px 0;
+        min-height: 50vh;
+    }
+
+    a,
+    a:hover,
+    a:focus,
+    a:active {
+        text-decoration: none;
+        outline: none;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .bg-gray {
+        background-color: #f9f9f9;
+    }
+
+    .site-heading h2 {
+        display: block;
+        font-weight: 700;
+        margin-bottom: 10px;
+        text-transform: uppercase;
+    }
+
+    .site-heading h2 span {
+        color: #ffaf5a;
+    }
+
+    .site-heading h4 {
+        display: inline-block;
+        padding-bottom: 20px;
+        position: relative;
+        text-transform: capitalize;
+        z-index: 1;
+    }
+
+    .site-heading h4::before {
+        background: #ffaf5a none repeat scroll 0 0;
+        bottom: 0;
+        content: "";
+        height: 2px;
+        left: 50%;
+        margin-left: -25px;
+        position: absolute;
+        width: 50px;
+    }
+
+    .site-heading {
+        margin-bottom: 60px;
+        overflow: hidden;
+        margin-top: -5px;
+    }
+
+
+    .features-items,
+    .features-items .items-box {
+        overflow: hidden;
+    }
+
+    .features-area .equal-height::after {
+        background: #e7e7e7 none repeat scroll 0 0;
+        content: "";
+        height: 100%;
+        position: absolute;
+        right: -1px;
+        top: 0;
+        width: 1px;
+    }
+
+    /* .features-area.item-full .equal-height::before {
+        background: #e7e7e7 none repeat scroll 0 0;
+        content: "";
+        height: 1px;
+        position: absolute;
+        bottom: -1px;
+        right: 0;
+        width: 100%;
+    } */
+
+    .features-area .features-items .col-md-5,
+    .features-area .features-items .col-md-7 {
+        display: table-cell;
+        float: none;
+        vertical-align: middle;
+    }
+
+    .features-area .features-items.reversed .col-md-5,
+    .features-area .features-items.reversed .col-md-7 {
+        display: inline-block;
+        float: left;
+    }
+
+    .features-area .features-items.reversed .info-box {
+        float: right;
+    }
+
+    .features-area .features-items .item {
+        padding: 15px 30px;
+    }
+
+    .features-area.item-full .features-items .item {
+        padding: 30px;
+    }
+
+    .features-area .features-items .item h4 {
+        position: relative;
+    }
+
+    .features-area.bottom-small {
+        padding-bottom: 25px;
+    }
+
+    .features-area.default-padding.bottom-none {
+        padding-bottom: 30px;
+    }
+
+    .features-area .item .icon {
+        margin-bottom: 20px;
+    }
+
+    .features-area .item .info {
+        color: black;
+    }
+
+    .features-area .item .icon i {
+        background: #ffffff none repeat scroll 0 0;
+        -webkit-border-radius: 50%;
+        -moz-border-radius: 50%;
+        border-radius: 50%;
+        -moz-box-shadow: 0 0 10px #cccccc;
+        -webkit-box-shadow: 0 0 10px #cccccc;
+        -o-box-shadow: 0 0 10px #cccccc;
+        box-shadow: 0 0 10px #cccccc;
+        color: #1e375b;
+        display: inline-block;
+        font-size: 30px;
+        height: 100px;
+        line-height: 100px;
+        position: relative;
+        text-align: center;
+        width: 100px;
+        z-index: 1;
+        border-color: #9aa3b5;
+        border-style: solid;
+    }
+
+    .features-area .features-items .items-box i {
+        background: transparent;
+    }
+
+    .features-area .item .icon {
+        margin-bottom: 25px;
+    }
+
+    .features-area .features-items.icon-solid i {
+        border-radius: inherit;
+        -moz-box-shadow: 0 0 10px #cccccc;
+        -webkit-box-shadow: 0 0 10px #cccccc;
+        -o-box-shadow: 0 0 10px #cccccc;
+        box-shadow: 0 0 10px #cccccc;
+        color: #1e375b;
+        display: inline-block;
+        font-size: 50px;
+        height: 80px;
+        line-height: 80px;
+        position: relative;
+        text-align: center;
+        width: 80px;
+    }
+
+
+    .features-area .item .info h4 {
+        font-weight: 600;
+        text-transform: capitalize;
+        font-size: 20px;
+    }
+
+    .features-area .item .info p {
+        margin: 0;
+    }
+
+    .features-area .features-items.less-icon .items-box.inc-cell .item .info {
+        padding-left: 0;
+    }
+
+    .features-area .features-items .items-box.inc-cell .item .info a {
+        color: #666666;
+        display: inline-block;
+        margin-top: 15px;
+        text-transform: uppercase;
+    }
+
+    .features-area .features-items .items-box.inc-cell .item .info a:hover {
+        color: #ffaf5a;
+    }
+</style>
 @stop

@@ -32,8 +32,8 @@ class ProfileController extends Controller {
         $users = Auth::user();
         $user = $users->name;
         if ($users->role_id == '35') {
-            $provinsis = \App\Models\Provinsi::pluck('name', 'id');
-            $kotas = \App\Models\Kota::pluck('name', 'id');
+            $provinsis = \App\Models\Provinsi::pluck('name', 'prov_code AS id');
+            $kotas = \App\Models\Kota::pluck('name', 'city_code AS id');
             $jeniss = \App\Models\Jenisusaha::pluck('name', 'id');
             $bidangs = \App\Models\Bidangusaha::pluck('name', 'id');
             return view('pjk3.profile', [
@@ -77,6 +77,23 @@ class ProfileController extends Controller {
                 'golongan' => $golongan,
                 'unitkerja' => $unitkerja
             ]);
+        } elseif ($users->role_id == '38') {
+            $provinsis = \App\Models\Provinsi::pluck('name', 'id');
+            $kotas = \App\Models\Kota::pluck('name', 'id');
+            $jabatan = \App\Models\Jabatan::pluck('name', 'id');
+            $pangkat = \App\Models\Pangkat::pluck('name', 'id');
+            $golongan = \App\Models\Golongan::pluck('name', 'id');
+            $unitkerja = \App\Models\Unitkerja::pluck('name', 'id');
+            return view('profile.pengawas', [
+                'provinsis' => $provinsis,
+                'kotas' => $kotas,
+                'user' => $user,
+                'users' => $users,
+                'jabatan' => $jabatan,
+                'pangkat' => $pangkat,
+                'golongan' => $golongan,
+                'unitkerja' => $unitkerja
+            ]);   
         } else {
             return view('profile', compact('user'));
         }
@@ -166,8 +183,8 @@ class ProfileController extends Controller {
         $fieldValidate = [
             'name' => ['required', 'string', 'max:255'],
             'address' => ['required', 'string', 'max:255'],
-            'id_provinsi' => ['required', 'numeric'],
-            'id_kota' => ['required', 'numeric'],
+            'prov_code' => ['required', 'string'],
+            'city_code' => ['required', 'string'],
             'phone' => ['required', 'string', 'max:18', 'regex:/^[0-9]+$/'],
             'longitude' => ['required', 'string', 'max:255'],
             'latitude' => ['required', 'string', 'max:255'],
@@ -238,8 +255,8 @@ class ProfileController extends Controller {
             'name' => $request->name,
             'slug' => $slug,
             'address' => $request->address,
-            'id_provinsi' => $request->id_provinsi,
-            'id_kota' => $request->id_kota,
+            'prov_code' => $request->prov_code,
+            'city_code' => $request->city_code,
             'phone' => $request->phone,
             'longitude' => $request->longitude,
             'latitude' => $request->latitude,
@@ -271,6 +288,7 @@ class ProfileController extends Controller {
         $users = Auth::user();
         $fieldValidate = [
             'name' => ['required', 'string', 'max:255'],
+            'nip' => ['required', 'string', 'max:18'],
             'birth_place' => ['required', 'string', 'max:100'],
             'birth_date' => ['required', 'date_format:Y-m-d'],
             'id_jabatan' => ['required', 'numeric'],

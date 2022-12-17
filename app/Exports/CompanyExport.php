@@ -15,17 +15,16 @@ namespace App\Exports;
  */
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use App\Models\Jenis;
 
-class JenisExport implements FromCollection, WithHeadings {
+class CompanyExport implements FromCollection, WithHeadings {
 
     //put your code here
     public function collection() {
-        return Jenis::select('code', 'name')->get();
+        return \App\Models\Company::select('id', 'name', 'address', 'phone', 'email')->get();
     }
 
     public function headings(): array {
-        return ["Code", "Name"];
+        return ['id', 'name', 'address', 'phone', 'email'];
     }
 
 }

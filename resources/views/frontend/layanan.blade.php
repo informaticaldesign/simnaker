@@ -3,7 +3,7 @@
 @section('title', 'Simnaker')
 @section('content')
 <!-- ======= Hero Section ======= -->
-<div class="row p-1">
+<div class="row p-1" style="margin-top: 80px;">
     <div class="col-sm-4">
         @include('frontend.auth.login')
     </div>
@@ -11,18 +11,18 @@
         <div id="carouselExample" class="carousel slide w-100" data-bs-ride="carousel" data-bs-interval="3000">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active"></button>
-                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1"></button>
-                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2"></button>
+                <!-- <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2"></button> -->
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img class="d-block w-100 layanan" src="{{ asset('images/s1.jpeg') }}" alt="First slide">
+                    <img class="d-block w-100 layanan" src="{{ asset('images/s1-1.jpeg') }}" alt="First slide">
                     <div class="carousel-caption d-none d-md-block">
                         <h5>Layanan K3 Online</h5>
                         <p>Dinas Tenaga Kerja dan Transmigrasi Provinsi Banten</p>
                     </div>
                 </div>
-                <div class="carousel-item">
+                {{-- <div class="carousel-item">
                     <img class="d-block w-100 layanan" src="{{ asset('images/s2.jpeg') }}" alt="Second slide">
                     <div class="carousel-caption d-none d-md-block">
                         <h5>Layanan K3 Online</h5>
@@ -49,7 +49,7 @@
                         <h5>Layanan K3 Online</h5>
                         <p>Dinas Tenaga Kerja dan Transmigrasi Provinsi Banten</p>
                     </div>
-                </div>
+                </div> --}}
             </div>
             <button class="carousel-control-prev" data-bs-target="#carouselExample" type="button" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>

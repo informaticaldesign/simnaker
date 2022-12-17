@@ -24,8 +24,7 @@
                 <h3 class="card-title">Perusahaan <small>list</small></h3>
                 <div class="card-tools">
                     <a href="{{ url('/company/create') }}" class="btn btn-tool"><i class="fas fa-plus text-primary"></i></a>
-                    <a href="#" class="btn btn-tool disabled"><i class="fas fa-file-excel text-gray-300"></i></a>
-                    <a href="#" class="btn btn-tool disabled"><i class="fas fa-file-pdf text-gray-300"></i></a>
+                    <a href="{{ url('/company/export_excel') }}" class="btn btn-tool text-success btn-action-excel"><i class="fas fa-file-excel text-success"></i></a>
                 </div>
             </div>
             <!-- /.card-header -->
@@ -36,7 +35,12 @@
                             <th width="50px">No</th>
                             <th width="50px">Logo</th>
                             <th>Nama</th>
-                            <th width="200px">Action</th>
+                            @if($comp_type == 'company')
+                            <th>Total Pengawas</th>
+                            @else
+                            <th>Total Perusahaan</th>
+                            @endif
+                            <th width="300px">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -130,12 +134,13 @@
         var _dataTable = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('company.fetch') }}",
+            ajax: "{{ route('company.fetch',['comp_type'=>$comp_type ]) }}",
             columns: [
-                {data: 'rownum', name: 'rownum'},
+                {data: 'DT_RowIndex', name: 'id'},
                 {data: 'image', name: 'image'},
                 {data: 'name', name: 'name'},
-                {data: 'action', name: 'action', orderable: false, searchable: false},
+                {data: 'ttl_pengawas', name: 'ttl_pengawas'},
+                {data: 'action', name: 'action', orderable: false, searchable: false}
             ],
         });
         var Toast = Swal.mixin({

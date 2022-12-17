@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Banknota;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +9,8 @@ class Configs extends Model {
 
     use HasFactory;
 
+    protected $table = 'sim_banknota_configs';
+    
     protected $fillable = [
         "key", "value"
     ];

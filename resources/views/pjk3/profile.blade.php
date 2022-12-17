@@ -74,25 +74,25 @@
                             </div>
                         </div>
                         <div class="mb-1">
-                            <label for="id_kota" class="col-sm-12 col-form-label">Kabupaten/Kota <span class="text-danger">*</span></label>
+                            <label for="city_code" class="col-sm-12 col-form-label">Kabupaten/Kota <span class="text-danger">*</span></label>
                             <div class="col-sm-12">
-                                <select class="form-control" id="id_kota" name="id_kota">
+                                <select class="form-control" id="city_code" name="city_code">
                                     @foreach ($kotas as $key => $kota)
                                     <option value="{{ $key }}">{{ $kota }}</option>
                                     @endforeach
                                 </select>
-                                <div class="invalid-feedback invalid-id_kota"></div>
+                                <div class="invalid-feedback invalid-city_code"></div>
                             </div>
                         </div>
                         <div class="mb-1">
-                            <label for="id_provinsi" class="col-sm-12 col-form-label">Provinsi <span class="text-danger">*</span></label>
+                            <label for="prov_code" class="col-sm-12 col-form-label">Provinsi <span class="text-danger">*</span></label>
                             <div class="col-sm-12">
-                                <select class="form-control" id="id_provinsi" name="id_provinsi">
+                                <select class="form-control" id="prov_code" name="prov_code">
                                     @foreach ($provinsis as $key => $provinsi)
                                     <option value="{{ $key }}">{{ $provinsi }}</option>
                                     @endforeach
                                 </select>
-                                <div class="invalid-feedback invalid-id_provinsi"></div>
+                                <div class="invalid-feedback invalid-prov_code"></div>
                             </div>
                         </div>
                         <div class="mb-1">

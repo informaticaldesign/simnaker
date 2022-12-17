@@ -16,14 +16,15 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @author heryhandoko
  */
-class Bidangusaha extends Model {
+class Usercompany extends Model {
 
     //put your code here
     use HasFactory;
 
-    protected $table = 'm_bidang_usaha';
+    protected $table = 'sim_user_company';
     protected $fillable = [
-        'name',
+        'user_id',
+        'company_id',
         'created_at',
         'created_by',
         'updated_at',

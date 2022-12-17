@@ -22,10 +22,6 @@
         <div class="card card-primary card-outline" style="border-top: 3px solid #1e375a !important;">
             <div class="card-header">
                 <h3 class="card-title">Proses <small>list</small></h3>
-                <div class="card-tools">
-                    <a href="#" class="btn btn-tool"><i class="fas fa-file-excel text-gray-300"></i></a>
-                    <a href="#" class="btn btn-tool" target="_blank"><i class="fas fa-file-pdf text-gray-300"></i></a>
-                </div>
             </div>
             <!-- /.card-header -->
             <div class="card-body">
@@ -37,6 +33,7 @@
                             <th>Tanggal Pengajuan</th>
                             <th>Nama Perusahaan</th>
                             <th width="100px">Status</th>
+                            <th width="100px">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,8 +47,16 @@
     <!-- /.col -->
 </div>
 @stop
-
+@section('css')
+<link href="https://cdn.datatables.net/buttons/1.7.1/css/buttons.dataTables.min.css" rel="stylesheet" type="text/css"/>
+@stop
 @section('js')
+<script src="{{ asset('vendor/datatables-plugins/buttons/js/dataTables.buttons.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('vendor/datatables-plugins/jszip/jszip.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('vendor/datatables-plugins/pdfmake/pdfmake.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('vendor/datatables-plugins/pdfmake/vfs_fonts.js') }}" type="text/javascript"></script>
+<script src="{{ asset('vendor/datatables-plugins/buttons/js/buttons.html5.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('vendor/datatables-plugins/buttons/js/buttons.print.min.js') }}" type="text/javascript"></script>
 <script>
     $(function () {
         $.ajaxSetup({
@@ -69,7 +74,12 @@
                 {data: 'tgl_surat', name: 'no_surat'},
                 {data: 'company_name', name: 'company_name'},
                 {data: 'status', name: 'status'},
+                {data: 'action', name: 'action'},
             ],
+            dom: 'Bfrtip',//'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
         });
     });
 </script>

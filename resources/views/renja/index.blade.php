@@ -51,7 +51,8 @@
                     <button class="btn btn-tool btn-sm text-success btn-action-print" >
                         <i class="fas fa-print text-warning"></i>
                     </button>
-                    <a href="{{ url('/admin/renja/excel') }}" class="btn btn-tool btn-sm text-success btn-action-excel"><i class="fas fa-file-excel text-danger"></i></a>
+                    <a href="{{ url('/admin/renja/view') }}" class="btn btn-tool btn-sm text-success btn-action-excel"><i class="fas fa-eye text-danger"></i></a>
+                    <!--<a href="{{ url('/admin/renja/excel') }}" class="btn btn-tool btn-sm text-success btn-action-excel"><i class="fas fa-file-excel text-danger"></i></a>-->
                 </div>
             </div>
             <!-- /.card-header -->
@@ -86,11 +87,16 @@
                             <option value="Pembinaan">Pembinaan</option>
                             <option value="Pemeriksaan">Pemeriksaan</option>
                             <option value="Pengujian">Pengujian</option>
-                            <option value="Penyidikan Tindak Pidana Ketenagakerjaan">Penyidikan Tindak Pidana Ketenagakerjaan</option>
+                            <option value="Penyidikan Tindak Pidana Ketenagakerjaan">Penyidikan Tindak Pidana</option>
                         </select>
                         <div class="invalid-feedback invalid-jenis_kegiatan"></div>
-<!--                        <input type="text" class="form-control form-control-border" name="jenis_kegiatan" placeholder="Jenis Kegiatan" maxlength="256">
-                        <div class="invalid-feedback invalid-jenis_kegiatan"></div>-->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="type_kegiatan" class="col-sm-12 control-label">Tipe Kegiatan</label>
+                    <div class="col-sm-12">
+                        <input type="text" class="form-control" name="type_kegiatan" value="Berkala">
+                        <div class="invalid-feedback invalid-type_kegiatan"></div>
                     </div>
                 </div>
                 <div class="form-group">
@@ -103,12 +109,7 @@
                 <div class="form-group">
                     <label for="company_id" class="col-sm-12 control-label">Nama Perusahaan</label>
                     <div class="col-sm-12">
-                        <select class="form-control company" name="company_id">
-                            <option value="" selected disabled>Pilih Perusahaan</option>
-                            @foreach ($company as $key => $val)
-                            <option value="{{ $key }}">{{ $val }}</option>
-                            @endforeach
-                        </select>
+                        <select class="form-control company" id="mySelect2" name="company_id"></select>
                         <div class="invalid-feedback invalid-company_id"></div>
                     </div>
                 </div>
@@ -158,6 +159,8 @@
 <link href="{{ asset('vendor/fullcalendar-plugins/timegrid/main.min.css') }}" rel="stylesheet" type="text/css"/>
 <link href="{{ asset('vendor/fullcalendar-plugins/bootstrap/main.min.css') }}" rel="stylesheet" type="text/css"/>
 <link href="{{ asset('vendor/jquery-ui/jquery-ui.min.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('vendor/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css">
+<link href="{{ asset('vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
 <style>
     .fc-sat { 
         color:blue; 
@@ -184,6 +187,7 @@
 <script src="{{ asset('vendor/fullcalendar-plugins/interaction/main.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('vendor/fullcalendar-plugins/daygrid/main.min.js') }}" type="text/javascript"></script>
 <script src="{{ asset('vendor/fullcalendar-plugins/bootstrap/main.min.js') }}" type="text/javascript"></script>
+<script src="{{ asset('vendor/select2/js/select2.min.js') }}" type="text/javascript"></script>
 <script>
 $(function () {
     $.ajaxSetup({
@@ -201,7 +205,7 @@ $(function () {
     function handleDatesRender(arg) {
         var _month = moment(arg.view.currentStart).format('M');
         var _year = moment(arg.view.currentStart).format('Y');
-        $('a.btn-action-excel').attr('href', '/admin/renja/export_excel?m=' + _month + '&y=' + _year);
+        $('a.btn-action-excel').attr('href', '/admin/renja/view/' + _month + '/' + _year);
     }
     var calendar = new FullCalendar.Calendar(calendarEl, {
         plugins: ['interaction', 'dayGrid'],
@@ -218,6 +222,9 @@ $(function () {
             url: "{{ url('admin/renja/event') }}",
             method: 'get',
             dataType: 'json',
+            extraParams: {
+                menu: 'pegawai'
+            },
             failure: function () {
                 Toast.fire({
                     icon: 'error',
@@ -241,13 +248,16 @@ $(function () {
                 $.each(e, function (index, value) {
                     var status = '';
                     switch (value.status) {
-                        case 'proses':
+                        case 'terkirim':
                             status = 'callout-warning';
                             break;
                         case 'disetujui':
                             status = 'callout-success';
                             break;
                         case 'ditolak':
+                            status = 'callout-danger';
+                            break;
+                        case 'reject_upt':
                             status = 'callout-danger';
                             break;
                     }
@@ -336,12 +346,14 @@ $(function () {
                         icon: 'success',
                         title: 'Data berhasil di update'
                     });
-                    calendar.refetchEvents();
+                    window.location.reload();
                 } else {
                     Toast.fire({
                         icon: 'error',
-                        title: 'Data gagal di update'
+                        title: result.message
                     });
+                    $('button.btn-action-save').html('<i class="far fa-save"></i> Simpan');
+                    $('button.btn-action-save').prop('disabled', false);
                 }
             },
             error: function (err) {
@@ -396,6 +408,23 @@ $(function () {
                 });
             }
         });
+    });
+
+    $('#mySelect2').select2({
+        placeholder: 'Pilih perusahaan',
+        minimumInputLength: 1,
+        ajax: {
+            url: "{{ url('admin/renja/company') }}",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    term: params.term || '',
+                    page: params.page || 1
+                };
+            },
+            cache: true
+        }
     });
 });
 </script>

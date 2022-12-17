@@ -1,16 +1,16 @@
 @extends('adminlte::page')
 
-@section('title', 'Sifat Dokumen')
+@section('title', 'Upt')
 
 @section('content_header')
 <div class="row mb-2">
     <div class="col-sm-6">
-        <h1>Sifat Dokumen</h1>
+        <h1>Upt</h1>
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="{{ url('/') }}">Master</a></li>
-            <li class="breadcrumb-item active">Sifat Dokumen</li>
+            <li class="breadcrumb-item active">Upt</li>
         </ol>
     </div>
 </div>
@@ -21,7 +21,7 @@
     <div class="col-12">
         <div class="card card-primary card-outline">
             <div class="card-header">
-                <h3 class="card-title">Sifat Dokumen <small>list</small></h3>
+                <h3 class="card-title">Upt <small>list</small></h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-tool btn-action-add" data-toggle="tooltip" data-placement="top" title="Add Modules">
                         <i class="fas fa-plus text-primary"></i>
@@ -37,6 +37,8 @@
                         <tr>
                             <th width="50px">No</th>
                             <th>Nama</th>
+                            <th>Total Pegawai</th>
+                            <th>Ttl. Perush</th>
                             <th width="200px">Action</th>
                         </tr>
                     </thead>
@@ -88,10 +90,12 @@
         var _dataTable = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('sifatdok.fetch') }}",
+            ajax: "{{ route('admin.upt.fetch') }}",
             columns: [
                 {data: 'id', name: 'id'},
                 {data: 'name', name: 'name'},
+                {data: 'ttl_pegawai', name: 'ttl_pegawai'},
+                {data: 'ttl_comp', name: 'ttl_comp'},
                 {data: 'action', name: 'action', orderable: false, searchable: false},
             ],
         });
@@ -115,7 +119,7 @@
                 if (result.isConfirmed) {
                     $.ajax({
                         type: "DELETE",
-                        url: "{{ url('sifatdok/destroy') }}" + "/" + id,
+                        url: "{{ url('admin/upt/destroy') }}" + "/" + id,
                         dataType: 'JSON',
                         data: {
                             'id': id,
@@ -137,8 +141,8 @@
             $('button.btn-save').html('<i class="far fa-save"></i> Simpan');
             $('button.btn-save').prop('disabled', false);
             var id = $(this).data('id');
-            $.get("sifatdok" + '/' + id + '/edit', function (data) {
-                $('#modelHeading').html("Edit Sifat Dokumen");
+            $.get("/admin/upt" + '/' + id + '/edit', function (data) {
+                $('#modelHeading').html("Edit Upt");
                 $('#ajaxModel').modal('show');
                 $('#id').val(data.id);
                 $('#name').val(data.name);
@@ -151,8 +155,8 @@
             $('.form-control').removeClass('is-invalid');
             $('.invalid-name').text('');
             var id = $(this).data('id');
-            $.get("sifatdok" + '/' + id + '/edit', function (data) {
-                $('#modelHeading').html("View Sifat Dokumen");
+            $.get("/admin/upt" + '/' + id + '/edit', function (data) {
+                $('#modelHeading').html("View Upt");
                 $('#ajaxModel').modal('show');
                 $('#id').val(data.id);
                 $('#name').val(data.name);
@@ -162,7 +166,7 @@
         });
 
         $('body').on('click', '.btn-action-add', function () {
-            $('#modelHeading').html("Add Sifat Dokumen");
+            $('#modelHeading').html("Add Upt");
             $('#ajaxModel').modal('show');
             $('#id').val('');
             $('button.btn-submit-update').show();
@@ -179,7 +183,7 @@
             $('.form-control').removeClass('is-invalid');
             $('.invalid-name').text('');
             $.ajax({
-                url: "sifatdok/update",
+                url: "{{ route('admin.upt.update') }}",
                 method: 'PUT',
                 data: $('#MyForm').serialize(),
                 success: function (result) {

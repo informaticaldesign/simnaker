@@ -16,12 +16,12 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @author heryhandoko
  */
-class Sifatdok extends Model {
+class Tembusan extends Model {
 
     //put your code here
     use HasFactory;
 
-    protected $table = 'm_sifat_doc';
+    protected $table = 'm_tembusan';
     protected $fillable = [
         'name',
         'created_at',

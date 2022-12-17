@@ -50,6 +50,8 @@
                             <th>Jabatan</th>
                             <th>Pangkat</th>
                             <th>Golongan</th>
+                            <th>Ttl. Perush</th>
+                            <th>Ttl. UPT</th>
                             <th width="200px">Action</th>
                         </tr>
                     </thead>
@@ -73,10 +75,10 @@
                 {{ Form::open(array('id' => 'PenggunaForm','name'=>'PenggunaForm', 'class'=>'form-horizontal')) }}
                 <input type="hidden" name="pengguna_id" id="pengguna_id">
                 <div class="form-group">
-                    <label for="nik" class="col-sm-2 control-label">Nik</label>
+                    <label for="nip" class="col-sm-2 control-label">Nip</label>
                     <div class="col-sm-12">
-                        <input type="text" class="form-control nip_pengawas" id="nik" name="nik" maxlength="21">
-                        <div class="invalid-feedback invalid-nik"></div>
+                        <input type="text" class="form-control nip_pengawas" id="nip" name="nip" maxlength="21">
+                        <div class="invalid-feedback invalid-nip"></div>
                     </div>
                 </div>
 
@@ -148,6 +150,8 @@ $(function () {
             {data: 'jabatan_name', name: 'jabatan_name'},
             {data: 'pangkat_name', name: 'pangkat_name'},
             {data: 'golongan_name', name: 'golongan_name'},
+            {data: 'ttl_comp', name: 'ttl_comp'},
+            {data: 'ttl_upt', name: 'ttl_upt'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ],
     });
@@ -189,7 +193,7 @@ $(function () {
     });
     $('body').on('click', '.action-edit', function () {
         $('.form-control').removeClass('is-invalid');
-        $('.invalid-nik').text('');
+        $('.invalid-nip').text('');
         $('.invalid-name').text('');
         $('.invalid-email').text('');
         $('.invalid-address').text('');
@@ -205,8 +209,8 @@ $(function () {
             $('#name').prop('readonly', false);
             $('#email').val(data.email);
             $('#email').prop('readonly', false);
-            $('#nik').val(data.nik);
-            $('#nik').prop('readonly', false);
+            $('#nip').val(data.nip);
+            $('#nip').prop('readonly', false);
             $('#phone').val(data.phone);
             $('#phone').prop('readonly', false);
             $('#address').val(data.address);
@@ -217,7 +221,7 @@ $(function () {
 
     $('body').on('click', '.action-view', function () {
         $('.form-control').removeClass('is-invalid');
-        $('.invalid-nik').text('');
+        $('.invalid-nip').text('');
         $('.invalid-name').text('');
         $('.invalid-email').text('');
         $('.invalid-address').text('');
@@ -227,8 +231,8 @@ $(function () {
             $('#modelHeading').html("View Pengguna");
             $('#ajaxModel').modal('show');
             $('#pengguna_id').val(data.id);
-            $('#nik').val(data.nik);
-            $('#nik').prop('readonly', true);
+            $('#nip').val(data.nip);
+            $('#nip').prop('readonly', true);
             $('#name').val(data.name);
             $('#name').prop('readonly', true);
             $('#email').val(data.email);
@@ -257,13 +261,13 @@ $(function () {
         $('button.btn-submit-update').prop('disabled', true);
         e.preventDefault();
         $('.form-control').removeClass('is-invalid');
-        $('.invalid-nik').text('');
+        $('.invalid-nip').text('');
         $('.invalid-name').text('');
         $('.invalid-email').text('');
         $('.invalid-address').text('');
         $('.invalid-phone').text('');
         $.ajax({
-            url: "pengguna/update",
+            url: "{{ route('pengguna.update') }}",
             method: 'PUT',
             data: $('#PenggunaForm').serialize(),
             success: function (result) {

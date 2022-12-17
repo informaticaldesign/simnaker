@@ -8,7 +8,7 @@
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item"><a href="{{ url('admin/pengajuan') }}">Suket Online</a></li>
+            <li class="breadcrumb-item"><a href="{{ url('admin/proses') }}">Suket Online</a></li>
             <li class="breadcrumb-item active">Pengajuan</li>
         </ol>
     </div>
@@ -88,9 +88,14 @@
                 </p>
                 <div class="col-lg-4">
                     <div class="form-group">
-                        <label for="name">Nama Perusahaan Pemilik Obyek K3 </label>
-                        <input type="text" class="form-control" id="name" placeholder="" readonly value="{{ Auth::user()->name }}">
-                        <div class="invalid-feedback invalid-name"></div>
+                        <label for="company_id">Nama Perusahaan Pemilik Obyek K3 </label>
+                        <select class="form-control" name="company_id">
+                            <option value="" selected disabled>Pilih Perusahaan</option>
+                            @foreach ($companies as $key => $company)
+                            <option value="{{ $key }}" {{ $key == $data->company_id ? 'selected' : '' }}>{{ $company }}</option>
+                            @endforeach
+                        </select>
+                        <div class="invalid-feedback invalid-company_id"></div>
                     </div>
                     <div class="form-group">
                         <label for="tgl">Tanggal Surat Permohonan</label>
@@ -99,7 +104,7 @@
                     </div>
                 </div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <a class="btn btn-warning mr-1" href="{{ url('admin/pengajuan/create/2') }}/{{ $id }}"><i class="fas fa-arrow-left"></i>&nbsp;Sebelumnya</a>
+                    <a class="btn btn-warning mr-1" href="{{ url('admin/proses/create/2') }}/{{ $id }}"><i class="fas fa-arrow-left"></i>&nbsp;Sebelumnya</a>
                     <button class="btn btn-success btn-action-next">Selanjutnya&nbsp;<i class="fas fa-arrow-right"></i></button>
                 </div>
             </div>
@@ -135,7 +140,7 @@ $(function () {
         var _form = $("form#MyForm");
         var formData = new FormData(_form[0]);
         $.ajax({
-            url: "{{ url('admin/pengajuan/store') }}",
+            url: "{{ url('admin/proses/store') }}",
             type: "POST",
             data: formData,
             enctype: 'multipart/form-data',
@@ -143,7 +148,7 @@ $(function () {
             contentType: false,
             success: function (result) {
                 if (result.success) {
-                    window.location.href = "{{ url('admin/pengajuan/create/4')}}/" + result.data.id;
+                    window.location.href = "{{ url('admin/proses/create/4')}}/" + result.data.id;
                 }
             },
             error: function (err) {

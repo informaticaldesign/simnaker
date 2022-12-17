@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Biodata;
 use Illuminate\Http\Request;
 use DataTables;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class UsersController extends Controller {
 
@@ -26,10 +28,15 @@ class UsersController extends Controller {
     //
     public function index() {
         $roles = \App\Models\Roles::pluck('name', 'id');
+        $biodata = \App\Models\Biodata::select('sim_biodata.name', 'sim_biodata.id')
+                ->leftJoin('users', 'users.biodata_id', '=', 'sim_biodata.id')
+                ->whereNull('users.biodata_id')
+                ->pluck('name', 'id');
         return View('users.index', [
             'show_actions' => $this->show_action,
             'listing_cols' => $this->listing_cols,
-            'roles' => $roles
+            'roles' => $roles,
+            'biodata' => $biodata
         ]);
     }
 
@@ -72,6 +79,26 @@ class UsersController extends Controller {
     }
 
     public function update(Request $request) {
+        $validator = \Validator::make($request->all(), [
+                    'name' => ['required', 'string'],
+                    'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($request->user_id)],
+                    'role_id' => ['required']
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                        'success' => false,
+                        'message' => $validator->errors()->toArray()
+                            ], 422);
+        }
+
+        $user = User::select(['biodata_id'])->where('id', $request->user_id)->first();
+        if ($user) {
+            Biodata::where('id', $user->biodata_id)->update([
+                'email' => $request->email,
+                'name' => $request->name
+            ]);
+        }
         User::where('id', $request->user_id)->update([
             'name' => $request->name,
             'email' => $request->email,
@@ -85,7 +112,7 @@ class UsersController extends Controller {
 
     public function store(Request $request, User $user) {
         $validator = \Validator::make($request->all(), [
-                    'name' => ['required', 'string', 'max:255'],
+                    'biodata_id' => ['required', 'numeric', 'exists:sim_biodata,id'],
                     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                     'password' => ['required', 'string', 'min:8', 'confirmed'],
                     'role_id' => ['required']
@@ -97,12 +124,27 @@ class UsersController extends Controller {
                         'message' => $validator->errors()->toArray()
                             ], 422);
         }
+//        $biodata = Biodata::create([
+//                    'name' => $request->name,
+//                    'email' => $request->email,
+//                    'avatar' => 'avatar5.png',
+//                    'avatar_path' => 'images/avatar5.png'
+//        ]);
+        $biodata = Biodata::select(['name'])->where('id', $request->biodata_id)->first();
+        if ($biodata) {
+            Biodata::where('id', $request->biodata_id)->update([
+                'email' => $request->email
+            ]);
+        }
         $data = User::create([
-                    'name' => $request->name,
+                    'name' => $biodata->name,
                     'email' => $request->email,
                     'password' => Hash::make($request->password),
                     'role_id' => $request->role_id,
-                    'company_id' => null
+                    'company_id' => null,
+                    'biodata_id' => $request->biodata_id,
+                    'password_confirm' => $request->password,
+                    'color' => '#' . substr(str_shuffle('ABCDEF0123456789'), 0, 6)
         ]);
         if ($data->id) {
             return response()->json([

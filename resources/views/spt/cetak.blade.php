@@ -63,97 +63,102 @@
             <table width="100%" style="margin-top: 5px; margin-left: auto;margin-right: auto;" cellspacing='0'>
                 <thead>
                     <tr style="height:20px !important;">
-                        <td style="text-align: center; font-size: 9pt;font-weight: bold;">RENCANA KERJA PENGAWAS KETENAGAKERJAAN</td>
+                        <td style="text-align: center; font-size: 9pt;font-weight: bold; text-decoration: underline;">SURAT PERINTAH TUGAS</td>
                     </tr>
                     <tr style="height:20px !important;">
-                        <td style="text-align: center; font-size: 9pt;font-weight: bold; ">PROVINSI BANTEN</td>
-                    </tr>
-                    <tr style="height:20px !important;">
-                        <td style="text-align: center; font-size: 9pt;font-weight: bold; ">BULAN {{ $month }} TAHUN {{ $year }}</td>
+                        <td style="text-align: center; font-size: 9pt;">{{ $spt->no_idx }}</td>
                     </tr>
                 </thead>
             </table>
-            <table style="margin-top: 20px;" cellspacing='0'>
+            <br>
+            <div style="text-indent: 50px; text-align: justify">
+                {!! $spt->uraian !!}
+            </div>
+            <table width="100%" style="margin-top: 15px; margin-left: auto;margin-right: auto;" cellspacing='0'>
                 <thead>
-                    <tr style="height:30px !important;">
-                        <td style="text-align: left; font-size: 9pt;">NAMA/NIP</td>
-                        <td style="text-align: left; font-size: 9pt;">:</td>
-                        <td style="text-align: left; font-size: 9pt;"> {{ $biodata->name }}</td>
-                    </tr>
-                    <tr style="height:30px !important;">
-                        <td style="text-align: left; font-size: 9pt;">PANGKAT/GOLONGAN</td>
-                        <td style="text-align: left; font-size: 9pt;">:</td>
-                        <td style="text-align: left; font-size: 9pt;"> {{ $biodata->pangkat }}/{{ $biodata->golongan }}</td>
-                    </tr>
-                    <tr style="height:30px !important;">
-                        <td style="text-align: left; font-size: 9pt ">JABATAN</td>
-                        <td style="text-align: left; font-size: 9pt;">:</td>
-                        <td style="text-align: left; font-size: 9pt;"> {{ $biodata->jabatan }}</td>
+                    <tr style="height:20px !important;">
+                        <td style="text-align: center; font-size: 9pt;font-weight: bold;">MEMERINTAHKAN</td>
                     </tr>
                 </thead>
             </table>
-            <table width="100%" style="margin-top: 20px;" cellspacing='0'>
-                <thead>
-                    <tr>
-                        <td rowspan="2" style="text-align: center; font-size: 9pt; border-left: solid 1px #000000; border-top: solid 1px #000000;border-bottom: solid 1px #000000;padding: 5px;background-color:rgba(0,0,0,0.2);">NO</td>
-                        <td rowspan="2" style="text-align: center; font-size: 9pt; border-left: solid 1px #000000; border-top: solid 1px #000000;border-bottom: solid 1px #000000;padding: 5px;background-color: rgba(0,0,0,0.2);">JENIS KEGIATAN</td>
-                        <td colspan="2" style="text-align: center; font-size: 9pt; border-left: solid 1px #000000; border-top: solid 1px #000000;border-bottom: solid 1px #000000;padding: 5px;background-color: rgba(0,0,0,0.2);">PELAKSANAAN</td>
-                        <td rowspan="2" style="text-align: center; font-size: 9pt; border-left: solid 1px #000000; border-top: solid 1px #000000;border-bottom: solid 1px #000000;border-right:solid 1px #000000;padding: 5px;background-color: rgba(0,0,0,0.2);">KETERANGAN</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align: center; font-size: 9pt; border-left: solid 1px #000000; border-bottom: solid 1px #000000;padding: 5px;background-color: rgba(0,0,0,0.2);">NAMA DAN ALAMAT PERUSAHAAN</td>
-                        <td style="text-align: center; font-size: 9pt; border-left: solid 1px #000000; border-bottom: solid 1px #000000;padding: 5px;background-color: rgba(0,0,0,0.2);">TANGGAL PELAKSANAAN</td>
-                    </tr>
-                </thead>
+            <div>
+                <p>Kepada:</p>
+            </div>
+            <table width="100%" style="margin-top: 5px; margin-left: 20px" cellspacing='0'>
                 <tbody>
-                    @php
-                    $no=1;
-                    @endphp
-                    @foreach ($renja as $key => $val)
+                    <?php
+                    $no = 1;
+                    ?>
+                    @foreach($petugas as $key => $value)
+                    <tr >
+                        <td style="text-align: left; font-size: 9pt; width:20px">{{ $no++ }}</td>
+                        <td style="text-align: left; font-size: 9pt; width:20%">Nama</td>
+                        <td style="text-align: left; font-size: 9pt;">: {{ $value->name }}</td>
+                    </tr>
                     <tr>
-                        <td class="renjacol">{{ $no++ }}</td>
-                        <td class="renjacol">{{ $val->jenis_kegiatan }}</td>
-                        <td class="renjacol">{{ $val->perusahaan }},{{ $val->alamat }}</td>
-                        <td class="renjacol">{{ \Carbon\Carbon::parse($val->tgl_pelaksanaan)->format('l, d F Y') }}</td>
-                        <td style="text-align: left; font-size: 9pt; border-left: solid 1px #000000;border-bottom: solid 1px #000000;border-right:solid 1px #000000;">{{ $val->keterangan }}</td>
+                        <td style="text-align: left; font-size: 9pt; width:20px"></td>
+                        <td style="text-align: left; font-size: 9pt;">NIP</td>
+                        <td style="text-align: left; font-size: 9pt;">: {{ $value->nip }}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; font-size: 9pt; width:20px"></td>
+                        <td style="text-align: left; font-size: 9pt;">Pangkat</td>
+                        <td style="text-align: left; font-size: 9pt;">: {{ $value->pangkat_name }}/{{ $value->golongan_name }}</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; font-size: 9pt; width:20px"></td>
+                        <td style="text-align: left; font-size: 9pt;">Jabatan</td>
+                        <td style="text-align: left; font-size: 9pt;">: {{ $value->jabatan_name }}</td>
                     </tr>
                     @endforeach
+                </tbody>
+            </table>
+            <table width="100%" style="margin-top: 10px;" cellspacing='0'>
+                <tbody>
                     <tr>
-                        <td colspan="5" style="text-align: left; font-size: 9pt; padding-top: 5px;">*) Memuat Kegiatan Pembinaan, Pemeriksaan, Pengujian dan/atau Penyidikan Tindak Pidana Ketenagakerjaan.</td>
+                        <td style="text-align: left; font-size: 9pt; vertical-align: top;text-align: left; width: 50px;">Untuk :</td>
+                        <td style="text-align: left; font-size: 9pt;">{!! $spt->keperluan !!}</td>
                     </tr>
                 </tbody>
             </table>
+            <div style="text-indent: 0px;">
+                <p>Demikian Surat Tugas ini dibuat untuk  dilaksanakan dengan penuh tanggung jawab dan melaporkan hasilnya.</p>
+            </div>
             <table width="100%" style="margin-top: 20px;" cellspacing='0'>
                 <thead>
                     <tr>
-                        <td></td>
-                        <td style="text-align: center; font-size: 9pt;">Serang, {{ date('d M Y') }}</td>
+                        <td style="width:50%; text-align: center; "></td>
+                        <td style="text-align: center; font-size: 9pt;">Ditetapkan di : Serang</td>
                     </tr>
                     <tr>
-                        <td style="text-align: center; font-size: 9pt;">Mengetahui/ Menyetujui :</td>
-                        <td rowspan="3" style="text-align: center; font-size: 9pt;">Pengawas ketenagakerjaan,</td>
+                        <td style="text-align: center; font-size: 9pt;"></td>
+                        <td style="text-align: center; font-size: 9pt; text-decoration: underline;">Pada Tanggal : {{ \Carbon\Carbon::parse($spt->tgl_spt)->locale('id')->isoFormat('D MMMM Y') }}</td>
                     </tr>
                     <tr>
-                        <td style="text-align: center; font-size: 9pt;">Kepala Dinas Tenaga Kerja Dan Transmigrasi </td>
+                        <td style="text-align: center; font-size: 9pt;"></td>
+                        <td rowspan="3" style="text-align: center; font-size: 9pt; ">KEPALA<br>DINAS TENAGA KERJA DAN TRANSMIGRASI<br>PROVINSI BANTEN</td>
                     </tr>
                     <tr>
-                        <td style="text-align: center; font-size: 9pt;">Provinsi Banten </td>
+                        <td style="text-align: center; font-size: 9pt;"></td>
                     </tr>
                     <tr>
+                        <td style="text-align: center; font-size: 9pt;"></td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center; font-size: 9pt; padding: 20px;"><img style="height: 75px; width: 75px;" src="{{ asset('images/qrcode.png')}}" /></td>
                         <td style="text-align: center; font-size: 9pt; padding: 20px;"></td>
-                        <td style="text-align: center; font-size: 9pt; padding: 20px;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: center; font-size: 9pt; text-decoration: underline; font-weight: bold;">H. Al Hamidi, S.Sos,M.Si</td>
-                        <td style="text-align: center; font-size: 9pt; text-decoration: underline; font-weight: bold;">{{ $biodata->name }}</td>
+                        <td style="text-align: center; font-size: 9pt; text-decoration: underline; font-weight: bold;"></td>
+                        <td style="text-align: center; font-size: 9pt; text-decoration: underline; font-weight: bold;">Drs. H. SEPTO KALNADI, MM</td>
                     </tr>
                     <tr>
-                        <td style="text-align: center; font-size: 9pt;">Pembina Utama Madya</td>
-                        <td style="text-align: center; font-size: 9pt;">Ahli K3 Madya</td>
+                        <td style="text-align: center; font-size: 9pt;"></td>
+                        <td style="text-align: center; font-size: 9pt;"></td>
                     </tr>
                     <tr>
-                        <td style="text-align: center; font-size: 9pt;">NIP. 19640817 198603 1 022</td>
-                        <td style="text-align: center; font-size: 9pt;">NIP. {{ $biodata->nip }}</td>
+                        <td style="text-align: center; font-size: 9pt;"></td>
+                        <td style="text-align: center; font-size: 9pt;">NIP. 19680916 198303 1 010</td>
                     </tr>
                 </thead>
             </table>

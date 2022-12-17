@@ -10,7 +10,8 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\Company;
 use App\Models\Visitors;
-
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 /**
  * Description of BerandaController
  *
@@ -23,11 +24,14 @@ class BerandaController {
         $visitor = new Visitors();
         $visitor->created_at = date('Y-m-d H:i:s');
         $visitor->save();
-        $topic = \App\Models\Group::select(['name', 'slug', 'icon'])->orderBy('hierarchy', 'asc')->get();
-        $datasets = \App\Models\Dataset::select(['title', 'slug', 'api_id', 'home_view', 'chart_type'])->where('home_view', '>', 0)->orderBy('home_view', 'asc')->get();
+        $slider = \App\Models\Homepage::where('status', 1)
+                ->where('start_date', '<=', Carbon::now())
+                ->where('end_date', '>=', Carbon::now())
+                ->orderBy('sorting', 'ASC')
+                ->orderBy('id', 'DESC')
+                ->get();
         return view('frontend.home', [
-            'topics' => $topic,
-            'datasets' => $datasets
+            'slider' => $slider
         ]);
     }
 

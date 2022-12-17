@@ -127,6 +127,6 @@ class RolesController extends Controller {
                 DB:: table('role_module')->where('role_id', $id)->where('module_id', $module->id)->update(['acc_view' => 0, 'acc_create' => 0, 'acc_edit' => 0, 'acc_delete' => 0]);
             }
         }
-        return redirect()->route('roles.show', ['id' => 1, 'role' => 'module'])->with('message', 'Role update Successfully');
+        return redirect()->route('roles.show', ['id' => $id, 'role' => 'module'])->with('message', 'Role update Successfully');
     }
 }

@@ -14,6 +14,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use File;
+use DB;
 
 class RegistrasiController {
 
@@ -53,8 +54,8 @@ class RegistrasiController {
                     'bidang_usaha' => ['required', 'numeric'],
                     'filenpwp' => ['required', 'max:2000', 'min:10', 'mimes:pdf'],
                     'fileakta' => ['required', 'max:2000', 'min:10', 'mimes:pdf'],
-//                    'password' => ['required', 'string', 'min:8', 'confirmed'],
-//                    'password_confirmation' => ['required', 'string', 'min:8', 'same:password'],
+                    'password' => ['required', 'string', 'min:8', 'confirmed'],
+                    'password_confirmation' => ['required', 'string', 'min:8', 'same:password'],
 //                    'logo' => ['required', 'max:10000', 'min:8', 'mimes:jpg,jpeg,png'],
 //                    'captcha' => ['required', 'captcha'],
         ]);
@@ -106,7 +107,7 @@ class RegistrasiController {
             if (!File::exists($pathMonthx)) {
                 File::makeDirectory($pathMonthx, 0755, true, true);
             }
-            $pdfnamex = $photo->getClientOriginalName();
+            $pdfnamex = $photox->getClientOriginalName();
             $pdfpathx = 'uploads' . DIRECTORY_SEPARATOR . $_domainx . DIRECTORY_SEPARATOR . date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR . $pdfnamex;
             $photox->move($pathMonthx, $pdfnamex);
         }
@@ -141,7 +142,11 @@ class RegistrasiController {
             'logo_path' => 'uploads/logo/building-logo.jpeg',
             'created_at' => date('Y-m-d H:i:s'),
             'comp_type' => 'agent',
-            'slug' => $slug
+            'slug' => $slug,
+            'filenpwp' => $pdfname,
+            'filenpwp_path' => $pdfpath,
+            'fileakta' => $pdfnamex,
+            'fileakta_path' => $pdfpathx
         ];
         $result = $datapost->storeData($input);
         if ($result) {
@@ -152,6 +157,14 @@ class RegistrasiController {
 //                'role_id' => 35,
 //                'company_id' => $result->id
 //            ]);
+            DB::table('users_temp')->insert([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'password_confirm' => $request->password,
+                'role_id' => 35,
+                'company_id' => $result->id
+            ]);
             return response()->json([
                         'success' => true,
                         'message' => 'Pendaftaran PJK3 Berhasil',

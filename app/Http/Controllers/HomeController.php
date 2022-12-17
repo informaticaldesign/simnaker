@@ -45,14 +45,18 @@ class HomeController extends Controller {
                 $rjapprove = \App\Models\Renja::where('status', 'disetujui')->where('created_by', $user->id)->whereYear('tgl_pelaksanaan', date('Y'))->count();
                 $rjreject = \App\Models\Renja::where('status', 'ditolak')->whereYear('tgl_pelaksanaan', date('Y'))->where('created_by', $user->id)->count();
                 $profile = \App\Models\Biodata::where('id', $user->biodata_id)->first();
-                return view('dashboard.pengawas', [
-                    'rjall' => $rjall,
-                    'rjwaiting' => $rjwaiting,
-                    'rjapprove' => $rjapprove,
-                    'rjreject' => $rjreject,
-                    'profile' => $profile,
-                    'users' => $user
-                ]);
+                if ($profile) {
+                    return view('dashboard.pengawas', [
+                        'rjall' => $rjall,
+                        'rjwaiting' => $rjwaiting,
+                        'rjapprove' => $rjapprove,
+                        'rjreject' => $rjreject,
+                        'profile' => $profile,
+                        'users' => $user
+                    ]);
+                } else {
+                    return redirect()->route('profile');
+                }
             }
         } elseif ($user->role_id == 37) {
             if (!$user->biodata_id) {
@@ -67,6 +71,42 @@ class HomeController extends Controller {
                     'company' => $company,
                     'visitor' => $visitor,
                     'inbox' => 0,
+                    'profile' => $profile,
+                    'users' => $user
+                ]);
+            }
+        } elseif ($user->role_id == 38) {
+            if (!$user->biodata_id) {
+                return redirect()->route('profile');
+            } else {
+                $rjall = \App\Models\Renja::where('created_by', $user->id)->whereYear('tgl_pelaksanaan', date('Y'))->count();
+                $rjwaiting = \App\Models\Renja::where('status', 'approve_upt')->whereYear('tgl_pelaksanaan', date('Y'))->count();
+                $rjapprove = \App\Models\Renja::where('status', 'disetujui')->whereYear('tgl_pelaksanaan', date('Y'))->count();
+                $rjreject = \App\Models\Renja::where('status', 'ditolak')->whereYear('tgl_pelaksanaan', date('Y'))->count();
+                $profile = \App\Models\Biodata::where('id', $user->biodata_id)->first();
+                return view('dashboard.kabid', [
+                    'rjall' => $rjall,
+                    'rjwaiting' => $rjwaiting,
+                    'rjapprove' => $rjapprove,
+                    'rjreject' => $rjreject,
+                    'profile' => $profile,
+                    'users' => $user
+                ]);
+            }
+        } elseif ($user->role_id == 39) {
+            if (!$user->biodata_id) {
+                return redirect()->route('profile');
+            } else {
+                $rjall = \App\Models\Renja::where('created_by', $user->id)->whereYear('tgl_pelaksanaan', date('Y'))->count();
+                $rjwaiting = \App\Models\Renja::where('status', 'terkirim')->whereYear('tgl_pelaksanaan', date('Y'))->count();
+                $rjapprove = \App\Models\Renja::where('status', 'approve_upt')->whereYear('tgl_pelaksanaan', date('Y'))->count();
+                $rjreject = \App\Models\Renja::where('status', 'reject_upt')->whereYear('tgl_pelaksanaan', date('Y'))->count();
+                $profile = \App\Models\Biodata::where('id', $user->biodata_id)->first();
+                return view('dashboard.kabid', [
+                    'rjall' => $rjall,
+                    'rjwaiting' => $rjwaiting,
+                    'rjapprove' => $rjapprove,
+                    'rjreject' => $rjreject,
                     'profile' => $profile,
                     'users' => $user
                 ]);
@@ -348,7 +388,7 @@ class HomeController extends Controller {
     }
 
     public function chartline() {
-
+        $user = Auth::user();
         $proses = DB::table('sys_month')
                 ->leftJoin('sim_visitors', function ($join) {
                     $user = Auth::user();
@@ -410,6 +450,66 @@ class HomeController extends Controller {
                                 'borderColor' => '#dc3545',
                             ]
                         ]
+                    ]
+        ]);
+    }
+
+    public function notifcount() {
+        $users = Auth::user();
+        $suketPengajuan = 0;
+        $suketProses = 0;
+        $company = 0;
+        $sptOpen = 0;
+        $renjaUpt = 0;
+        $pengaduan = 0;
+        if ($users->role_id == 38) {
+            $suketPengajuan = DB::table('sim_suket')
+                    ->where('status', 'terkirim')
+                    ->count();
+            $company = DB::table('m_company')
+                    ->where('status', 0)
+                    ->where('comp_type', 'agent')
+                    ->count();
+
+            $renjaUpt = DB::table('sim_renja')
+                    ->join('users', 'users.id', '=', 'sim_renja.created_by')
+                    ->join('sim_biodata', 'sim_biodata.id', '=', 'users.biodata_id')
+                    ->where('sim_renja.status', 'approve_upt')
+                    ->count();
+            $pengaduan = DB::table('sim_pengaduan')
+                    ->where('status', 0)
+                    ->count(); 
+                    
+        } elseif ($users->role_id == 39) {
+            $suketProses = DB::table('sim_suket')
+                    ->where('status', 'proses')
+                    ->where('biodata_upt_id', $users->biodata_id)
+                    ->count();
+            $upt = DB::table('sim_user_upt')->select('upt_id')->where('biodata_id', $users->biodata_id)->first();
+            $renjaUpt = DB::table('sim_renja')
+                    ->join('users', 'users.id', '=', 'sim_renja.created_by')
+                    ->join('sim_biodata', 'sim_biodata.id', '=', 'users.biodata_id')
+                    ->join('sim_user_upt', 'sim_user_upt.biodata_id', '=', 'sim_biodata.id')
+                    ->where('sim_renja.status', 'terkirim')
+                    ->where('sim_user_upt.upt_id', $upt->upt_id)
+                    ->count();
+        } elseif ($users->role_id == 34) {
+            $sptOpen = DB::table('sim_spt')
+                    ->join('sim_spt_biodata', 'sim_spt_biodata.spt_id', '=', 'sim_spt.id')
+                    ->where('sim_spt.status', 'open')
+                    ->where('sim_spt_biodata.biodata_id', $users->biodata_id)
+                    ->count();
+        }
+        return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'pjkkk_proses' => $company,
+                        'suket_online' => $suketPengajuan,
+                        'suket_proses' => $suketProses,
+                        'spt_open' => $sptOpen,
+                        'renja_upt' => $renjaUpt,
+                        'pengaduan' => $pengaduan,
+                        'notif_all' => $company + $suketPengajuan + $suketProses + $sptOpen + $renjaUpt + $pengaduan,
                     ]
         ]);
     }

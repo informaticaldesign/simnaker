@@ -42,7 +42,7 @@ class TerverifikasiController {
                     ->leftJoin('m_company AS b', 'b.id', '=', 'a.company_id')
                     ->where('a.status', 'terverifikasi');
             if ($users->role_id == 35) {
-                $data->where('a.company_id', $users->company_id);
+                $data->where('a.created_by', $users->id);
             }
 
             return DataTables::of($data)
