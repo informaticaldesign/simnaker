@@ -1,0 +1,1612 @@
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+DROP TABLE IF EXISTS `bbns`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `bbns` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `no_registrasi` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis_id` bigint unsigned DEFAULT NULL,
+  `brand_id` bigint unsigned DEFAULT NULL,
+  `tahun` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `file_name` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `bidangs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `bidangs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `provinsi_id` bigint unsigned DEFAULT NULL,
+  `sektor_id` bigint unsigned DEFAULT NULL,
+  `label` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_opd_prov` (`provinsi_id`),
+  KEY `fk_opd_sektor` (`sektor_id`),
+  CONSTRAINT `fk_opd_prov` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsis` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_opd_sektor` FOREIGN KEY (`sektor_id`) REFERENCES `sektors` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `biodata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `biodata` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(500) CHARACTER SET utf8 DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(2000) CHARACTER SET utf8 DEFAULT NULL,
+  `phone` varchar(18) CHARACTER SET utf8 DEFAULT NULL,
+  `nik` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime NOT NULL,
+  `user_id` bigint DEFAULT NULL,
+  `ektp` varchar(2000) CHARACTER SET utf8 DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `brands`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `brands` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis_id` bigint unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_merk_jenis` (`jenis_id`) USING BTREE,
+  CONSTRAINT `fk_brand_jenis` FOREIGN KEY (`jenis_id`) REFERENCES `jeniss` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `configs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `configs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `key` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `section` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `value` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `datasets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `datasets` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `title` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `slug` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id_topic` bigint unsigned DEFAULT NULL,
+  `id_organization` bigint unsigned DEFAULT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `counter` int DEFAULT NULL,
+  `thumbnail` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `api_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '1',
+  `created_by` bigint DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `status` smallint NOT NULL,
+  `home_view` int NOT NULL DEFAULT '0',
+  `chart_type` varchar(12) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `fk_ds_topic` (`id_topic`),
+  KEY `fk_ds_orgeh` (`id_organization`),
+  CONSTRAINT `fk_ds_orgeh` FOREIGN KEY (`id_organization`) REFERENCES `organizations` (`id`),
+  CONSTRAINT `fk_ds_topic` FOREIGN KEY (`id_topic`) REFERENCES `groups` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `failed_jobs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `failed_jobs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `connection` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `queue` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `payload` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `exception` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `forminputs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `forminputs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `uraian` text,
+  `parent` bigint DEFAULT NULL,
+  `hierarchy` bigint DEFAULT NULL,
+  `satuan` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `suburusan_id` bigint unsigned DEFAULT NULL,
+  `urusan_id` bigint unsigned DEFAULT NULL,
+  `bidang_id` bigint unsigned DEFAULT NULL,
+  `sektor_id` bigint unsigned DEFAULT NULL,
+  `provinsi_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_form_urusan` (`urusan_id`),
+  KEY `fk_form_suburusan` (`suburusan_id`),
+  KEY `fk_form_opd` (`bidang_id`),
+  KEY `fk_form_prov` (`provinsi_id`),
+  KEY `fk_form_sektor` (`sektor_id`),
+  CONSTRAINT `fk_form_opd` FOREIGN KEY (`bidang_id`) REFERENCES `bidangs` (`id`),
+  CONSTRAINT `fk_form_prov` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsis` (`id`),
+  CONSTRAINT `fk_form_sektor` FOREIGN KEY (`sektor_id`) REFERENCES `sektors` (`id`),
+  CONSTRAINT `fk_form_suburusan` FOREIGN KEY (`suburusan_id`) REFERENCES `suburusans` (`id`),
+  CONSTRAINT `fk_form_urusan` FOREIGN KEY (`urusan_id`) REFERENCES `urusans` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `groups` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `hierarchy` int DEFAULT NULL,
+  PRIMARY KEY (`id`,`slug`) USING BTREE,
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `infografiks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `infografiks` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `name` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `slug` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `icon` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` varchar(4000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `counter` int DEFAULT NULL,
+  `id_topic` bigint unsigned DEFAULT NULL,
+  `id_organization` bigint unsigned DEFAULT NULL,
+  `created_by` bigint NOT NULL,
+  `updated_by` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_graf_topic` (`id_topic`),
+  KEY `fk_graf_orgeh` (`id_organization`),
+  CONSTRAINT `fk_graf_orgeh` FOREIGN KEY (`id_organization`) REFERENCES `organizations` (`id`),
+  CONSTRAINT `fk_graf_topic` FOREIGN KEY (`id_topic`) REFERENCES `groups` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `infografiks_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `infografiks_detail` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `id_infografis` bigint unsigned DEFAULT NULL,
+  `fullpath` varchar(1000) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_detail_graf` (`id_infografis`),
+  CONSTRAINT `fk_detail_graf` FOREIGN KEY (`id_infografis`) REFERENCES `infografiks` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `jenis_pemeriksaan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `jenis_pemeriksaan` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `jeniss`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `jeniss` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_bidang_usaha`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_bidang_usaha` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_company`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_company` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `address` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `id_kota` bigint DEFAULT NULL,
+  `id_provinsi` bigint DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `phone` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `longitude` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `latitude` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `logo` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nib` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `no_wlkp` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `jenis_usaha` bigint DEFAULT NULL,
+  `bidang_usaha` bigint DEFAULT NULL,
+  `npp_bpjs` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `no_npwp` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pemeriksa` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nik_ktp_p` varchar(24) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `penanggung_jwb` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nik_ktp_t` varchar(24) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `logo_path` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` smallint DEFAULT '0',
+  `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reg_code` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `id_kel` bigint DEFAULT NULL,
+  `id_kec` bigint DEFAULT NULL,
+  `id_sektor` bigint DEFAULT NULL,
+  `kel_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `kec_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `prov_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `registrasi_no` varchar(26) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `sektor_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `filenpwp` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `filenpwp_path` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fileakta` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `fileakta_path` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `comp_type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `id` (`id`),
+  KEY `fk_kab` (`city_code`),
+  KEY `fk_kec` (`kec_code`),
+  KEY `fk_kel` (`kel_code`),
+  CONSTRAINT `fk_kab` FOREIGN KEY (`city_code`) REFERENCES `m_kota` (`city_code`) ON UPDATE RESTRICT,
+  CONSTRAINT `fk_kec` FOREIGN KEY (`kec_code`) REFERENCES `m_kecamatan` (`kec_code`) ON UPDATE RESTRICT,
+  CONSTRAINT `fk_kel` FOREIGN KEY (`kel_code`) REFERENCES `m_kelurahan` (`kel_code`) ON UPDATE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_golongan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_golongan` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `golongan_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_jabatan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_jabatan` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `jabatan_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_kecamatan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_kecamatan` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `kec_code` varchar(18) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city_code` varchar(18) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`,`kec_code`) USING BTREE,
+  KEY `kec_code` (`kec_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_kelurahan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_kelurahan` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `kel_code` varchar(18) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `kec_code` varchar(18) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`,`kel_code`) USING BTREE,
+  KEY `kel_code` (`kel_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_kota`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_kota` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `prov_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `city_code` varchar(18) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`,`city_code`) USING BTREE,
+  KEY `city_code` (`city_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_pangkat`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_pangkat` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `pangkat_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_pemeriksaan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_pemeriksaan` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_provinsi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_provinsi` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `prov_code` varchar(18) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`,`prov_code`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_sektor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_sektor` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `sektor_code` varchar(18) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`,`sektor_code`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_sifat_doc`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_sifat_doc` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_tembusan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_tembusan` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_templates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_templates` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `content` text COLLATE utf8_unicode_ci,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_type_periksa`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_type_periksa` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_unit_kerja`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_unit_kerja` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_upt`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_upt` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `m_usaha`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `m_usaha` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `menus`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `menus` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `module_id` bigint unsigned DEFAULT NULL,
+  `parent` int unsigned NOT NULL DEFAULT '0',
+  `hierarchy` int unsigned NOT NULL DEFAULT '0',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_menus_module` (`module_id`),
+  CONSTRAINT `fk_menus_module` FOREIGN KEY (`module_id`) REFERENCES `modules` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `migrations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `migrations` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `batch` int NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `modules`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `modules` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `fa_icon` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `oauth_access_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `oauth_access_tokens` (
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `client_id` bigint unsigned NOT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `scopes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `revoked` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `expires_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_access_tokens_user_id_index` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `oauth_auth_codes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `oauth_auth_codes` (
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  `client_id` bigint unsigned NOT NULL,
+  `scopes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `revoked` tinyint(1) NOT NULL,
+  `expires_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_auth_codes_user_id_index` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `oauth_clients`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `oauth_clients` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint unsigned DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `secret` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `provider` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `redirect` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `personal_access_client` tinyint(1) NOT NULL,
+  `password_client` tinyint(1) NOT NULL,
+  `revoked` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_clients_user_id_index` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `oauth_personal_access_clients`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `oauth_personal_access_clients` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `client_id` bigint unsigned NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `oauth_refresh_tokens`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `oauth_refresh_tokens` (
+  `id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `access_token_id` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `revoked` tinyint(1) NOT NULL,
+  `expires_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `oauth_refresh_tokens_access_token_id_index` (`access_token_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `organizations`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `organizations` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `slug` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `hierarchy` int DEFAULT NULL,
+  `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`,`slug`) USING BTREE,
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `password_resets`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `password_resets` (
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  KEY `password_resets_email_index` (`email`),
+  CONSTRAINT `fk_pasres_user` FOREIGN KEY (`email`) REFERENCES `users` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `pemeriksaans`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pemeriksaans` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `no_surat` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jml_lampiran` int DEFAULT NULL,
+  `perihal` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `no_spt` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tgl_spt` date DEFAULT NULL,
+  `sifat` bigint DEFAULT NULL,
+  `perusahaan` bigint DEFAULT NULL,
+  `jns_pemeriksaan` bigint DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `updated_by` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `pengawasans`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `pengawasans` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `pemeriksa` bigint DEFAULT NULL,
+  `tgl_pemeriksaan` date DEFAULT NULL,
+  `perusahaan` bigint DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `updated_by` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `perusahaans`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `perusahaans` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `provinsis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `provinsis` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `role_module`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role_module` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `role_id` bigint unsigned NOT NULL,
+  `module_id` bigint unsigned NOT NULL,
+  `acc_view` tinyint(1) NOT NULL,
+  `acc_create` tinyint(1) NOT NULL,
+  `acc_edit` tinyint(1) NOT NULL,
+  `acc_delete` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_rel_role_module` (`module_id`),
+  KEY `fk_rel_role_role` (`role_id`),
+  CONSTRAINT `fk_rel_role_module` FOREIGN KEY (`module_id`) REFERENCES `modules` (`id`),
+  CONSTRAINT `fk_rel_role_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `role_opd`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role_opd` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `role_id` int unsigned NOT NULL,
+  `opd_id` int unsigned NOT NULL,
+  `acc_view` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `role_module_role_id_foreign` (`role_id`),
+  KEY `role_module_module_id_foreign` (`opd_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `role_provinsi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role_provinsi` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `role_id` bigint unsigned NOT NULL,
+  `provinsi_id` bigint unsigned NOT NULL,
+  `acc_view` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `role_module_role_id_foreign` (`role_id`),
+  KEY `role_module_module_id_foreign` (`provinsi_id`),
+  CONSTRAINT `fk_rel_ole_prov` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_rel_role_role_x` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `role_sektor`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role_sektor` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `role_id` int unsigned NOT NULL,
+  `sektor_id` int unsigned NOT NULL,
+  `acc_view` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `role_module_role_id_foreign` (`role_id`),
+  KEY `role_module_module_id_foreign` (`sektor_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `role_suburusan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role_suburusan` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `role_id` int unsigned NOT NULL,
+  `suburusan_id` int unsigned NOT NULL,
+  `acc_view` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `role_module_role_id_foreign` (`role_id`),
+  KEY `role_module_module_id_foreign` (`suburusan_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `role_urusan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `role_urusan` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `role_id` bigint unsigned NOT NULL,
+  `urusan_id` bigint unsigned NOT NULL,
+  `acc_view` tinyint(1) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `role_module_role_id_foreign` (`role_id`),
+  KEY `role_module_module_id_foreign` (`urusan_id`),
+  CONSTRAINT `fk_rel_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_rel_role_urusan` FOREIGN KEY (`urusan_id`) REFERENCES `urusans` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `roles` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `description` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `satuans`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `satuans` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sektorals`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sektorals` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `provinsi_id` bigint unsigned DEFAULT NULL,
+  `bidang_id` bigint unsigned DEFAULT NULL,
+  `urusan_id` bigint unsigned DEFAULT NULL,
+  `suburusan_id` bigint unsigned DEFAULT NULL,
+  `tahun` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `sektor_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_sek_prov` (`provinsi_id`),
+  KEY `fk_sek_sektor` (`sektor_id`),
+  KEY `fk_sek_opd` (`bidang_id`),
+  KEY `fk_sek_urusan` (`urusan_id`),
+  KEY `fk_sek_subur` (`suburusan_id`),
+  CONSTRAINT `fk_sek_opd` FOREIGN KEY (`bidang_id`) REFERENCES `bidangs` (`id`),
+  CONSTRAINT `fk_sek_prov` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsis` (`id`),
+  CONSTRAINT `fk_sek_sektor` FOREIGN KEY (`sektor_id`) REFERENCES `sektors` (`id`),
+  CONSTRAINT `fk_sek_subur` FOREIGN KEY (`suburusan_id`) REFERENCES `suburusans` (`id`),
+  CONSTRAINT `fk_sek_urusan` FOREIGN KEY (`urusan_id`) REFERENCES `urusans` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sektorals_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sektorals_detail` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `komponen_id` bigint unsigned DEFAULT NULL,
+  `sektoral_id` bigint unsigned DEFAULT NULL,
+  `qty` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_head_sektorals` (`sektoral_id`),
+  KEY `fk_sek_komponenen` (`komponen_id`),
+  CONSTRAINT `fk_head_sektorals` FOREIGN KEY (`sektoral_id`) REFERENCES `sektorals` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_sek_komponenen` FOREIGN KEY (`komponen_id`) REFERENCES `forminputs` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sektors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sektors` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `provinsi_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_sektor_prov` (`provinsi_id`),
+  CONSTRAINT `fk_sektor_prov` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsis` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_banknota`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_banknota` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `document_no` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  `deleted_by` bigint DEFAULT NULL,
+  `status` enum('open','draft','send','waiting','approve','close','reject') CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `spt_id` bigint DEFAULT NULL,
+  `sifat_id` bigint DEFAULT NULL,
+  `kota` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `jenis_id` varchar(256) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `perihal` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tanggal` date DEFAULT NULL,
+  `company_name` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `company_id` bigint DEFAULT NULL,
+  `description_footer` text COLLATE utf8_unicode_ci,
+  `kadis_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `kadis_nip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pengawas_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pengawas_nip` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `version` int DEFAULT NULL,
+  `parent_id` bigint DEFAULT NULL,
+  `reason` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_banknota_configs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_banknota_configs` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `key` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `section` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT '',
+  `value` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_banknota_jenis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_banknota_jenis` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `uuid` varchar(256) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `deleted_at` datetime DEFAULT NULL,
+  `deleted_by` bigint DEFAULT NULL,
+  `status` enum('active','deactive') COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_banknota_no`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_banknota_no` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `banknota_id` bigint DEFAULT NULL,
+  `banknota_run_no` bigint DEFAULT NULL,
+  `banknota_idx_no` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `category` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `version` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_banknota_rel_jenis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_banknota_rel_jenis` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `banknota_id` bigint DEFAULT NULL,
+  `jenis_id` bigint DEFAULT NULL,
+  `description` text COLLATE utf8_unicode_ci,
+  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_banknota_jenis` (`banknota_id`),
+  CONSTRAINT `fk_banknota_jenis` FOREIGN KEY (`banknota_id`) REFERENCES `sim_banknota` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_banknota_rel_tembusan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_banknota_rel_tembusan` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `banknota_id` bigint DEFAULT NULL,
+  `tembusan_id` bigint DEFAULT NULL,
+  `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `updated_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_banknota_jenis` (`banknota_id`),
+  CONSTRAINT `sim_banknota_rel_tembusan_ibfk_1` FOREIGN KEY (`banknota_id`) REFERENCES `sim_banknota` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_bio_comp_suket`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_bio_comp_suket` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `biodata_id` bigint DEFAULT NULL,
+  `company_id` bigint DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `suket_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_biodata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_biodata` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `phone` varchar(18) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `nip` varchar(25) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `birth_place` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `birth_date` date DEFAULT NULL,
+  `id_jabatan` bigint DEFAULT NULL,
+  `id_golongan` bigint DEFAULT NULL,
+  `id_uptd` bigint DEFAULT NULL,
+  `id_kota` bigint DEFAULT NULL,
+  `id_provinsi` bigint DEFAULT NULL,
+  `avatar` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `avatar_path` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `latitude` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `longitude` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `id_pangkat` bigint DEFAULT NULL,
+  `jabatan_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `pangkat_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `golongan_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_homepage`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_homepage` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `subtitle` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `sorting` int DEFAULT NULL,
+  `img_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` tinyint DEFAULT '1',
+  `start_date` date DEFAULT NULL,
+  `end_date` date DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci ROW_FORMAT=DYNAMIC;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_manual`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_manual` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `judul` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` varchar(18) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `attachment` varchar(1000) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `slug` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `attachment_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_pemberitahuan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_pemberitahuan` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `no_idx` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `uraian` text CHARACTER SET utf8 COLLATE utf8_unicode_ci,
+  `tgl_notif` date DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `renja_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_pengaduan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_pengaduan` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `email` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `phone` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `jenis` varchar(64) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `kategori` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `lokasi` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `judul` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `laporan` text COLLATE utf8_unicode_ci,
+  `status` tinyint DEFAULT '0',
+  `created_at` datetime DEFAULT NULL,
+  `slug` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `lampiran` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `lampiran_path` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_regulasi`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_regulasi` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `type` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `judul` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tajuk` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `nomor` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tahun` varchar(4) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `jenis` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `singkatan` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tmp_netap` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tgl_netap` date DEFAULT NULL,
+  `tgl_undang` date DEFAULT NULL,
+  `sumber` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `lokasi` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `bid_hukum` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `bahasa` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `status` varchar(18) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `attachment` varchar(1000) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `view` int DEFAULT '0',
+  `attachment_name` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_renja`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_renja` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `jenis_kegiatan` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tgl_pelaksanaan` date DEFAULT NULL,
+  `company_id` bigint DEFAULT NULL,
+  `keterangan` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `approval_id` bigint DEFAULT NULL,
+  `approval_date` datetime DEFAULT NULL,
+  `color` varchar(25) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `reason` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `type_kegiatan` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `approval_next` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_renja_company` (`company_id`),
+  CONSTRAINT `fk_renja_company` FOREIGN KEY (`company_id`) REFERENCES `m_company` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_renja_approval`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_renja_approval` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `id_renja` bigint DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `description` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `approval_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_reporting_line`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_reporting_line` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `user_id` bigint DEFAULT NULL,
+  `parent_id` bigint DEFAULT NULL,
+  `sort_no` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_spt`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_spt` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `no_idx` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `uraian` text COLLATE utf8_unicode_ci,
+  `keperluan` text COLLATE utf8_unicode_ci,
+  `city_code` varchar(18) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `tgl_spt` date DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `suket_id` bigint DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `banknota_id` bigint DEFAULT NULL,
+  `renja_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_spt_biodata`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_spt_biodata` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `biodata_id` bigint DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `spt_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_spt_no`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_spt_no` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `spt_id` bigint DEFAULT NULL,
+  `spt_run_no` bigint DEFAULT NULL,
+  `spt_idx_no` varchar(64) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `category` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_spt_tembusan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_spt_tembusan` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `tembusan_id` bigint DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `spt_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_suket`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_suket` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `no_surat` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `company_id` bigint DEFAULT NULL,
+  `tgl_surat` date DEFAULT NULL,
+  `lampiran` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `lampiran_path` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `step` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `id_pemeriksaan` bigint DEFAULT NULL,
+  `jml_obyek` int DEFAULT NULL,
+  `attach_object` varchar(500) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `attach_object_path` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `id_type_pem` bigint DEFAULT NULL,
+  `biodata_upt_id` bigint DEFAULT NULL,
+  `reason` varchar(1000) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `approve_level` int DEFAULT NULL,
+  PRIMARY KEY (`id`,`no_surat`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_talkshow`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_talkshow` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `url` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  `slug` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `view` int DEFAULT NULL,
+  `thumbnail` smallint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_upt_company`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_upt_company` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `company_id` bigint DEFAULT NULL,
+  `upt_id` bigint DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_user_company`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_user_company` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `biodata_id` bigint DEFAULT NULL,
+  `company_id` bigint DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_user_upt`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_user_upt` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `biodata_id` bigint DEFAULT NULL,
+  `upt_id` bigint DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `created_by` bigint DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `updated_by` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_visitors`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_visitors` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `ip_address` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `platform` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `browser` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `parent` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `statuss`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `statuss` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_sts_jenis` (`jenis_id`),
+  CONSTRAINT `fk_status_jenis` FOREIGN KEY (`jenis_id`) REFERENCES `jeniss` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `stnks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `stnks` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `transaksi_id` bigint unsigned DEFAULT NULL,
+  `shortpath` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `filename` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_stnk_trans` (`transaksi_id`),
+  CONSTRAINT `fk_stnk_trans` FOREIGN KEY (`transaksi_id`) REFERENCES `transaksis` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `suburusans`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `suburusans` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `urusan_id` bigint unsigned DEFAULT NULL,
+  `bidang_id` bigint unsigned DEFAULT NULL,
+  `sektor_id` bigint unsigned DEFAULT NULL,
+  `provinsi_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_sub_urusan` (`urusan_id`),
+  KEY `fk_sub_prov` (`provinsi_id`),
+  KEY `fk_sub_sektor` (`sektor_id`),
+  KEY `fk_sub_opd` (`bidang_id`),
+  CONSTRAINT `fk_sub_opd` FOREIGN KEY (`bidang_id`) REFERENCES `bidangs` (`id`),
+  CONSTRAINT `fk_sub_prov` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsis` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_sub_sektor` FOREIGN KEY (`sektor_id`) REFERENCES `sektors` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_sub_urusan` FOREIGN KEY (`urusan_id`) REFERENCES `urusans` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sys_month`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sys_month` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `code` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `transaksis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transaksis` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `no_registrasi` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `address` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `brand_id` bigint unsigned DEFAULT NULL,
+  `tahun` varchar(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status_id` bigint unsigned DEFAULT NULL,
+  `status` varchar(18) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_by` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `email` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `user_id` bigint unsigned NOT NULL,
+  `jenis_id` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_tr_brand` (`brand_id`),
+  KEY `fk_tr_status` (`status_id`),
+  CONSTRAINT `fk_tr_brand` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_tr_status` FOREIGN KEY (`status_id`) REFERENCES `statuss` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `urusans`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `urusans` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `code` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `bidang_id` bigint unsigned DEFAULT NULL,
+  `sektor_id` bigint unsigned DEFAULT NULL,
+  `provinsi_id` bigint unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_urusan_prov` (`provinsi_id`),
+  KEY `fk_urusan_sektor` (`sektor_id`),
+  KEY `fk_urusan_opd` (`bidang_id`),
+  CONSTRAINT `fk_urusan_opd` FOREIGN KEY (`bidang_id`) REFERENCES `bidangs` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_urusan_prov` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsis` (`id`) ON DELETE SET NULL,
+  CONSTRAINT `fk_urusan_sektor` FOREIGN KEY (`sektor_id`) REFERENCES `sektors` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `role_id` bigint unsigned DEFAULT NULL,
+  `company_id` bigint DEFAULT NULL,
+  `biodata_id` bigint DEFAULT NULL,
+  `password_confirm` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `color` varchar(12) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `users_email_unique` (`email`),
+  KEY `fk_user_role` (`role_id`),
+  CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `visualisasis`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `visualisasis` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `name` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `slug` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `icon` varchar(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `description` varchar(2000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id_topic` bigint unsigned DEFAULT NULL,
+  `id_organization` bigint unsigned DEFAULT NULL,
+  `counter` int DEFAULT NULL,
+  `created_by` bigint NOT NULL,
+  `updated_by` bigint NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_vis_topic` (`id_topic`),
+  KEY `fk_vis_org` (`id_organization`),
+  CONSTRAINT `fk_vis_org` FOREIGN KEY (`id_organization`) REFERENCES `organizations` (`id`) ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!50003 DROP FUNCTION IF EXISTS `f_total_dataset` */;
+ALTER DATABASE `db_datasets` CHARACTER SET utf8 COLLATE utf8_general_ci ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` FUNCTION `f_total_dataset`(`id_orgeh` BIGINT) RETURNS int
+    DETERMINISTIC
+BEGIN
+  DECLARE total INT;
+	SET total = 0;
+	SELECT
+		COUNT( id ) INTO total 
+	FROM
+		datasets 
+	WHERE
+		id_organization = id_orgeh;
+  RETURN total;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+ALTER DATABASE `db_datasets` CHARACTER SET utf8 COLLATE utf8_unicode_ci ;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+INSERT INTO `migrations` VALUES (7,'2014_10_12_000000_create_users_table',1);
+INSERT INTO `migrations` VALUES (8,'2014_10_12_100000_create_password_resets_table',1);
+INSERT INTO `migrations` VALUES (9,'2019_08_19_000000_create_failed_jobs_table',1);
+INSERT INTO `migrations` VALUES (10,'2021_02_21_134347_create_modules_table',1);
+INSERT INTO `migrations` VALUES (12,'2021_02_21_185935_create_menus_table',2);
+INSERT INTO `migrations` VALUES (13,'2021_02_21_223909_create_roles_table',3);
+INSERT INTO `migrations` VALUES (14,'2021_02_22_015037_create_configs_table',4);
+INSERT INTO `migrations` VALUES (15,'2021_02_22_040000_create_provinsis_table',5);
+INSERT INTO `migrations` VALUES (16,'2021_02_22_082036_create_bidangs_table',6);
+INSERT INTO `migrations` VALUES (17,'2021_02_22_083131_create_urusans_table',7);
+INSERT INTO `migrations` VALUES (18,'2021_02_22_084115_create_satuans_table',8);
+INSERT INTO `migrations` VALUES (19,'2021_02_22_141232_create_forminputs_table',9);
+INSERT INTO `migrations` VALUES (20,'2021_02_22_160330_create_komponens_table',10);
+INSERT INTO `migrations` VALUES (21,'2021_02_24_000951_create_sektorals_table',11);
+INSERT INTO `migrations` VALUES (22,'2021_02_24_004544_create_suburusans_table',12);
+INSERT INTO `migrations` VALUES (23,'2021_03_10_041347_create_sektors_table',13);
+INSERT INTO `migrations` VALUES (24,'2016_06_01_000001_create_oauth_auth_codes_table',14);
+INSERT INTO `migrations` VALUES (25,'2016_06_01_000002_create_oauth_access_tokens_table',14);
+INSERT INTO `migrations` VALUES (26,'2016_06_01_000003_create_oauth_refresh_tokens_table',14);
+INSERT INTO `migrations` VALUES (27,'2016_06_01_000004_create_oauth_clients_table',14);
+INSERT INTO `migrations` VALUES (28,'2016_06_01_000005_create_oauth_personal_access_clients_table',14);
+INSERT INTO `migrations` VALUES (29,'2021_03_29_052035_create_brands_table',15);
+INSERT INTO `migrations` VALUES (30,'2021_03_29_054644_create_statuses_table',16);
+INSERT INTO `migrations` VALUES (31,'2021_03_29_055904_create_transaksis_table',17);
+INSERT INTO `migrations` VALUES (32,'2021_03_29_061525_create_manuals_table',18);
+INSERT INTO `migrations` VALUES (33,'2021_03_29_073420_create_jenis_table',19);
+INSERT INTO `migrations` VALUES (34,'2021_03_31_120523_create_stnks_table',20);
+INSERT INTO `migrations` VALUES (35,'2021_04_11_142709_create_blokirs_table',21);
+INSERT INTO `migrations` VALUES (36,'2021_04_11_160009_create_bbns_table',21);
+INSERT INTO `migrations` VALUES (37,'2021_04_29_102134_create_antrians_table',22);
+INSERT INTO `migrations` VALUES (38,'2021_05_17_152340_create_groups_table',23);
+INSERT INTO `migrations` VALUES (39,'2021_05_18_014505_create_organizations_table',24);
+INSERT INTO `migrations` VALUES (40,'2021_05_23_022520_create_visualisasis_table',25);
+INSERT INTO `migrations` VALUES (41,'2021_05_23_194828_create_infografiks_table',26);
+INSERT INTO `migrations` VALUES (42,'2021_05_26_002359_create_datasets_table',27);
+INSERT INTO `migrations` VALUES (43,'2021_12_21_171133_create_pemeriksaans_table',28);
+INSERT INTO `migrations` VALUES (44,'2021_12_21_171356_sim_pemeriksaan',28);
+INSERT INTO `migrations` VALUES (45,'2021_12_23_021423_create_pengawasans_table',29);

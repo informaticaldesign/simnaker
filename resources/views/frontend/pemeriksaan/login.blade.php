@@ -18,13 +18,13 @@
                         <div class="col-sm-12">
                             <h3>Masuk ke Akun</h3>
                             <p>Belum memiliki akun? <a href="{{ url('/akta-pemeriksaan') }}"><b>Daftar</b></a></p>
-                            <div class="mb-3 mt-4">
+                            <!-- <div class="mb-3 mt-4">
                                 <label for="nik" class="col-sm-12 col-form-label">Nomor Induk Kependudukan (No. KTP) <span class="text-danger">*</span></label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" name="nik" placeholder="Masukan Nomor Induk Kependudukan">
                                     <div class="invalid-feedback invalid-nik"></div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="mb-3">
                                 <label for="email" class="col-sm-12 col-form-label">Alamat Email <span class="text-danger">*</span></label>
                                 <div class="col-sm-12">
@@ -87,36 +87,18 @@
                 contentType: false,
                 success: function(result) {
                     if (result.success) {
-                        Swal.fire({
-                            title: 'Pengaduan Diterima',
-                            text: "Kami akan verifikasi dan proses pengaduan anda 1x24, terima kasih sudah menggunakan layanan pengaduan online kami.",
-                            icon: 'success',
-                            showCancelButton: false,
-                            confirmButtonColor: '#1e375b',
-                            confirmButtonText: 'Tutup'
-                        }).then((result) => {
-                            window.location.href = "{{ url('/')}}";
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Gagal',
-                            text: "Pengaduan gagal disimpan",
-                            icon: 'error',
-                            showCancelButton: false,
-                            confirmButtonColor: '#dc3741',
-                            confirmButtonText: 'Tutup'
-                        });
+                        window.location.href = "{{ url('/admin')}}";
                     }
                 },
                 error: function(err) {
-                    $.each(err.responseJSON.message, function(i, error) {
+                    $.each(err.responseJSON.errors, function(i, error) {
                         var _field = $(document).find('[name="' + i + '"]');
                         _field.addClass('is-invalid');
                         var el = $(document).find('[class="invalid-feedback invalid-' + i + '"]');
                         el.css('display', 'block');
                         el.text(error[0]);
                     });
-                    $('button.btn-action-daftar').html('<i class="far fa-save"></i> Simpan');
+                    $('button.btn-action-daftar').html('Masuk');
                     $('button.btn-action-daftar').prop('disabled', false);
                 }
             });

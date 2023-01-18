@@ -18,13 +18,13 @@
                         <div class="col-sm-12">
                             <h3>Pendaftaran Akun</h3>
                             <p>Sudah memiliki akun? <a href="{{ url('/akta-pemeriksaan/login') }}"><b>Masuk</b></a></p>
-                            <div class="mb-2 mt-4">
+                            <!-- <div class="mb-2 mt-4">
                                 <label for="nik" class="col-sm-12 col-form-label">Nomor Induk Kependudukan (No. KTP) <span class="text-danger">*</span></label>
                                 <div class="col-sm-12">
                                     <input type="text" class="form-control" name="nik" placeholder="Masukan Nomor Induk Kependudukan">
                                     <div class="invalid-feedback invalid-nik"></div>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="mb-2">
                                 <label for="name" class="col-sm-12 col-form-label">Nama Lengkap <span class="text-danger">*</span></label>
                                 <div class="col-sm-12">
@@ -111,7 +111,7 @@
                     if (result.success) {
                         Swal.fire({
                             title: 'Pendaftaran Akun Berhasil',
-                            text: "Kami akan verifikasi dan proses pengaduan anda 1x24, terima kasih sudah melakukan registrasi online.",
+                            text: "Kami akan verifikasi dan proses pendaftaran akun anda 1x24, terima kasih sudah melakukan pendaftaran online.",
                             icon: 'success',
                             showCancelButton: false,
                             confirmButtonColor: '#1e375b',

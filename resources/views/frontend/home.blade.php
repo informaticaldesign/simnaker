@@ -74,7 +74,7 @@
                                 <i class="fas fa-tachometer-alt"></i>
                             </div>
                             <div class="info">
-                                <h4>Akta Pemeriksaan</h4>
+                                <h4>Akta Pengawasan</h4>
                                 <p>Akta Pengawasan Ketenagakerjaan Provinsi Banten.
                                 </p>
                             </div>

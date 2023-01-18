@@ -11,14 +11,16 @@ use File;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
-class ProfileController extends Controller {
+class ProfileController extends Controller
+{
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
@@ -27,7 +29,8 @@ class ProfileController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
+    public function index()
+    {
         //
         $users = Auth::user();
         $user = $users->name;
@@ -93,7 +96,24 @@ class ProfileController extends Controller {
                 'pangkat' => $pangkat,
                 'golongan' => $golongan,
                 'unitkerja' => $unitkerja
-            ]);   
+            ]);
+        } elseif ($users->role_id == '41') {
+            $provinsis = \App\Models\Provinsi::pluck('name', 'id');
+            $kotas = \App\Models\Kota::pluck('name', 'id');
+            $jabatan = \App\Models\Jabatan::pluck('name', 'id');
+            $pangkat = \App\Models\Pangkat::pluck('name', 'id');
+            $golongan = \App\Models\Golongan::pluck('name', 'id');
+            $unitkerja = \App\Models\Unitkerja::pluck('name', 'id');
+            return view('profile.admin', [
+                'provinsis' => $provinsis,
+                'kotas' => $kotas,
+                'user' => $user,
+                'users' => $users,
+                'jabatan' => $jabatan,
+                'pangkat' => $pangkat,
+                'golongan' => $golongan,
+                'unitkerja' => $unitkerja
+            ]);
         } else {
             return view('profile', compact('user'));
         }
@@ -104,7 +124,8 @@ class ProfileController extends Controller {
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
+    public function create()
+    {
         //
     }
 
@@ -114,7 +135,8 @@ class ProfileController extends Controller {
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         //
     }
 
@@ -124,7 +146,8 @@ class ProfileController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show() {
+    public function show()
+    {
         //
         $model = new \App\Models\Company();
         $users = Auth::user();
@@ -132,32 +155,34 @@ class ProfileController extends Controller {
         return response()->json($Users);
     }
 
-    public function personal() {
+    public function personal()
+    {
         //
         $users = Auth::user();
         $data = User::select([
-                    'b.id',
-                    'a.name',
-                    'b.nip',
-                    'b.birth_place',
-                    'b.birth_date',
-                    'b.id_jabatan',
-                    'b.id_golongan',
-                    'b.id_pangkat',
-                    'b.id_uptd',
-                    'b.address',
-                    'b.id_kota',
-                    'b.id_provinsi',
-                    'b.latitude',
-                    'b.longitude',
-                    'a.email',
-                    'b.phone',
-                    'b.avatar_path',
-                    'b.avatar'])
-                ->from('users AS a')
-                ->leftJoin('sim_biodata AS b', 'b.id', '=', 'a.biodata_id')
-                ->where('a.id', $users->id)
-                ->first();
+            'b.id',
+            'a.name',
+            'b.nip',
+            'b.birth_place',
+            'b.birth_date',
+            'b.id_jabatan',
+            'b.id_golongan',
+            'b.id_pangkat',
+            'b.id_uptd',
+            'b.address',
+            'b.id_kota',
+            'b.id_provinsi',
+            'b.latitude',
+            'b.longitude',
+            'a.email',
+            'b.phone',
+            'b.avatar_path',
+            'b.avatar'
+        ])
+            ->from('users AS a')
+            ->leftJoin('sim_biodata AS b', 'b.id', '=', 'a.biodata_id')
+            ->where('a.id', $users->id)
+            ->first();
         return response()->json($data);
     }
 
@@ -167,7 +192,8 @@ class ProfileController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id) {
+    public function edit($id)
+    {
         //
     }
 
@@ -178,7 +204,8 @@ class ProfileController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Company $datapost) {
+    public function update(Request $request, Company $datapost)
+    {
         //
         $fieldValidate = [
             'name' => ['required', 'string', 'max:255'],
@@ -200,19 +227,19 @@ class ProfileController extends Controller {
         $user = auth()->user();
         if ($request->password) {
             $fieldValidate['password'] = ['required', function ($attribute, $value, $fail) use ($user) {
-                    if (!Hash::check($value, $user->password)) {
-                        $fail('Your password was not updated, since the provided current password does not match.');
-                    }
-                }];
+                if (!Hash::check($value, $user->password)) {
+                    $fail('Your password was not updated, since the provided current password does not match.');
+                }
+            }];
             $fieldValidate['password_new'] = ['required', 'string', 'min:8', 'different:password'];
             $fieldValidate['password_confirmation'] = ['required', 'string', 'min:8', 'same:password_new'];
         }
         $validator = \Validator::make($request->all(), $fieldValidate);
         if ($validator->fails()) {
             return response()->json([
-                        'success' => false,
-                        'message' => $validator->errors()->toArray()
-                            ], 422);
+                'success' => false,
+                'message' => $validator->errors()->toArray()
+            ], 422);
         } else {
             if ($request->password && $request->password_new) {
                 $user->fill([
@@ -278,12 +305,13 @@ class ProfileController extends Controller {
             'updated_at' => date('Y-m-d H:i:s'),
         ])->save();
         return response()->json([
-                    'success' => true,
-                    'message' => 'Update Profile Berhasil',
+            'success' => true,
+            'message' => 'Update Profile Berhasil',
         ]);
     }
 
-    public function simpan(Request $request, Biodata $biodata) {
+    public function simpan(Request $request, Biodata $biodata)
+    {
         $user = auth()->user();
         $users = Auth::user();
         $fieldValidate = [
@@ -331,19 +359,19 @@ class ProfileController extends Controller {
 
         if ($request->password) {
             $fieldValidate['password'] = ['required', function ($attribute, $value, $fail) use ($user) {
-                    if (!Hash::check($value, $user->password)) {
-                        $fail('Your password was not updated, since the provided current password does not match.');
-                    }
-                }];
+                if (!Hash::check($value, $user->password)) {
+                    $fail('Your password was not updated, since the provided current password does not match.');
+                }
+            }];
             $fieldValidate['password_new'] = ['required', 'string', 'min:8', 'different:password'];
             $fieldValidate['password_confirmation'] = ['required', 'string', 'min:8', 'same:password_new'];
         }
         $validator = \Validator::make($request->all(), $fieldValidate);
         if ($validator->fails()) {
             return response()->json([
-                        'success' => false,
-                        'message' => $validator->errors()->toArray()
-                            ], 422);
+                'success' => false,
+                'message' => $validator->errors()->toArray()
+            ], 422);
         } else {
             if ($request->password && $request->password_new) {
                 $user->fill([
@@ -368,7 +396,7 @@ class ProfileController extends Controller {
                 File::makeDirectory($pathMonth, 0755, true, true);
             }
             $pdfname = $photo->getClientOriginalName();
-//            $extension = $photo->extension();
+            //            $extension = $photo->extension();
             $pdfpath = 'uploads' . DIRECTORY_SEPARATOR . $_domain . DIRECTORY_SEPARATOR . date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR . $pdfname;
             $photo->move($pathMonth, $pdfname);
             $input['avatar'] = $pdfname;
@@ -391,8 +419,8 @@ class ProfileController extends Controller {
             'updated_at' => date('Y-m-d H:i:s'),
         ])->save();
         return response()->json([
-                    'success' => true,
-                    'message' => 'Update Profile Berhasil',
+            'success' => true,
+            'message' => 'Update Profile Berhasil',
         ]);
     }
 
@@ -402,8 +430,8 @@ class ProfileController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
+    public function destroy($id)
+    {
         //
     }
-
 }

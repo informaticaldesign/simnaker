@@ -250,7 +250,7 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::get('/admin/manual/{id}/edit', ['as' => 'admin.manual.edit', 'uses' => 'ManualController@edit']);
     Route::post('/admin/manual/update', ['as' => 'admin.manual.update', 'uses' => 'ManualController@update']);
     Route::delete('/admin/manual/destroy/{id}', ['as' => 'admin.manual.destroy', 'uses' => 'ManualController@destroy']);
-    
+
     Route::get('/admin/homepage', ['as' => 'admin.homepage', 'uses' => 'HomepageController@index']);
     Route::get('/admin/homepage/fetch', ['as' => 'admin.homepage.fetch', 'uses' => 'HomepageController@fetch']);
     Route::post('/admin/homepage/store', ['as' => 'admin.homepage.store', 'uses' => 'HomepageController@store']);
@@ -331,7 +331,6 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::post('/admin/layanan-pengaduan/store', ['as' => 'admin.layanan.pengaduan.store', 'uses' => 'PengaduanController@store']);
 
     Route::group(['prefix' => 'spt'], function () {
-        
     });
 
     Route::get('/tembusan', ['as' => 'tembusan', 'uses' => 'TembusanController@index']);
@@ -357,6 +356,19 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::get('/admin/reporting/fetch', ['as' => 'admin.reporting.fetch', 'uses' => 'ReportingController@fetch']);
     Route::delete('/admin/reporting/destroy/{id}', ['as' => 'admin.reporting.destroy', 'uses' => 'ReportingController@destroy']);
     Route::post('/admin/reporting/store', ['as' => 'admin.reporting.store', 'uses' => 'ReportingController@store']);
+
+    Route::get('/admin/pengawasan/list', ['as' => 'admin.pengawasan.list', 'uses' => 'Akta\PengawasanController@list']);
+    Route::get('/admin/pengawasan/add', ['as' => 'admin.pengawasan.add', 'uses' => 'Akta\PengawasanController@add']);
+    Route::post('/admin/pengawasan/store', ['as' => 'admin.pengawasan.store', 'uses' => 'Akta\PengawasanController@store']);
+
+    Route::get('/admin/pengawasan/mesin', ['as' => 'admin.pengawasan.mesin', 'uses' => 'Akta\PengawasanController@mesin']);
+    Route::post('/admin/pengawasan/mesin/store', ['as' => 'admin.pengawasan.mesin.store', 'uses' => 'Akta\PengawasanController@store_mesin']);
+
+    Route::get('/admin/pengawasan/list-akta', ['as' => 'admin.pengawasan.list-akta', 'uses' => 'Akta\PengawasanController@list_akta']);
+    Route::delete('/admin/pengawasan/destroy-akta/{id}', ['as' => 'admin.pengawasan.destroy-akta', 'uses' => 'Akta\PengawasanController@destroy_akta']);
+    Route::get('/admin/pengawasan/{id}/edit-akta', ['as' => 'admin.pengawasan.edit-akta', 'uses' => 'Akta\PengawasanController@edit_akta']);
+    Route::get('/admin/pengawasan/{id}/show-akta', ['as' => 'admin.pengawasan.show-akta', 'uses' => 'Akta\PengawasanController@show_akta']);
+    Route::get('/admin/pengawasan/get-company', ['as' => 'admin.pengawasan.company', 'uses' => 'Akta\PengawasanController@combo_company']);
 
     Route::group(['prefix' => 'spt'], function () {
         Route::get('list', 'Spt\ListController@index')->name('spt.list');
@@ -430,8 +442,8 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
 
     Route::get('qr-code-g', function () {
         \QrCode::size(500)
-                ->format('png')
-                ->generate('ItSolutionStuff.com', public_path('images/qrcode.png'));
+            ->format('png')
+            ->generate('ItSolutionStuff.com', public_path('images/qrcode.png'));
 
         return view('qrCode');
     });

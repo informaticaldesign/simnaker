@@ -197,36 +197,36 @@ $(function () {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
   });
-  $.ajax({
-    url: urlDtrans,
-    dataType: 'JSON',
-    method: 'POST',
-    success: function success(result) {
-      if (result.success) {
-        visitorsChart.data.labels = result.data.labels;
-        visitorsChart.data.datasets = result.data.datasets1;
-        visitorsChart.update();
-        salesChart.data.labels = result.data.labels;
-        salesChart.data.datasets = result.data.datasets2;
-        salesChart.update();
-      }
-    }
-  });
-  $.ajax({
-    url: urlDbbn,
-    method: 'POST',
-    dataType: 'JSON',
-    success: function success(result) {
-      if (result.success) {
-        pieChartM.data.labels = result.data.labels;
-        pieChartM.data.datasets[0].data = result.data.status;
-        pieChartM.update();
-        pieChartBbns.data.labels = result.datax.labels;
-        pieChartBbns.data.datasets[0].data = result.datax.status;
-        pieChartBbns.update();
-      }
-    }
-  });
+  // $.ajax({
+  //   url: urlDtrans,
+  //   dataType: 'JSON',
+  //   method: 'POST',
+  //   success: function success(result) {
+  //     if (result.success) {
+  //       visitorsChart.data.labels = result.data.labels;
+  //       visitorsChart.data.datasets = result.data.datasets1;
+  //       visitorsChart.update();
+  //       salesChart.data.labels = result.data.labels;
+  //       salesChart.data.datasets = result.data.datasets2;
+  //       salesChart.update();
+  //     }
+  //   }
+  // });
+  // $.ajax({
+  //   url: urlDbbn,
+  //   method: 'POST',
+  //   dataType: 'JSON',
+  //   success: function success(result) {
+  //     if (result.success) {
+  //       pieChartM.data.labels = result.data.labels;
+  //       pieChartM.data.datasets[0].data = result.data.status;
+  //       pieChartM.update();
+  //       pieChartBbns.data.labels = result.datax.labels;
+  //       pieChartBbns.data.datasets[0].data = result.datax.status;
+  //       pieChartBbns.update();
+  //     }
+  //   }
+  // });
 });
 /******/ })()
 ;

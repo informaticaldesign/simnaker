@@ -18,6 +18,7 @@ $(function () {
   var _dataTable = $('.data-table').DataTable({
     processing: true,
     serverSide: true,
+    scrollX: true,
     ajax: urlFetch,
     columns: [{
       data: 'id',
