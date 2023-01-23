@@ -38,7 +38,7 @@
                             <th>Nama Perusahaan</th>
                             <th>Pemeriksa</th>
                             <th>Status</th>
-                            <th width="50">Action</th>
+                            <th width="90">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -130,6 +130,30 @@
                     searchable: false
                 },
             ],
+        });
+
+        $('body').on('click', '.action-cetak', function () {
+            $(this).html('<i class="fa fa-spinner fa-spin"></i> Wait...');
+            $(this).prop('disabled', true);
+            var _button = $(this);
+            var module_id = $(this).data("id");
+            $.ajax({
+                url: "{{ route('banknota.listbn.cetak') }}",
+                type: "get",
+                data: {id: module_id},
+                dataType: "json",
+                success: function (result) {
+                    if (result.status == 'success') {
+                        _button.html('<i class="fas fa-file-pdf"></i> Cetak');
+                        _button.prop('disabled', false);
+                        $('#ajaxAddModel').modal('show');
+                        $("#frame").attr("src", result.data.url);
+                    }
+                },
+                error: function (xhr, Status, err) {
+                    $("Terjadi error : " + Status);
+                }
+            });
         });
     });
 </script>

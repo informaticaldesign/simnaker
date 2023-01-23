@@ -20,7 +20,6 @@
 
 @section('content')
 {{ Form::open(array('route' => 'admin.pengawasan.store','method'=>'post', 'enctype'=>"multipart/form-data", 'id'=>'form-input')) }}
-<input type="hidden" name="id">
 <?php
 $widthLabel = 'col-sm-3 col-form-label';
 $widthField = 'col-sm-6';
@@ -206,6 +205,7 @@ $widthField = 'col-sm-6';
                                 "hideMethod": "fadeOut"
                             };
                             toastr.success('Pengajuan Akta Pengawasan Berhasil', 'Success');
+                            window.location.href="{{ url('/admin/pengawasan/mesin/list') }}";
                         } else {
                             toastr.error('Update LHP Pengawasan Gagal', 'Error');
                         }

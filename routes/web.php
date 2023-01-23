@@ -361,8 +361,13 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::get('/admin/pengawasan/add', ['as' => 'admin.pengawasan.add', 'uses' => 'Akta\PengawasanController@add']);
     Route::post('/admin/pengawasan/store', ['as' => 'admin.pengawasan.store', 'uses' => 'Akta\PengawasanController@store']);
 
-    Route::get('/admin/pengawasan/mesin', ['as' => 'admin.pengawasan.mesin', 'uses' => 'Akta\PengawasanController@mesin']);
+    Route::get('/admin/pengawasan/mesin/list', ['as' => 'admin.pengawasan.mesin.list', 'uses' => 'Akta\PengawasanController@list_mesin']);
+    Route::get('/admin/pengawasan/mesin/fetch', ['as' => 'admin.pengawasan.mesin.fetch', 'uses' => 'Akta\PengawasanController@fetch_mesin']);
+    Route::get('/admin/pengawasan/mesin/add', ['as' => 'admin.pengawasan.mesin.add', 'uses' => 'Akta\PengawasanController@add_mesin']);
     Route::post('/admin/pengawasan/mesin/store', ['as' => 'admin.pengawasan.mesin.store', 'uses' => 'Akta\PengawasanController@store_mesin']);
+    Route::delete('/admin/pengawasan/mesin/destroy/{id}', ['as' => 'admin.pengawasan.mesin.destroy', 'uses' => 'Akta\PengawasanController@destroy_mesin']);
+    Route::get('/admin/pengawasan/mesin/{id}/edit', ['as' => 'admin.pengawasan.mesin.edit', 'uses' => 'Akta\PengawasanController@edit_mesin']);
+    Route::get('/admin/pengawasan/mesin/{id}/show', ['as' => 'admin.pengawasan.mesin.show', 'uses' => 'Akta\PengawasanController@show_mesin']);
 
     Route::get('/admin/pengawasan/list-akta', ['as' => 'admin.pengawasan.list-akta', 'uses' => 'Akta\PengawasanController@list_akta']);
     Route::delete('/admin/pengawasan/destroy-akta/{id}', ['as' => 'admin.pengawasan.destroy-akta', 'uses' => 'Akta\PengawasanController@destroy_akta']);

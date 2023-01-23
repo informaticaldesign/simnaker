@@ -1,5 +1,5 @@
 @extends('adminlte::page')
-@section('title', 'LHP Pengawasan' )
+@section('title', 'Akta Pengawasan' )
 @section('content_header')
 @section('css')
 <link rel="stylesheet" href="{{ asset('vendor/jquery-ui/jquery-ui.min.css') }}">
@@ -7,206 +7,295 @@
 @stop
 <div class="row mb-2">
     <div class="col-sm-6">
-        <h1>LHP Pengawasan</h1>
+        <h1>Akta Pengawasan</h1>
     </div>
     <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-            <a href="{{ url('/admin') }}" class="btn btn-default"> <i class="fas fa-times"></i> Tutup</a>&nbsp;
+            <!-- <a href="{{ url('/admin') }}" class="btn btn-default"> <i class="fas fa-times"></i> Tutup</a>&nbsp;
+            <button type="button" class="btn btn-danger btn-save btn-action-submit"><i class="far fa-save"></i> Simpan</button>&nbsp; -->
         </ol>
     </div>
 </div>
 @stop
 
 @section('content')
-{{ Form::open(array('route' => 'pengawasan.store','method'=>'post', 'enctype'=>"multipart/form-data", 'id'=>'form-input')) }}
+{{ Form::open(array('route' => 'admin.pengawasan.store','method'=>'post', 'enctype'=>"multipart/form-data", 'id'=>'form-input')) }}
 <input type="hidden" name="id">
+<?php
+$widthLabel = 'col-sm-3 col-form-label';
+$widthField = 'col-sm-6';
+?>
 <div class="row">
-    <div class="col-6">
+    <div class="col-md-12">
         <div class="card card-outline">
-            <div class="card-header">
-                <h3 class="card-title">Identitas Pemeriksa</h3>
-            </div>
             <div class="card-body">
-                <div class="form-group">
-                    <label for="label" class="col-sm-6 col-form-label">Nama Pegawai Pengawas<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="nama_pemeriksa" placeholder="Nama Pegawai Pengawas" disabled value="{{ $datastore->nama_pemeriksa }}">
-                    <div class="invalid-feedback invalid-nama_pemeriksa"></div>
+                <div class="form-group row">
+                    <div class="col-md-12">
+                        <h6>Penggunaan mesin-mesin produksi di Perusahaan berdasarkan Undang-undang Nomor 1 Tahun 1970 tentang Keselamatan Kerja.</h6>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="label" class="col-sm-6 col-form-label">Nomor Induk Pegawai / NIP<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="nip_pemeriksa" placeholder="Nomor Induk Pegawai" disabled value="1231232">
-                    <div class="invalid-feedback invalid-nip_pemeriksa"></div>
+                <hr>
+                <div class="form-group row mt-1">
+                    <label for="company_id" class="{{ $widthLabel }}">Nama Perusahaan <span class="text-danger">*</span></label>
+                    <div class="{{ $widthField }}">
+                        {{ Form::text('company_id', $data->company_name,['class'=>'form-control-plaintext','readonly'=>true,'id'=>'company_id']); }}
+                        <div class="invalid-feedback invalid-company_id"></div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="label" class="col-sm-6 col-form-label">Pangkat<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="pangkat_pemeriksa" placeholder="Pangkat" disabled value="Penata">
-                    <div class="invalid-feedback invalid-pangkat_pemeriksa"></div>
+                <div class="form-group row">
+                    <label for="address" class="{{ $widthLabel }}">Alamat</label>
+                    <div class="{{ $widthField }}">
+                        {{ Form::textarea('address', $data->address,['class'=>'form-control-plaintext','rows'=>3,'id'=>'address']); }}
+                        <div class="invalid-feedback invalid-address"></div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="label" class="col-sm-6 col-form-label">Golongan<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="golongan_pemeriksa" placeholder="Golongan" disabled value="IIIC">
-                    <div class="invalid-feedback invalid-golongan_pemeriksa"></div>
+                <div class="form-group row">
+                    <label for="jml_cabang" class="{{ $widthLabel }}">Data Mesin Produksi <span class="text-danger">*</span>
+                    </label>
                 </div>
-                <div class="form-group">
-                    <label for="label" class="col-sm-6 col-form-label">Jabatan<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="jabatan_pemeriksa" placeholder="Jabatan" disabled value="Pengawas">
-                    <div class="invalid-feedback invalid-jabatan_pemeriksa"></div>
+                <div class="form-group row">
+                    <div class="col-md-12 table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nama Mesin</th>
+                                    <th>Jumlah motor Listrik</th>
+                                    <th>Kekuatan/ Daya MotorListrik (TK.KW.HP)</th>
+                                    <th>Jumlah Daya/Kekuatan</th>
+                                    <th>Keterangan</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody">
+                                @foreach($details as $key => $val)
+                                <tr>
+                                    <td>
+                                        {{ Form::text('nama_motor['.$key.']', $val->nama_motor ,['class'=>'form-control-plaintext','id'=>'nama_motor']); }}
+                                        <div class="invalid-feedback invalid-nama_motor.0"></div>
+                                    </td>
+                                    <td>
+                                        {{ Form::number('jml_motor['.$key.']',$val->jml_motor,['class'=>'form-control-plaintext','id'=>'jml_motor']); }}
+                                        <div class="invalid-feedback invalid-jml_motor.0"></div>
+                                    </td>
+                                    <td>
+                                        {{ Form::number('daya_motor['.$key.']',$val->daya_motor,['class'=>'form-control-plaintext','id'=>'daya_motor']); }}
+                                        <div class="invalid-feedback invalid-daya_motor.0"></div>
+                                    </td>
+                                    <td>
+                                        {{ Form::number('ttl_daya_motor['.$key.']',$val->ttl_daya_motor,['class'=>'form-control-plaintext','id'=>'ttl_daya_motor']); }}
+                                        <div class="invalid-feedback invalid-ttl_daya_motor.0"></div>
+                                    </td>
+                                    <td>
+                                        {{ Form::text('keterangan['.$key.']',$val->keterangan,['class'=>'form-control-plaintext','id'=>'keterangan']); }}
+                                        <div class="invalid-feedback invalid-keterangan.0"></div>
+                                    </td>
+                                    @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="label" class="col-sm-6 col-form-label">Tanggal Pemeriksaan<span class="text-danger">*</span></label>
-                    <input type="text" class="form-control" name="tgl_pemeriksaan" id="tgl_pemeriksaan" placeholder="Tanggal Pemeriksaan" disabled value="{{ $datastore->tgl_pemeriksaan }}">
-                    <div class="invalid-feedback invalid-tgl_pemeriksaan"></div>
+                <hr>
+                <div class="form-group row text-right">
+                    <div class="col-md-12">
+                        <a href="{{ url('/admin/pengawasan/mesin/list') }}" class="btn btn-default"><i class="fa fa-times"></i> Close</a>
+                    </div>
                 </div>
+                <!-- /.card-body -->
             </div>
-            <!-- /.card-body -->
+            <!-- /.card -->
         </div>
-        <!-- /.card -->
     </div>
-    <!-- /.col -->
-    <div class="col-md-6">
-        <div class="card card-outline">
-            <div class="card-header">
-                <h3 class="card-title">Identitas Perusahaan</h3>
-            </div>
-            <div class="card-body">
-                <div class="form-group">
-                    <label for="label" class="col-sm-6 col-form-label">Nama Perusahaan<span class="text-danger">*</span></label>
-                    <select class="form-control" name="perusahaan" disabled>
-                        @foreach ($perusahaans as $key => $perusahaan)
-                        <option value="{{ $key }}" {{$datastore->perusahaan == $key ? 'selected' :'' }}>{{ $perusahaan }}</option>
-                        @endforeach
-                    </select>
-                    <div class="invalid-feedback invalid-title"></div>
-                </div>
-                <div class="form-group">
-                    <label for="label" class="col-sm-6 col-form-label">Alamat<span class="text-danger">*</span></label>
-                    <textarea class="form-control" name="alamat" disabled>Jl Halmahera No.17 Tangerang</textarea>
-                </div>
-                <div class="form-group">
-                    <label for="label" class="col-sm-6 col-form-label">Jenis Usaha<span class="text-danger">*</span></label>
-                    <select class="form-control" name="jenis_usaha" disabled>
-                        <option value="1">Manufacture</option>
-                        <option value="2">Tambang</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="label" class="col-sm-6 col-form-label">Bidang Usaha<span class="text-danger">*</span></label>
-                    <select class="form-control" name="bidang_usaha" disabled>
-                        <option value="1">Otomotif</option>
-                        <option value="2">Elektronik</option>
-                    </select>
-                </div>
-            </div>
-            <!-- /.card-body -->
-        </div>
-        <!-- /.card -->
-    </div>
-</div>
-{{ Form::close() }}
-@stop
+    {{ Form::close() }}
+    @stop
 
-@section('css')
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet" />
-<style>
-    .bootstrap-tagsinput .tag {
-        margin-right: 2px;
-        color: #ffffff;
-        background: #2196f3;
-        padding: 3px 7px;
-        border-radius: 3px;
-    }
-
-    .bootstrap-tagsinput {
-        width: 100%;
-    }
-</style>
-@stop
-
-@section('js')
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.js"></script>
-<script src="{{ asset('vendor/jquery-ui/jquery-ui.min.js') }}"></script>
-<script src="{{ asset('vendor/toastr/toastr.min.js') }}"></script>
-<script>
-$(function () {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    @section('css')
+    <link href="{{ asset('vendor/select2/css/select2.min.css') }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('vendor/select2-bootstrap4-theme/select2-bootstrap4.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.css" rel="stylesheet" />
+    <style>
+        .bootstrap-tagsinput .tag {
+            margin-right: 2px;
+            color: #ffffff;
+            background: #2196f3;
+            padding: 3px 7px;
+            border-radius: 3px;
         }
-    });
 
-    $('button.btn-action-submit').click(function (e) {
-        $('button.btn-save').html('<i class="fa fa-spinner fa-spin"></i> Processing...');
-        $('button.btn-save').prop('disabled', true);
-        event.preventDefault();
-        $('.form-control').removeClass('is-invalid');
-        $('.invalid-tgl_pemeriksaan').text('');
+        .bootstrap-tagsinput {
+            width: 100%;
+        }
+    </style>
+    @stop
 
-        var _form = $("#form-input");
-        var formData = new FormData(_form[0]);
-        $.ajax({
-            url: "{{ route('pengawasan.store') }}",
-            type: "POST",
-            data: formData,
-            enctype: 'multipart/form-data',
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                if (response.success) {
-                    var _field = $(document).find('[name="id"]');
-                    _field.val(response.data.id);
-                    toastr.options = {
-                        "closeButton": false,
-                        "debug": false,
-                        "newestOnTop": false,
-                        "progressBar": true,
-                        "positionClass": "toast-bottom-right",
-                        "preventDuplicates": false,
-                        "onclick": null,
-                        "showDuration": "300",
-                        "hideDuration": "1000",
-                        "timeOut": "5000",
-                        "extendedTimeOut": "1000",
-                        "showEasing": "swing",
-                        "hideEasing": "linear",
-                        "showMethod": "fadeIn",
-                        "hideMethod": "fadeOut"
-                    };
-                    // $('.btn-action-preview').prop('disabled', false);
-                    if (response.status == 'insert') {
-                        toastr.success('Input LHP Pengawasan Berhasil', 'Success');
-                    } else {
-                        toastr.info('Update LHP Pengawasan Berhasil', 'Success');
-                    }
-                } else {
-                    toastr.error('Update LHP Pengawasan Gagal', 'Error');
+    @section('js')
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.js"></script>
+    <script src="{{ asset('vendor/jquery-ui/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('vendor/toastr/toastr.min.js') }}"></script>
+    <script src="{{ asset('vendor/select2/js/select2.min.js') }}" type="text/javascript"></script>
+    <script>
+        $(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-                $('button.btn-save').html('<i class="far fa-save"></i> Update');
-                $('button.btn-save').prop('disabled', false);
-            },
-            error: function (err) {
-                $.each(err.responseJSON.message, function (i, error) {
-                    var _field = $(document).find('[name="' + i + '"]');
-                    _field.addClass('is-invalid');
-                    var el = $(document).find('[class="invalid-feedback invalid-' + i + '"]');
-                    el.css('display', 'block');
-                    el.text(error[0]);
+            });
+            var $eventSelect = $("#company_id");
+            $eventSelect.select2({
+                placeholder: 'Pilih perusahaan',
+                minimumInputLength: 0,
+                ajax: {
+                    url: "{{ url('admin/pengawasan/get-company') }}",
+                    dataType: 'json',
+                    delay: 150,
+                    data: function(params) {
+                        console.log(1232)
+                        return {
+                            term: params.term || '',
+                            page: params.page || 1
+                        };
+                    },
+                    cache: true
+                },
+            });
+
+            $eventSelect.on("select2:selecting", function(e) {
+                $('#address').val(e.params.args.data.address);
+            });
+
+            $('button.btn-action-submit').click(function(e) {
+                $('button.btn-save').html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+                $('button.btn-save').prop('disabled', true);
+                event.preventDefault();
+                $('.form-control').removeClass('is-invalid');
+                $('.invalid-tgl_pemeriksaan').text('');
+
+                var _form = $("#form-input");
+                var formData = new FormData(_form[0]);
+                $.ajax({
+                    url: "{{ route('admin.pengawasan.mesin.store') }}",
+                    type: "POST",
+                    data: formData,
+                    enctype: 'multipart/form-data',
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.options = {
+                                "closeButton": false,
+                                "debug": false,
+                                "newestOnTop": false,
+                                "progressBar": true,
+                                "positionClass": "toast-bottom-right",
+                                "preventDuplicates": false,
+                                "onclick": null,
+                                "showDuration": "300",
+                                "hideDuration": "1000",
+                                "timeOut": "5000",
+                                "extendedTimeOut": "1000",
+                                "showEasing": "swing",
+                                "hideEasing": "linear",
+                                "showMethod": "fadeIn",
+                                "hideMethod": "fadeOut"
+                            };
+                            toastr.success('Pengajuan Akta Pengawasan Berhasil', 'Success');
+                            window.location.href = "{{ url('/admin/pengawasan/mesin/list') }}";
+                        } else {
+                            toastr.error('Update LHP Pengawasan Gagal', 'Error');
+                        }
+                        $('button.btn-save').html('<i class="far fa-save"></i> Update');
+                        $('button.btn-save').prop('disabled', false);
+                    },
+                    error: function(err) {
+                        $.each(err.responseJSON.message, function(i, error) {
+                            var _field = $(document).find('[name="' + i + '"]');
+                            _field.addClass('is-invalid');
+                            var el = $(document).find('[class="invalid-feedback invalid-' + i + '"]');
+                            el.css('display', 'block');
+                            el.text(error[0]);
+                        });
+                        $('button.btn-save').html('<i class="far fa-save"></i> Save');
+                        $('button.btn-save').prop('disabled', false);
+                    }
                 });
-                $('button.btn-save').html('<i class="far fa-save"></i> Save');
-                $('button.btn-save').prop('disabled', false);
-            }
+            });
+
+            $("#tgl_pemeriksaan").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy-mm-dd'
+            });
+
+            var rowIdx = 0;
+
+            // jQuery button click event to add a row.
+            $('#addBtn').on('click', function() {
+                var _row = '<tr>';
+                var _rowNum = $(this).val();
+                var _roxIdx = parseInt(_rowNum) + 1;
+                $(this).val(_roxIdx)
+                _row += '<td>';
+                _row += '<input class="form-control" id="nama_motor" name="nama_motor[' + _roxIdx + ']" type="text">';
+                _row += '<div class="invalid-feedback invalid-nama_motor.' + _roxIdx + '"></div>';
+                _row += '</td>';
+                _row += '<td>';
+                _row += '<input class="form-control" id="jml_motor" name="jml_motor[' + _roxIdx + ']" type="number">';
+                _row += '<div class="invalid-feedback invalid-jml_motor.' + _roxIdx + '"></div>';
+                _row += '</td>';
+                _row += '<td>';
+                _row += '<input class="form-control" id="daya_motor" name="daya_motor[' + _roxIdx + ']" type="number">';
+                _row += '<div class="invalid-feedback invalid-daya_motor.' + _roxIdx + '"></div>';
+                _row += '</td>';
+                _row += '<td>';
+                _row += '<input class="form-control" id="ttl_daya_motor" name="ttl_daya_motor[' + _roxIdx + ']" type="number">';
+                _row += '<div class="invalid-feedback invalid-ttl_daya_motor.' + _roxIdx + '"></div>';
+                _row += '</td>';
+                _row += '<td>';
+                _row += '<input class="form-control" id="keterangan" name="keterangan[' + _roxIdx + ']" type="text">';
+                _row += '<div class="invalid-feedback invalid-keterangan.' + _roxIdx + '"></div>';
+                _row += '</td>';
+                _row += '<td>';
+                _row += '<button class="btn btn-danger remove" type="button">Remove</button>';
+                _row += '</td>';
+                _row += '</tr>';
+                $('#tbody').append(_row);
+            });
+
+            $('#tbody').on('click', '.remove', function() {
+
+                // Getting all the rows next to the 
+                // row containing the clicked button
+                var child = $(this).closest('tr').nextAll();
+
+                // Iterating across all the rows 
+                // obtained to change the index
+                child.each(function() {
+
+                    // Getting <tr> id.
+                    var id = $(this).attr('id');
+
+                    // Getting the <p> inside the .row-index class.
+                    var idx = $(this).children('.row-index').children('p');
+
+                    // Gets the row number from <tr> id.
+                    var dig = parseInt(id.substring(1));
+
+                    // Modifying row index.
+                    idx.html(`Row ${dig - 1}`);
+
+                    // Modifying row id.
+                    $(this).attr('id', `R${dig - 1}`);
+                });
+
+                // Removing the current row.
+                $(this).closest('tr').remove();
+
+                // Decreasing the total number of rows by 1.
+                rowIdx--;
+            });
+
         });
-    });
-
-    $("#tgl_pemeriksaan").datepicker({
-        changeMonth: true,
-        changeYear: true,
-        dateFormat: 'yy-mm-dd'
-    });
-
-});
-</script>
-@stop
+    </script>
+    @stop

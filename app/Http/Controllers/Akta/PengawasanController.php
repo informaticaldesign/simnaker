@@ -50,7 +50,23 @@ class PengawasanController extends Controller
         return View('akta.pengawasan.create');
     }
 
-    public function mesin()
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function list_mesin()
+    {
+        //
+        return View('akta.mesin.list');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function add_mesin()
     {
         //
         return View('akta.mesin.create');
@@ -149,7 +165,6 @@ class PengawasanController extends Controller
         if ($request->id) {
             $id = $request->id;
             $data = request()->all();
-            $data['status'] = 'terkirim';
             $data['updated_by'] = $users->id;
             unset($request['id']);
             $result = AktaPengawasan::where('id', $id)->update($data);
@@ -158,7 +173,6 @@ class PengawasanController extends Controller
             $sptRunNo = $this->getNoIdxSpt();
             $sptIdx = '560/' . str_pad($sptRunNo, 3, '0', STR_PAD_LEFT) . '-DTKT/WASNAKER/' . $this->numberToRomanRepresentation(date('m')) . '/' . date('Y');
             $data = request()->all();
-            $data['status'] = 'terkirim';
             $data['nomor_akta'] = $sptIdx;
             $data['created_by'] = $users->id;
             $result = AktaPengawasan::create($data);
@@ -369,10 +383,16 @@ class PengawasanController extends Controller
                     }
                 })
                 ->editColumn('status', function ($row) {
-                    return '<span class="badge bg-success">' . $row->status . '</span>';
+                    if ($row->status == 'terkirim') {
+                        $_status = '<span class="badge bg-success">' . $row->status . '</span>';
+                    } else {
+                        $_status = '<span class="badge bg-warning">' . $row->status . '</span>';
+                    }
+                    return $_status;
                 })
                 ->addColumn('action', function ($row) {
-                    $btn = '<a href="' . url('/admin/pengawasan/' . $row->id . '/show-akta/') . '" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="View" class="action-view"><i class="fas fa-eye text-success"></i></a> ';
+                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Cetak" class="action-cetak"><i class="fas fa-print text-info"></i></a> ';
+                    $btn .= '<a href="' . url('/admin/pengawasan/' . $row->id . '/show-akta/') . '" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="View" class="action-view"><i class="fas fa-eye text-success"></i></a> ';
                     if ($row->status == 'draft') {
                         $btn .= '<a href="' . url('/admin/pengawasan/' . $row->id . '/edit-akta/') . '" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="action-edit"><i class="fas fa-pencil-alt text-warning"></i></a> ';
                     }
@@ -435,12 +455,15 @@ class PengawasanController extends Controller
         unset($request['_token']);
         $datapost['company_id'] = $request->company_id;
         $datapost['address'] = $request->address;
+        $datapost['status'] = 'terkirim';
         $detail = false;
-        if ($request->id) {
+        $id = $request->id;
+        if ($id) {
             $datapost['updated_at'] = date('Y-m-d H:i:s');
             $datapost['updated_by'] = $users->id;
             $result = AktaPengawasanMesin::where('id', $request->id)->update($datapost);
             if ($result) {
+                AktaPengawasanMesinDet::where('id_akta_mesin', $id)->delete();
                 $detail = true;
             }
         } else {
@@ -449,6 +472,7 @@ class PengawasanController extends Controller
             $result = AktaPengawasanMesin::create($datapost);
             if ($result) {
                 $detail = true;
+                $id = $result->id;
             }
         }
         if ($detail) {
@@ -456,19 +480,100 @@ class PengawasanController extends Controller
             foreach ($nama_motor as $key => $value) {
                 # code...
                 AktaPengawasanMesinDet::create([
+                    'id_akta_mesin' => $id,
                     'nama_motor' => $value,
                     'jml_motor' => $request->jml_motor[$key],
                     'daya_motor' => $request->daya_motor[$key],
                     'ttl_daya_motor' => $request->ttl_daya_motor[$key],
                     'keterangan' => $request->keterangan[$key],
-                    'created_by',
-                    'updated_by'
+                    'created_by' =>  $users->id,
+                    'updated_by' =>  $users->id
                 ]);
             }
         }
         return response()->json([
             'success' => true,
             'message' => 'Update user success',
+        ]);
+    }
+
+    public function fetch_mesin(Request $request)
+    {
+        # code...
+        if ($request->ajax()) {
+            $data = AktaPengawasanMesin::select([
+                'sim_akta_mesin.id',
+                'users.name AS created_by',
+                'm_company.name AS nama_perusahaan',
+                'users.name',
+                'sim_akta_mesin.status'
+            ])
+                ->leftJoin('m_company', 'm_company.id', '=', 'sim_akta_mesin.company_id')
+                ->leftJoin('users', 'users.id', '=', 'sim_akta_mesin.created_by');
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->filter(function ($instance) use ($request) {
+                    if (!empty($request->get('search'))) {
+                        $instance->where(function ($w) use ($request) {
+                            $search = $request->get('search');
+                            $w->orWhere('users.name', 'LIKE', "%" . Str::lower($search['value']) . "%")
+                                ->orWhere('m_company.name', 'LIKE', "%" . Str::lower($search['value']) . "%");
+                        });
+                    }
+                })
+                ->editColumn('status', function ($row) {
+                    $sts = '';
+                    if ($row->status  == 'terkirim') {
+                        $sts = '<span class="badge bg-success">' . $row->status . '</span>';
+                    } elseif ($row->status  == 'draft') {
+                        $sts = '<span class="badge bg-warning">' . $row->status . '</span>';
+                    }
+                    return $sts;
+                })
+                ->addColumn('action', function ($row) {
+                    $btn = '<a href="' . url('/admin/pengawasan/mesin/' . $row->id . '/show/') . '" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="View" class="action-view"><i class="fas fa-eye text-success"></i></a> ';
+                    if ($row->status == 'draft') {
+                        $btn .= '<a href="' . url('/admin/pengawasan/mesin/' . $row->id . '/edit/') . '" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="action-edit"><i class="fas fa-pencil-alt text-warning"></i></a> ';
+                    }
+                    $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="action-delete"><i class="fas fa-trash text-danger"></i></a>';
+                    return $btn;
+                })
+                ->rawColumns(['action', 'status'])
+                ->make(true);
+        }
+    }
+
+    public function destroy_mesin($id)
+    {
+        //
+        AktaPengawasanMesin::find($id)->delete();
+        AktaPengawasanMesinDet::where('id_akta_mesin', $id)->delete();
+        return response()->json(['success' => true]);
+    }
+
+    public function show_mesin($id)
+    {
+        $data = AktaPengawasanMesin::select('sim_akta_mesin.*', 'm_company.name AS company_name')
+            ->leftJoin('m_company', 'm_company.id', '=', 'sim_akta_mesin.company_id')
+            ->where('sim_akta_mesin.id', $id)
+            ->first();
+        $details = AktaPengawasanMesinDet::select('*')->where('id_akta_mesin', $id)->get();
+        return View('akta.mesin.view', [
+            'data' => $data,
+            'details' => $details
+        ]);
+    }
+
+    public function edit_mesin($id)
+    {
+        $data = AktaPengawasanMesin::select('sim_akta_mesin.*', 'm_company.name AS company_name')
+            ->leftJoin('m_company', 'm_company.id', '=', 'sim_akta_mesin.company_id')
+            ->where('sim_akta_mesin.id', $id)
+            ->first();
+        $details = AktaPengawasanMesinDet::select('*')->where('id_akta_mesin', $id)->get();
+        return View('akta.mesin.edit', [
+            'data' => $data,
+            'details' => $details
         ]);
     }
 }

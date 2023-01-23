@@ -20,7 +20,7 @@
 
 @section('content')
 {{ Form::open(array('route' => 'admin.pengawasan.store','method'=>'post', 'enctype'=>"multipart/form-data", 'id'=>'form-input')) }}
-<input type="hidden" name="id">
+<input type="hidden" name="status" id="hidden-status" value="">
 <?php
 $widthLabel = 'col-sm-3 col-form-label';
 $widthField = 'col-sm-6';
@@ -383,7 +383,9 @@ $widthField = 'col-sm-6';
                 <hr>
                 <div class="form-group row text-right">
                     <div class="col-md-12">
-                        <button type="button" class="btn btn-success btn-save btn-action-submit"><i class="far fa-save"></i> Simpan</button>&nbsp;
+                        <a href="{{ url('/admin/pengawasan/list') }}" class="btn btn-default"><i class="fa fa-times"></i> Batal</a>&nbsp;
+                        <button type="button" class="btn btn-warning btn-save btn-action-submit" value="draft"><i class="far fa-save"></i> Konsep</button>&nbsp;
+                        <button type="button" class="btn btn-success btn-save btn-action-submit" value="terkirim"><i class="far fa-save"></i> Kirim</button>&nbsp;
                     </div>
                 </div>
                 <!-- /.card-body -->
@@ -458,6 +460,7 @@ $widthField = 'col-sm-6';
                 event.preventDefault();
                 $('.form-control').removeClass('is-invalid');
                 $('.invalid-tgl_pemeriksaan').text('');
+                $('#hidden-status').val($(this).val());
 
                 var _form = $("#form-input");
                 var formData = new FormData(_form[0]);
@@ -488,11 +491,12 @@ $widthField = 'col-sm-6';
                                 "hideMethod": "fadeOut"
                             };
                             toastr.success('Pengajuan Akta Pengawasan Berhasil', 'Success');
+                            window.location.href="{{ url('/admin/pengawasan/list') }}";
                         } else {
                             toastr.error('Update LHP Pengawasan Gagal', 'Error');
                         }
-                        $('button.btn-save').html('<i class="far fa-save"></i> Update');
-                        $('button.btn-save').prop('disabled', false);
+                        // $('button.btn-save').html('<i class="far fa-save"></i> Update');
+                        // $('button.btn-save').prop('disabled', false);
                     },
                     error: function(err) {
                         $.each(err.responseJSON.message, function(i, error) {
