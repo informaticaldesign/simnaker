@@ -899,6 +899,118 @@ CREATE TABLE `sektors` (
   CONSTRAINT `fk_sektor_prov` FOREIGN KEY (`provinsi_id`) REFERENCES `provinsis` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_akta_mesin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_akta_mesin` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `company_id` int DEFAULT NULL,
+  `address` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `updated_by` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `status` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_akta_mesin_detail`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_akta_mesin_detail` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `nama_motor` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jml_motor` int DEFAULT NULL,
+  `daya_motor` int DEFAULT NULL,
+  `ttl_daya_motor` int DEFAULT NULL,
+  `keterangan` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `updated_by` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `id_akta_mesin` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `sim_akta_pengawasan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sim_akta_pengawasan` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `nomor_akta` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `company_id` int DEFAULT NULL,
+  `address` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_pemilik` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `add_pemilik` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `nama_pengurus` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `add_pengurus` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jenis_usaha` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `tgl_berdiri` date DEFAULT NULL,
+  `no_akte` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jml_cabang` int DEFAULT NULL,
+  `wni_l_bul_a` int DEFAULT NULL,
+  `wni_l_bul_d` int DEFAULT NULL,
+  `wni_p_bul_a` int DEFAULT NULL,
+  `wni_p_bul_d` int DEFAULT NULL,
+  `wna_l_bul_a` int DEFAULT NULL,
+  `wna_l_bul_d` int DEFAULT NULL,
+  `wna_p_bul_a` int DEFAULT NULL,
+  `wna_p_bul_d` int DEFAULT NULL,
+  `jml_bul_l` int DEFAULT NULL,
+  `jml_bul_p` int DEFAULT NULL,
+  `wni_l_bor_a` int DEFAULT NULL,
+  `wni_l_bor_d` int DEFAULT NULL,
+  `wni_p_bor_a` int DEFAULT NULL,
+  `wni_p_bor_d` int DEFAULT NULL,
+  `wna_l_bor_a` int DEFAULT NULL,
+  `wna_l_bor_d` int DEFAULT NULL,
+  `wna_p_bor_a` int DEFAULT NULL,
+  `wna_p_bor_d` int DEFAULT NULL,
+  `jml_bor_l` int DEFAULT NULL,
+  `jml_bor_p` int DEFAULT NULL,
+  `wni_l_hl_a` int DEFAULT NULL,
+  `wni_l_hl_d` int DEFAULT NULL,
+  `wni_p_hl_a` int DEFAULT NULL,
+  `wni_p_hl_d` int DEFAULT NULL,
+  `wna_l_hl_a` int DEFAULT NULL,
+  `wna_l_hl_d` int DEFAULT NULL,
+  `wna_p_hl_a` int DEFAULT NULL,
+  `wna_p_hl_d` int DEFAULT NULL,
+  `jml_hl_l` int DEFAULT NULL,
+  `jml_hl_p` int DEFAULT NULL,
+  `wni_l_pkwt_a` int DEFAULT NULL,
+  `wni_l_pkwt_d` int DEFAULT NULL,
+  `wni_p_pkwt_a` int DEFAULT NULL,
+  `wni_p_pkwt_d` int DEFAULT NULL,
+  `wna_l_pkwt_a` int DEFAULT NULL,
+  `wna_l_pkwt_d` int DEFAULT NULL,
+  `wna_p_pkwt_a` int DEFAULT NULL,
+  `wna_p_pkwt_d` int DEFAULT NULL,
+  `jml_pkwt_l` int DEFAULT NULL,
+  `jml_pkwt_p` int DEFAULT NULL,
+  `wni_l_pkwtt_a` int DEFAULT NULL,
+  `wni_l_pkwtt_d` int DEFAULT NULL,
+  `wni_p_pkwtt_a` int DEFAULT NULL,
+  `wni_p_pkwtt_d` int DEFAULT NULL,
+  `wna_l_pkwtt_a` int DEFAULT NULL,
+  `wna_l_pkwtt_d` int DEFAULT NULL,
+  `wna_p_pkwtt_a` int DEFAULT NULL,
+  `wna_p_pkwtt_d` int DEFAULT NULL,
+  `jml_pkwtt_l` int DEFAULT NULL,
+  `jml_pkwtt_p` int DEFAULT NULL,
+  `gaya_gerak` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jns_pesawat_tenaga` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `jml_pesawat_tenaga` int DEFAULT NULL,
+  `bahan_baku` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_by` int DEFAULT NULL,
+  `updated_by` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 DROP TABLE IF EXISTS `sim_banknota`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
@@ -1610,3 +1722,6 @@ INSERT INTO `migrations` VALUES (42,'2021_05_26_002359_create_datasets_table',27
 INSERT INTO `migrations` VALUES (43,'2021_12_21_171133_create_pemeriksaans_table',28);
 INSERT INTO `migrations` VALUES (44,'2021_12_21_171356_sim_pemeriksaan',28);
 INSERT INTO `migrations` VALUES (45,'2021_12_23_021423_create_pengawasans_table',29);
+INSERT INTO `migrations` VALUES (47,'2022_12_18_154436_create_sim_akta_pengawasan_table',30);
+INSERT INTO `migrations` VALUES (48,'2022_12_19_214713_create_sim_akta_mesin_table',31);
+INSERT INTO `migrations` VALUES (52,'2022_12_19_220128_create_sim_akta_mesin_detail_table',32);

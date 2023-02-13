@@ -13,6 +13,8 @@ use Illuminate\Support\Str;
 use Auth;
 use DataTables;
 use DB;
+use PDF;
+use URL;
 
 class PengawasanController extends Controller
 {
@@ -59,6 +61,17 @@ class PengawasanController extends Controller
     {
         //
         return View('akta.mesin.list');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function list_doc()
+    {
+        //
+        return View('akta.document.list');
     }
 
     /**
@@ -164,9 +177,25 @@ class PengawasanController extends Controller
         unset($request['_token']);
         if ($request->id) {
             $id = $request->id;
-            $data = request()->all();
-            $data['updated_by'] = $users->id;
-            unset($request['id']);
+            if ($request->menu) {
+                if (!$request->status) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => [
+                            'status' => ['The status field is required.']
+                        ]
+                    ], 422);
+                }
+                $data = [
+                    'updated_by' => $users->id,
+                    'updated_at' => date('Y-m-d H:i:s'),
+                    'status' => $request->status
+                ];
+            } else {
+                $data = request()->all();
+                $data['updated_by'] = $users->id;
+                unset($request['id']);
+            }
             $result = AktaPengawasan::where('id', $id)->update($data);
         } else {
             unset($request['id']);
@@ -360,7 +389,9 @@ class PengawasanController extends Controller
     {
         # code...
         if ($request->ajax()) {
-            $data = AktaPengawasan::select([
+            $_menu = $request->menu;
+            $users = Auth::user();
+            $dataAkta = AktaPengawasan::select([
                 'sim_akta_pengawasan.id',
                 'sim_akta_pengawasan.nomor_akta',
                 'sim_akta_pengawasan.nama_pemilik',
@@ -371,6 +402,16 @@ class PengawasanController extends Controller
             ])
                 ->leftJoin('m_company', 'm_company.id', '=', 'sim_akta_pengawasan.company_id')
                 ->leftJoin('users', 'users.id', '=', 'sim_akta_pengawasan.created_by');
+            if ($_menu) {
+                if ($users->role_id == 38) {
+                    $data = $dataAkta->where('sim_akta_pengawasan.status', 'terkirim');
+                }else{
+                    $data = $dataAkta->where('sim_akta_pengawasan.status', 'diterima');
+                }
+            } else {
+                $data = $dataAkta->where('sim_akta_pengawasan.created_by', $users->id);
+            }
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->filter(function ($instance) use ($request) {
@@ -382,26 +423,45 @@ class PengawasanController extends Controller
                         });
                     }
                 })
-                ->editColumn('status', function ($row) {
-                    if ($row->status == 'terkirim') {
-                        $_status = '<span class="badge bg-success">' . $row->status . '</span>';
+                ->editColumn('status', function ($row) use ($_menu) {
+                    $_status = '';
+                    if ($_menu) {
+                        if ($row->status == 'terkirim') {
+                            $_status = '<span class="badge bg-warning">Menunggu</span>';
+                        }elseif($row->status == 'diterima') {
+                            $_status = '<span class="badge bg-success">' . $row->status . '</span>';
+                        }
                     } else {
-                        $_status = '<span class="badge bg-warning">' . $row->status . '</span>';
+                        if ($row->status == 'terkirim' || $row->status == 'diterima') {
+                            $_status = '<span class="badge bg-success">' . $row->status . '</span>';
+                        } else {
+                            $_status = '<span class="badge bg-warning">' . $row->status . '</span>';
+                        }
                     }
                     return $_status;
                 })
-                ->addColumn('action', function ($row) {
-                    $btn = '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Cetak" class="action-cetak"><i class="fas fa-print text-info"></i></a> ';
-                    $btn .= '<a href="' . url('/admin/pengawasan/' . $row->id . '/show-akta/') . '" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="View" class="action-view"><i class="fas fa-eye text-success"></i></a> ';
-                    if ($row->status == 'draft') {
-                        $btn .= '<a href="' . url('/admin/pengawasan/' . $row->id . '/edit-akta/') . '" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="action-edit"><i class="fas fa-pencil-alt text-warning"></i></a> ';
+                ->addColumn('action', function ($row) use ($_menu) {
+                    $btn = '';
+                    if ($_menu) {
+                        $btn .= '<a href="' . url('/admin/pengawasan/persetujuan/' . $row->id . '/approve-akta/') . '" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Approval" class="action-edit"><i class="fas fa-pencil-alt text-warning"></i></a> ';
+                    } else {
+                        $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Cetak" class="action-cetak"><i class="fas fa-print text-info"></i></a> ';
+                        $btn .= '<a href="' . url('/admin/pengawasan/' . $row->id . '/show-akta/') . '" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="View" class="action-view"><i class="fas fa-eye text-success"></i></a> ';
+                        if ($row->status == 'draft') {
+                            $btn .= '<a href="' . url('/admin/pengawasan/' . $row->id . '/edit-akta/') . '" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Edit" class="action-edit"><i class="fas fa-pencil-alt text-warning"></i></a> ';
+                        }
+                        $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="action-delete"><i class="fas fa-trash text-danger"></i></a>';
                     }
-                    $btn .= '<a href="javascript:void(0)" data-toggle="tooltip"  data-id="' . $row->id . '" data-original-title="Delete" class="action-delete"><i class="fas fa-trash text-danger"></i></a>';
                     return $btn;
                 })
                 ->rawColumns(['action', 'status'])
                 ->make(true);
         }
+    }
+
+    public function list_persetujuan(Request $request)
+    {
+        return View('akta.persetujuan.list');
     }
 
     public function destroy_akta($id)
@@ -418,6 +478,17 @@ class PengawasanController extends Controller
             ->where('sim_akta_pengawasan.id', $id)
             ->first();
         return View('akta.pengawasan.edit', [
+            'data' => $data
+        ]);
+    }
+
+    public function approve_akta($id)
+    {
+        $data = AktaPengawasan::select('sim_akta_pengawasan.*', 'm_company.name AS company_name')
+            ->leftJoin('m_company', 'm_company.id', '=', 'sim_akta_pengawasan.company_id')
+            ->where('sim_akta_pengawasan.id', $id)
+            ->first();
+        return View('akta.persetujuan.edit', [
             'data' => $data
         ]);
     }
@@ -575,5 +646,36 @@ class PengawasanController extends Controller
             'data' => $data,
             'details' => $details
         ]);
+    }
+
+    public function cetak_akta()
+    {
+        date_default_timezone_set("Asia/Bangkok");
+        ini_set('memory_limit', '1024M');
+        ini_set('upload_max_filesize', '1024M');
+        ini_set('post_max_size', '1024M');
+
+        $configs = [
+            'title' => 'Akta Pengawas Ketenagakerjaan',
+            'format' => 'A4',
+            'orientation' => 'P',
+            'author' => '',
+            'watermark' => '',
+            'show_watermark' => false,
+            'show_watermark_image' => false,
+        ];
+        // $banknota = Banknota::where('uuid', $request->id)->first();
+        // $relbank = \App\Models\Banknota\Relbank::select(['id', 'description'])->where('banknota_id', $banknota->id)->get();
+        $pdf = PDF::loadView('akta.pengawasan.cetak', [], [], $configs);
+        // $slug = Str::slug($banknota->document_no, '-');
+        $filename = 'akta-pengawas-ketenagakerjaan.pdf';
+        $pdf->save(public_path('pdf/akta/' . $filename));
+        $response = [
+            'status' => 'success',
+            'data' => [
+                'url' => URL::to('pdf/akta/' . $filename)
+            ]
+        ];
+        return response()->json($response);
     }
 }

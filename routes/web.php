@@ -36,6 +36,10 @@ Route::get('/reload-captcha', [App\Http\Controllers\Auth\RegisterController::cla
 Route::auth();
 Auth::routes();
 
+Route::get('/cetak-akta', function () {
+    return View('akta.pengawasan.cetak');
+});
+
 $as = "";
 Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
@@ -370,10 +374,16 @@ Route::group(['as' => $as, 'middleware' => 'auth'], function () {
     Route::get('/admin/pengawasan/mesin/{id}/show', ['as' => 'admin.pengawasan.mesin.show', 'uses' => 'Akta\PengawasanController@show_mesin']);
 
     Route::get('/admin/pengawasan/list-akta', ['as' => 'admin.pengawasan.list-akta', 'uses' => 'Akta\PengawasanController@list_akta']);
+    Route::get('/admin/pengawasan/persetujuan/list', ['as' => 'admin.pengawasan.persetujuan.list', 'uses' => 'Akta\PengawasanController@list_persetujuan']);
+    Route::get('/admin/pengawasan/persetujuan/{id}/approve-akta', ['as' => 'admin.pengawasan.persetujuan.approve-akta', 'uses' => 'Akta\PengawasanController@approve_akta']);
+
     Route::delete('/admin/pengawasan/destroy-akta/{id}', ['as' => 'admin.pengawasan.destroy-akta', 'uses' => 'Akta\PengawasanController@destroy_akta']);
     Route::get('/admin/pengawasan/{id}/edit-akta', ['as' => 'admin.pengawasan.edit-akta', 'uses' => 'Akta\PengawasanController@edit_akta']);
     Route::get('/admin/pengawasan/{id}/show-akta', ['as' => 'admin.pengawasan.show-akta', 'uses' => 'Akta\PengawasanController@show_akta']);
     Route::get('/admin/pengawasan/get-company', ['as' => 'admin.pengawasan.company', 'uses' => 'Akta\PengawasanController@combo_company']);
+    Route::get('/admin/pengawasan/cetak-akta', ['as' => 'admin.pengawasan.cetak-akta', 'uses' => 'Akta\PengawasanController@cetak_akta']);
+
+    Route::get('/admin/pengawasan/document/list-doc', ['as' => 'admin.document.list-doc', 'uses' => 'Akta\PengawasanController@list_doc']);
 
     Route::group(['prefix' => 'spt'], function () {
         Route::get('list', 'Spt\ListController@index')->name('spt.list');

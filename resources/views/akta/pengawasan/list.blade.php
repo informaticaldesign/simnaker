@@ -30,7 +30,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table class="table table-bordered data-table">
+                <table class="table table-bordered data-table" width='100%'>
                     <thead>
                         <tr>
                             <th width="50px">No</th>
@@ -51,6 +51,23 @@
     </div>
     <!-- /.col -->
 </div>
+
+<div class="modal fade" id="ajaxAddModel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Akta Pengawas Ketenagakerjaan</h4>
+            </div>
+            <div class="modal-body">
+                <iframe id="frame" src="" width="100%" height="500"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @stop
 
 @section('js')
@@ -132,25 +149,27 @@
             ],
         });
 
-        $('body').on('click', '.action-cetak', function () {
-            $(this).html('<i class="fa fa-spinner fa-spin"></i> Wait...');
+        $('body').on('click', '.action-cetak', function() {
+            $(this).html('<i class="fa fa-spinner fa-spin"></i>');
             $(this).prop('disabled', true);
             var _button = $(this);
             var module_id = $(this).data("id");
             $.ajax({
-                url: "{{ route('banknota.listbn.cetak') }}",
+                url: "{{ route('admin.pengawasan.cetak-akta') }}",
                 type: "get",
-                data: {id: module_id},
+                data: {
+                    id: module_id
+                },
                 dataType: "json",
-                success: function (result) {
+                success: function(result) {
                     if (result.status == 'success') {
-                        _button.html('<i class="fas fa-file-pdf"></i> Cetak');
+                        _button.html('<i class="fas fa-print"></i>');
                         _button.prop('disabled', false);
                         $('#ajaxAddModel').modal('show');
                         $("#frame").attr("src", result.data.url);
                     }
                 },
-                error: function (xhr, Status, err) {
+                error: function(xhr, Status, err) {
                     $("Terjadi error : " + Status);
                 }
             });

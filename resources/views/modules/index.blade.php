@@ -41,7 +41,7 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body">
-                <table class="table table-bordered data-table">
+                <table class="table table-bordered data-table" width="100%">
                     <thead>
                         <tr>
                             <th width="50px">No</th>
